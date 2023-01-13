@@ -1,8 +1,7 @@
 """
-This is the main program entry point.
+Programmstartpunkt.
+Diese Datei wird ausgeführt, wenn man das Start-Script ausführt.
 """
-
-
 
 def main():
     pass
