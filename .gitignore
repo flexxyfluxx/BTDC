@@ -1,6 +1,6 @@
 .vim
 .vscode
 .jython_cache/*
-program/kotlin/out/*
 program/*.class
-
+lib/*
+program/META-INF
