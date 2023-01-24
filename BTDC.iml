@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="GENERAL_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Python" name="Python">
+      <configuration sdkName="Jython 2.7" />
+    </facet>
+  </component>
   <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/program" />
     <output-test url="file://$MODULE_DIR$/program/test" />
@@ -11,6 +16,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="python.jython" level="project" />
     <orderEntry type="library" name="jetbrains.kotlinx.coroutines.core.jvm" level="project" />
-    <orderEntry type="library" name="JGameGrid" level="project" />
+    <orderEntry type="library" name="kotlin-stdlib-1.6.21" level="project" />
+    <orderEntry type="library" name="Jython 2.7 interpreter library" level="application" />
   </component>
 </module>

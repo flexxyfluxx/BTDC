@@ -1,21 +1,17 @@
 package de.wvsberlin.factory
 
-import com.sun.jdi.InterfaceType
 import org.python.core.Py
 import org.python.core.PyObject
 import org.python.core.PySystemState
-import de.wvsberlin.factory.interfaces.*
-import java.net.InterfaceAddress
 
 /**
- * Factory class to instantiate Jython objects in Kotlin.
+ * Factory-Klasse, um Jython-Klassen in Kotlin zu instantiieren.
+ * nach https://jython.readthedocs.io/en/latest/JythonAndJavaIntegration/#making-use-of-a-loosely-coupled-object-factory
+ * von Java zu Kotlin übersetzt
  */
 class PyObjFactory {
-    lateinit var make: Function<Any>
-
     private lateinit var theClass: PyObject
     private lateinit var interfaceType: Class<*>
-    companion object {}
 
     // init w/ existing python sysstate
     constructor (interfaceType: Class<*>, systemState: PySystemState, moduleName: String, className: String) {

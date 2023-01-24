@@ -2,5 +2,4 @@
 .vscode
 .jython_cache/*
 program/*.class
-lib/*
 program/META-INF
