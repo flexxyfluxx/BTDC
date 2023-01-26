@@ -1,2 +1,2 @@
-jython program/main.py
+jython program/main.py -Q new
 
