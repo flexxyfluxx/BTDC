@@ -8,8 +8,8 @@
   <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/program" />
     <output-test url="file://$MODULE_DIR$/program/test" />
-    <exclude-output />
-    <content url="file://$MODULE_DIR$/program/kotlin-src">
+    <content url="file://$MODULE_DIR$/program">
+      <sourceFolder url="file://$MODULE_DIR$/program" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/program/kotlin-src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />

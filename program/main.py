@@ -20,13 +20,12 @@ from ch.aplu import jgamegrid as gg
 def main():
     myGrid = gg.GameGrid(1920,1080)
 
-    myGrid.show()
-
     frame = myGrid.getFrame()
 
     #frame.setUndecorated(True)
     frame.setBounds(0, 0, 1920, 1080)
 
+    myGrid.show()
 
 if __name__ == "__main__":
     main()
