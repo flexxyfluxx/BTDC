@@ -5,18 +5,39 @@ import kotlin.math.sqrt
 
 fun abs(x: Vektor): Double = sqrt(x.x1.pow(2) + x.x2.pow(2))
 
-fun dist(a: Vektor, b: Vektor) = abs(a - b)
+/**
+ * dist:
+ * auf 2 (Orts-)Vektoren angewandt: Abstand zw. den entsprechenden Punkten
+ * auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade
+ */
+fun dist(a: Vektor, b: Vektor): Double = abs(a - b)
+fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.hnormal
 
-class Vektor(val x1: Double, val x2: Double) {
+/**
+ * clampedDist:
+ * berechnet Entfernung eines Punktes (als Ortsvektor) zu einer Strecke zw. 2 Punkten (als Ortsvektoren).
+ */
+fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {
+    //FIXME does this even work??
+    val AB = b - a
+    val AP = p - a
+
+    val r = ((AB * AP) / abs(AB))
+
+    if (r < 0) return dist(a, p)
+    if (r > 1) return dist(b, p)
+
+    return dist(Gerade(a, AB), p)
+}
+
+open class Vektor(open val x1: Double, open val x2: Double) {
     /**
      * 2d vectors wowowowowowo
+     * Vektoren im mathematischen Sinne.
      */
 
-    override fun hashCode(): Int {
-        var result = x1.hashCode()
-        result = 31 * result + x2.hashCode()
-        return result
-    }
+    override fun hashCode(): Int = 31 * x1.hashCode() + x2.hashCode()
+
     override operator fun equals(other: Any?): Boolean {
         if (other !is Vektor) {
             return false
@@ -25,7 +46,7 @@ class Vektor(val x1: Double, val x2: Double) {
     }
 
     /**
-     * Addiere Vektor mit Vektor -> Vektor
+     * Addiere/Subtrahiere Vektor mit Vektor -> Vektor
      */
     operator fun plus(other: Vektor) = Vektor(this.x1 + other.x1, this.x2 + other.x2)
     operator fun minus(other: Vektor) = Vektor(this.x1 - other.x1, this.x2 - other.x2)
@@ -41,7 +62,7 @@ class Vektor(val x1: Double, val x2: Double) {
     /**
      * Multipliziere Vektor mit Vektor -> Skalarprodukt
      */
-    operator fun times(other: Vektor): Number = this.x1 * other.x1 + this.x2 * other.x2
+    operator fun times(other: Vektor): Double = this.x1 * other.x1 + this.x2 * other.x2
 
     operator fun div(scalar: Number): Vektor {
         /**
@@ -66,9 +87,23 @@ class Vektor(val x1: Double, val x2: Double) {
         get() = normal / abs(normal)
 }
 
+/**
+ * mutable vector (it will prob be useful ww)
+ * Vektor, aber die Attrs sind mutable
+ */
+class MutableVektor(override var x1: Double, override var x2: Double) : Vektor(x1, x2) {
+    fun set(x1: Double, x2: Double) {
+        /**
+         * um alles auf einmal zu setzen
+         */
+        this.x1 = x1
+        this.x2 = x2
+    }
+}
+
 class Gerade(val p: Vektor, val v: Vektor) {
     /**
-     * 'ne Vektorgerade der Form p-> + r * v->
+     * 'ne Vektorgerade der Form p> + r * v>
      */
     operator fun invoke(r: Number) = p + v * (r as Double)
 }
