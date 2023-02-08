@@ -39,7 +39,7 @@ def validateNodes(nodes):
                 return False
             
             if not (0 <= num <= 1):
-                print("[WARNING] at validateNodes: Number not in range(0,1). This could cause unexpected behavior!")
+                print("[WARNING] at validateNodes: Number not in range(0,1). This could cause unexpected behavior!")
 
         node = tuple(node)  # zu Tupel umformen
 
