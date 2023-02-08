@@ -11,23 +11,39 @@ fun abs(x: Vektor): Double = sqrt(x.x1.pow(2) + x.x2.pow(2))
  * auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade
  */
 fun dist(a: Vektor, b: Vektor): Double = abs(a - b)
-fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.hnormal
+fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.normal
 
-/**
- * clampedDist:
- * berechnet Entfernung eines Punktes (als Ortsvektor) zu einer Strecke zw. 2 Punkten (als Ortsvektoren).
- */
 fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {
-    //FIXME does this even work??
+    /**
+     * clampedDist:
+     * Brechnet den Abstand eines Punktes zu einer Strecke AB (aus geg. A und B):
+     * Falls der Fußpkt auf AB liegt, gebe dies zurück.
+     * Sonst, gebe die Entfernung zum nächsten Pkt A oder B zurück.
+     */
+
+    // herausfinden, ob Fußpkt zwischen A und B
     val AB = b - a
+    val absAB = abs(AB)
     val AP = p - a
 
-    val r = ((AB * AP) / abs(AB))
+    val distanceAF = AB * AP / absAB
+    // Erklärung: https://www.rhetos.de/html/lex/skalarprodukt_anschaulich.htm
+    // basically liefert das Skalarprodukt zweier Vektoren die Länge der Projektion des einen Vektors auf dem anderen
+    // mal die Länge des anderen. Teilt man durch die Länge des anderen (hier AB), erhält man die Länge der Projektion.
 
-    if (r < 0) return dist(a, p)
-    if (r > 1) return dist(b, p)
-
-    return dist(Gerade(a, AB), p)
+    return when {
+        distanceAF < 0     -> dist(a, p)
+        distanceAF > absAB -> dist(b, p)
+        else               -> dist(Gerade(a, AB), p)
+    }
+    /* wishful thinking
+    return dist(when {
+        distanceAF < 0     -> a
+        distanceAF > absAB -> b
+        else               -> Gerade(a, AB)
+    }, p)  // fails, because Kotlin needs to know the exact type at compile time :<
+           // dynamic scripting langs are more fun in this way.
+     */
 }
 
 open class Vektor(open val x1: Double, open val x2: Double) {
@@ -35,6 +51,17 @@ open class Vektor(open val x1: Double, open val x2: Double) {
      * 2d vectors wowowowowowo
      * Vektoren im mathematischen Sinne.
      */
+
+    /**
+     * Normalvektor normalisiert
+     */
+    val normal: Vektor
+
+    init {
+        // FIXME maybe this works??? idfk
+        val tmpvec = Vektor(x2, -x1)
+        normal = tmpvec / abs(tmpvec)
+    }
 
     override fun hashCode(): Int = 31 * x1.hashCode() + x2.hashCode()
 
@@ -74,18 +101,9 @@ open class Vektor(open val x1: Double, open val x2: Double) {
 
     operator fun rangeTo(other: Vektor) = dist(this, other)
 
-    val normal: Vektor
-        /**
-         * Normalenvektor zum geg. Vektor mit gleicher Länge
-         */
-        get() = Vektor(-x2, x1)
-
-    val hnormal: Vektor
-        /**
-         * Hessischer Normalenvektor
-         */
-        get() = normal / abs(normal)
 }
+
+val NullVektor = Vektor(0.0,0.0)
 
 /**
  * mutable vector (it will prob be useful ww)
