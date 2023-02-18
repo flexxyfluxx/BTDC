@@ -11,6 +11,7 @@
     <content url="file://$MODULE_DIR$/program">
       <sourceFolder url="file://$MODULE_DIR$/program" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/program/kotlin-src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/program/ch" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -18,5 +19,6 @@
     <orderEntry type="library" name="jetbrains.kotlinx.coroutines.core.jvm" level="project" />
     <orderEntry type="library" name="kotlin-stdlib-1.6.21" level="project" />
     <orderEntry type="library" name="Jython 2.7 interpreter library" level="application" />
+    <orderEntry type="library" name="ch" level="project" />
   </component>
 </module>

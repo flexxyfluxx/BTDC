@@ -16,16 +16,21 @@ sys.path.append(abspath("../lib/kotlin-stdlib-common-1.6.21.jar"))  # beide ig; 
 import de.wvsberlin.factory as fac
 from ch.aplu import jgamegrid as gg
 
+import maputil as mu
+import de.wvsberlin.vektor as vek
+
 
 def main():
-    myGrid = gg.GameGrid(1920,1080)
+    myGrid = gg.GameGrid(800,800, 1, False)
 
-    frame = myGrid.getFrame()
+    myMap = mu.loadMapFromJSON("./maps/test.json")
 
-    #frame.setUndecorated(True)
-    frame.setBounds(0, 0, 1920, 1080)
+
+    myMap.setGridBg(myGrid, debug=True)
+
 
     myGrid.show()
+
 
 if __name__ == "__main__":
     main()

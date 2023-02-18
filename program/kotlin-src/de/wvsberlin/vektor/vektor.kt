@@ -3,7 +3,8 @@ package de.wvsberlin.vektor
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-fun abs(x: Vektor): Double = sqrt(x.x1.pow(2) + x.x2.pow(2))
+
+fun abs(x: Vektor): Double = sqrt(x.y.pow(2) + x.y.pow(2))
 
 /**
  * dist:
@@ -46,7 +47,7 @@ fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {
      */
 }
 
-open class Vektor(open val x1: Double, open val x2: Double) {
+class Vektor(var x: Double, var y: Double) {
     /**
      * 2d vectors wowowowowowo
      * Vektoren im mathematischen Sinne.
@@ -55,15 +56,18 @@ open class Vektor(open val x1: Double, open val x2: Double) {
     /**
      * Normalvektor normalisiert
      */
-    val normal: Vektor
+    private lateinit var _normal: Vektor
+    // private, weil lateinit var; sollte aber eig nicht veränderlich sein
+
+    val normal
+        get() = _normal
+        // Der unnormalisierte Normalvektor müsste dieselbe Länge wie der "eigentliche" Vektor haben.
 
     init {
-        // FIXME maybe this works??? idfk
-        val tmpvec = Vektor(x2, -x1)
-        normal = tmpvec / abs(tmpvec)
+        _normal = Vektor(y,-x) / abs(this)
     }
 
-    override fun hashCode(): Int = 31 * x1.hashCode() + x2.hashCode()
+    override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
 
     override operator fun equals(other: Any?): Boolean {
         if (other !is Vektor) {
@@ -75,49 +79,56 @@ open class Vektor(open val x1: Double, open val x2: Double) {
     /**
      * Addiere/Subtrahiere Vektor mit Vektor -> Vektor
      */
-    operator fun plus(other: Vektor) = Vektor(this.x1 + other.x1, this.x2 + other.x2)
-    operator fun minus(other: Vektor) = Vektor(this.x1 - other.x1, this.x2 - other.x2)
-
-    operator fun times(other: Number): Vektor {
-        /**
-         * Multipliziere Vektor mit Skalar -> Vektor
-         */
-        val doubleOther = other as Double
-        return Vektor(x1 * doubleOther, x2 * doubleOther)
+    operator fun plus(other: Vektor) = Vektor(this.x + other.x, this.y + other.y)
+    operator fun plusAssign(other: Vektor) {
+        this.x += other.x
+        this.y += other.y
     }
+    operator fun minus(other: Vektor) = Vektor(this.x - other.x, this.y - other.y)
+    operator fun minusAssign(other: Vektor) {
+        this.x -= other.x
+        this.y -= other.y
+    }
+
+    /**
+     * Multipliziere Vektor mit Skalar -> Vektor
+     */
+    operator fun times(other: Double): Vektor = Vektor(x * other , y * other)
+    operator fun times(other: Int): Vektor = this.times(other.toDouble())
+    operator fun times(other: Float): Vektor = this.times(other.toDouble())
+    operator fun timesAssign(other: Double) {
+        this.x *= other
+        this.y *= other
+    }
+    operator fun timesAssign(other: Float) = this.timesAssign(other.toDouble())
+    operator fun timesAssign(other: Int) = this.timesAssign(other.toDouble())
 
     /**
      * Multipliziere Vektor mit Vektor -> Skalarprodukt
      */
-    operator fun times(other: Vektor): Double = this.x1 * other.x1 + this.x2 * other.x2
+    operator fun times(other: Vektor): Double = this.x * other.x + this.y * other.y
+    // kein timesAssign mit Vektor, da sich dann der Objekttyp ändert
 
-    operator fun div(scalar: Number): Vektor {
-        /**
-         * Teile Vektor durch Skalar → Vektor
-         */
-        val doubleScalar = scalar as Double
-        return Vektor(x1 / doubleScalar, x2 / doubleScalar)
+    /**
+     * Teile Vektor durch Skalar → Vektor
+     */
+    operator fun div(scalar: Double): Vektor = Vektor(x * scalar, y * scalar)
+    operator fun div(scalar: Int): Vektor = this.div(scalar.toDouble())
+    operator fun div(scalar: Float): Vektor = this.div(scalar.toDouble())
+    operator fun divAssign(scalar: Double) {
+        this.x /= scalar
+        this.y /= scalar
     }
+    operator fun divAssign(scalar: Float) = this.divAssign(scalar.toDouble())
+    operator fun divAssign(scalar: Int) = this.divAssign(scalar.toDouble())
 
+
+    /**
+     * Bei Verwendung von Kotlin kann man den Abstand zweier Vektoren als `v1..v2` schreiben.
+     */
     operator fun rangeTo(other: Vektor) = dist(this, other)
-
 }
 
-val NullVektor = Vektor(0.0,0.0)
-
-/**
- * mutable vector (it will prob be useful ww)
- * Vektor, aber die Attrs sind mutable
- */
-class MutableVektor(override var x1: Double, override var x2: Double) : Vektor(x1, x2) {
-    fun set(x1: Double, x2: Double) {
-        /**
-         * um alles auf einmal zu setzen
-         */
-        this.x1 = x1
-        this.x2 = x2
-    }
-}
 
 class Gerade(val p: Vektor, val v: Vektor) {
     /**
