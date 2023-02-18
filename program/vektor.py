@@ -1,98 +1,60 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 """
-Gleichungen und Datentypen rund um die Vektorrechnung.
+Wrapper für das (kotlinbasierte) Vektor-Modul.
 """
 
-from math import sqrt
+from de.wvsberlin.vektor import *
+from ch.aplu.jgamegrid import Location
+from java.awt import Point
 
 
-class Vektor:
-#class Vektor(fac.interfaces.VektorType):
-    def __init__(self, x1,x2):
-        # Falls die Parameter keine Zahlen sind, wird die Umwandlung zu Float einen Fehler schmeißen (dies ist gewollt.)
-        self.x1 = float(x1)
-        self.x2 = float(x2)
+# Ich setze die Python-Operatorfunktionen so, um die rohen Funktionen nicht mitimportieren zu müssen.
+def _setup():
+    Vektor.toLocation = lambda self, xFac=1, yFac=1: Location(int(self.x * xFac), int(self.y * yFac))
+
+    Vektor.toPoint = lambda self, xFac=1, yFac=1: Point(int(self.x * xFac), int(self.y * yFac))
+
+    def _add(self, other):
+        if not isinstance(other, Vektor):
+            raise TypeError("Unexpected operand type %s; expected Vektor. (Can only add vectors to vectors!)" % (type(other)))
+
+        return Vektor(self.x + other.x, self.y + other.x)
+
+    def _sub(self, other):
+        if not isinstance(other, Vektor):
+            raise TypeError("Unexpected operand type %s; expected Vektor. (Can only subtract vectors from vectors!)" % (type(other)))
+
+        return Vektor(self.x - other.x, self.y - other.y)
 
 
-    def __str__(self):
-        if self.x2 < 0:
-            return "%fi - %fj" \
-                % (self.x1, abs(self.x2))
-
-        return "%fi + %fj" \
-            % (self.x1, self.x2)
-
-
-    def __repr__(self):
-        return "<Vektor(%f, %f) object in %s at 0x%x>" \
-                % (self.x1, self.x2, __name__, id(self))
-
-
-    def __eq__(self, other):
-        if self.x1 == other.x1 and self.x2 == other.x2 and isinstance(other, Vektor):
-            return True
-        return False
-
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-
-    def __add__(self, other):
-        if isinstance(other, int) or isinstance(other, float):
-            return Vektor(self.x1 * other, self.x2 * other)
-
+    def _mul(self, other):
         if isinstance(other, Vektor):
-            return Vektor(self.x1 + other.x1, self.x2 + other.x2)
+            return self.x * other.x + self.y * other.y
 
-        raise TypeError("Can only multiply with a number or another vector!")
+        try:
+            float(other)  # check if other is a num
+        except TypeError:
+            raise TypeError("Unexpected operand type %s; expected Float/Int or Vektor." % (type(other)))
 
-
-    def __sub__(self, other):
-        return Vektor(self.x1 - other.x1, self.x2 - other.x2)
+        return Vektor(self.x * other, self.y * other)
     
 
-    def __mul__(self, other):  # Skalarprodukt
-        if isinstance(other, Vektor): 
-            return self.x1 * other.x1 + self.x2 + other.x2
 
-        return Vektor(self.x1 * other, self.x2 * other)
+    def _div(self, other):
+        try:
+            float(other)
+        except TypeError:
+            raise TypeError("Unexpected operand type %s; expected Float or Int. (Can only divide vectors by numbers!)" % (type(other)))
 
-    # Kein Kreuzprodukt, da nicht mathematisch möglich mit 2-dimensionalen Vektoren.
+        return Vektor(self.x / other, self.y / other)
 
+    # Mutability ist ne schöne Sache.
+    Vektor.__add__ = _add
+    Vektor.__sub__ = _sub
+    Vektor.__div__ = _div
+    Vektor.__mul__ = Vektor.__rmul__ = _mul
 
-    def __rmul__(self, other):
-        return self.__mul__(other)
-
-
-    def __truediv__(self, other):
-        if isinstance(other, int) or isinstance(other, float):
-            return Vektor(self.x1 / other, self.x2 / other)
-
-        raise TypeError("Can only divide by a scalar (a real number).")
-
-
-    def __abs__(self):
-        return sqrt(self.x1**2 + self.x2**2)
-
-
-
-def vecdist(v1, v2):
-    """
-    Abstand zweier Punkte als Ortsvektoren.
-    """
-    if not (isinstance(v1, Vektor) and isinstance(v2, Vektor)):
-        raise TypeError("Arguments must be vectors!")
-
-    return abs(v1 - v2)
-
-
-def vecnormal(v):
-    if not isinstance(v, Vektor):
-        raise TypeError("Can only get normal vector of a vector!")
-
-    return Vektor(v.x2, -v.x1)
-
-
-
+if __name__ == "vektor":
+    _setup()
+    del _setup  # Wir brauchen nach Import keine Setup-Funktion mehr.
 

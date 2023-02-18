@@ -1,4 +1,4 @@
-from de.wvsberlin.factory.interfaces import HelloWorldSayerType
+something = 0
+print(something)
+del something
 
-class HelloWorldSayer(HelloWorldSayerType):
-    def sayHelloWorld(self): print("Hello World!")
