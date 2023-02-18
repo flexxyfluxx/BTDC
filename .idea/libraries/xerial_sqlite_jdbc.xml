@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="xerial.sqlite.jdbc" type="repository">
+    <properties maven-id="org.xerial:sqlite-jdbc:3.40.1.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/sqlite-jdbc-3.40.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/sqlite-jdbc-3.40.1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
