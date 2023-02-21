@@ -16,16 +16,17 @@ def _setup():
 
     def _add(self, other):
         if not isinstance(other, Vektor):
-            raise TypeError("Unexpected operand type %s; expected Vektor. (Can only add vectors to vectors!)" % (type(other)))
+            raise TypeError("Unexpected operand type %s; expected Vektor. (Can only add vectors to vectors!)"
+                            % (type(other)))
 
         return Vektor(self.x + other.x, self.y + other.x)
 
     def _sub(self, other):
         if not isinstance(other, Vektor):
-            raise TypeError("Unexpected operand type %s; expected Vektor. (Can only subtract vectors from vectors!)" % (type(other)))
+            raise TypeError("Unexpected operand type %s; expected Vektor. (Can only subtract vectors from vectors!)"
+                            % (type(other)))
 
         return Vektor(self.x - other.x, self.y - other.y)
-
 
     def _mul(self, other):
         if isinstance(other, Vektor):
@@ -34,17 +35,17 @@ def _setup():
         try:
             float(other)  # check if other is a num
         except TypeError:
-            raise TypeError("Unexpected operand type %s; expected Float/Int or Vektor." % (type(other)))
+            raise TypeError("Unexpected operand type %s; expected Float/Int or Vektor."
+                            % (type(other)))
 
         return Vektor(self.x * other, self.y * other)
-    
-
 
     def _div(self, other):
         try:
             float(other)
         except TypeError:
-            raise TypeError("Unexpected operand type %s; expected Float or Int. (Can only divide vectors by numbers!)" % (type(other)))
+            raise TypeError("Unexpected operand type %s; expected Float or Int. (Can only divide vectors by numbers!)"
+                            % (type(other)))
 
         return Vektor(self.x / other, self.y / other)
 
@@ -54,7 +55,7 @@ def _setup():
     Vektor.__div__ = _div
     Vektor.__mul__ = Vektor.__rmul__ = _mul
 
+
 if __name__ == "vektor":
     _setup()
     del _setup  # Wir brauchen nach Import keine Setup-Funktion mehr.
-
