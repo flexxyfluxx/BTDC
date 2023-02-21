@@ -12,6 +12,7 @@ import de.wvsberlin.vektor as vek
 from os.path import abspath
 import sys
 
+
 # nötige JARs für Jython zugänglich machen
 sys.path.append(abspath("../lib/kotlin-stdlib-1.6.21.jar"))  # idk inwiefern nur eine Kotlin-stdlib-JAR nötig ist
 sys.path.append(abspath("../lib/kotlin-stdlib-common-1.6.21.jar"))  # beide ig; kann ja nicht schaden
@@ -22,13 +23,9 @@ sys.path.append(abspath("../lib/sqlite-jdbc-3.40.1.0.jar"))
 
 
 def main():
-    myGrid = gg.GameGrid(800, 800, 1, False)
+    pass
 
-    myMap = mu.loadMapFromJSON("./maps/test.json")
 
-    myMap.setGridBg(myGrid, debug=True)
-
-    myGrid.show()
 
 
 if __name__ == "__main__":

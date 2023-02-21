@@ -1,5 +1,6 @@
 .vim
 .vscode
+**/.jython_cache/*
 .jython_cache/*
 program/*.class
 program/META-INF

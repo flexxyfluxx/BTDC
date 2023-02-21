@@ -1,3 +1,3 @@
-cd program  # cd into dir so that it is the working dir
-jython main.py -Q new
+cd program || exit
+jython main.py -Q new -Jclasspath ".;../lib/sqlite-jdbc-3.40.1.0.jar"
 
