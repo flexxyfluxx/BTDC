@@ -19,7 +19,7 @@ def _setup():
             raise TypeError("Unexpected operand type %s; expected Vektor. (Can only add vectors to vectors!)"
                             % (type(other)))
 
-        return Vektor(self.x + other.x, self.y + other.x)
+        return Vektor(self.x + other.x, self.y + other.y)
 
     def _sub(self, other):
         if not isinstance(other, Vektor):
