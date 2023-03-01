@@ -56,15 +56,10 @@ class Vektor(var x: Double, var y: Double) {
     /**
      * Normalvektor normalisiert
      */
-    private lateinit var _normal: Vektor
-    // private, weil lateinit var; sollte aber eig nicht veränderlich sein
-
-    val normal
-        get() = _normal
-        // Der unnormalisierte Normalvektor müsste dieselbe Länge wie der "eigentliche" Vektor haben.
+    val normal: Vektor
 
     init {
-        _normal = Vektor(y,-x) / abs(this)
+        normal = Vektor(y,-x) / abs(this)
     }
 
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
