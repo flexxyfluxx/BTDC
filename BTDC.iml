@@ -30,7 +30,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
-    <orderEntry type="library" name="Jython 2.7 (BTDC) interpreter library" level="application" />
     <orderEntry type="library" name="python.jython" level="project" />
   </component>
 </module>

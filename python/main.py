@@ -8,7 +8,7 @@ from __future__ import print_function  # mehr knorke als Print Keywords
 import de.wvsberlin.factory as fac
 from ch.aplu import jgamegrid as gg
 import maputil as mu
-import de.wvsberlin.vektor as vek
+import vektor as vek
 from os.path import abspath
 import sys
 

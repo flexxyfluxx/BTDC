@@ -47,7 +47,7 @@ fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {
      */
 }
 
-class Vektor(var x: Double, var y: Double) {
+class Vektor(__x: Number, __y: Number) {
     /**
      * 2d vectors wowowowowowo
      * Vektoren im mathematischen Sinne.
@@ -56,10 +56,28 @@ class Vektor(var x: Double, var y: Double) {
     /**
      * Normalvektor normalisiert
      */
+    var x: Double = 0.0
+        set(new) {
+            field = new.toDouble()
+        }
+        get() = x
+
+    var y: Double = 0.0
+        set(new) {
+            field = new.toDouble()
+        }
+        get() = y
+
     val normal: Vektor
 
     init {
         normal = Vektor(y,-x) / abs(this)
+        x = __x.toDouble()
+        y = __y.toDouble()
+    }
+
+    companion object {
+        val NullVektor = Vektor(0,0)
     }
 
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
