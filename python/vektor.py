@@ -2,7 +2,10 @@
 """
 Wrapper für das (kotlinbasierte) Vektor-Modul.
 """
+import sys
 
+import syspaths
+print(sys.path)
 from de.wvsberlin.vektor import *
 from ch.aplu.jgamegrid import Location
 from java.awt import Point
@@ -10,9 +13,11 @@ from java.awt import Point
 
 # Ich setze die Python-Operatorfunktionen so, um die rohen Funktionen nicht mitimportieren zu müssen.
 def _setup():
-    Vektor.toLocation = lambda self, xFac=1, yFac=1: Location(int(self.x * xFac), int(self.y * yFac))
+    def _toLocation(self, xFac=1,yFac=1):
+        return Location(int(round(self.x * xFac)), int(round(self.y * yFac)))
 
-    Vektor.toPoint = lambda self, xFac=1, yFac=1: Point(int(self.x * xFac), int(self.y * yFac))
+    def _toPoint(self, xFac=1,yFac=1):
+        return Point(int(self.x * xFac), int(self.y * yFac))
 
     def _add(self, other):
         if not isinstance(other, Vektor):
@@ -50,10 +55,14 @@ def _setup():
         return Vektor(self.x / other, self.y / other)
 
     # Mutability ist ne schöne Sache.
+    Vektor.toLocation = _toLocation
+    Vektor.toPoint = _toPoint
+    """
     Vektor.__add__ = _add
     Vektor.__sub__ = _sub
     Vektor.__div__ = _div
     Vektor.__mul__ = Vektor.__rmul__ = _mul
+    """
 
 
 if __name__ == "vektor":
