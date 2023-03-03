@@ -29,7 +29,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="python.jython" level="project" />
-    <orderEntry type="library" exported="" name="kotlin-stdlib-1.8.10" level="project" />
+    <orderEntry type="library" exported="" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" exported="" name="jgamegrid" level="project" />
   </component>
 </module>

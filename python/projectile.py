@@ -6,7 +6,6 @@ Projektile UwU
 import syspaths
 from ch.aplu.jgamegrid import Actor
 import de.wvsberlin.vektor as vek
-from math import asin, acos
 
 
 class Projectile(Actor):

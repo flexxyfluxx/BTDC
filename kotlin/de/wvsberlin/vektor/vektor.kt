@@ -5,20 +5,28 @@ import java.awt.Point
 import kotlin.math.*
 import java.lang.Math.toDegrees
 
-fun abs(x: Vektor): Double = sqrt(x.x.pow(2) + x.y.pow(2))
 
-fun abs2(x: Vektor): Double = abs(x.x.pow(2) + x.y.pow(2))
-// nützlich, falls nur ermittelt werden soll, welcher Vektor länger/kürzer ist. (sqrt ist langsam!)
+fun abs(v: Vektor, doSqrt: Boolean = true): Double {
+    val unsqrted = v.x.pow(2) + v.y.pow(2)
+
+    if (doSqrt) return sqrt(unsqrted)
+    return unsqrted
+}
 
 /**
  * dist:
  * auf 2 (Orts-)Vektoren angewandt: Abstand zw. den entsprechenden Punkten
  * auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade
  */
-fun dist(a: Vektor, b: Vektor): Double = abs(a - b)
-fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.getUnitNormal()
 
-fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {
+fun dist(a: Vektor, b: Vektor, doSqrt: Boolean = true): Double = abs(a - b, doSqrt)
+
+fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.getUnitNormal()
+// Bei der Abstandmessung zu einer Gerade brauchen wir komischerweise keine Sqrt-Option,
+// da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können nicht an der Stelle weitere Performance rausholen.
+
+fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {  // keine Option doSqrt, da sonst in manchen Fällen noch
+                                                            // hoch 2 genommen werden müsste lul
     /**
      * clampedDist:
      * Berechnet den Abstand eines Punktes zu einer Strecke AB (aus geg. A und B):
@@ -77,7 +85,7 @@ open class Vektor(x: Number, y: Number) {
         return this / abs(this)
     }
 
-    fun getUnitNormal(): Vektor {
+    fun getUnitNormal(): Vektor {  // Ich kann nicht garantieren, dass der Vektor in die "richtige" Richtung zeigt.
         if (this == NullVektor)
             throw IllegalCallerException("Cannot get unit normal of NullVektor! (The laws of maths forbid it)")
         val normal = Vektor(y, -x)
