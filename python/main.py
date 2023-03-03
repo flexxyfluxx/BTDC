@@ -10,7 +10,6 @@ import syspaths
 import de.wvsberlin.factory as fac
 from ch.aplu import jgamegrid as gg
 import maputil as mu
-import vektor as vek
 
 
 

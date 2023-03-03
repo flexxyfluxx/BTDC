@@ -5,13 +5,14 @@ Map-Modul: Enthält alles Notwendige, um Maps zu laden und zu verarbeiten.
 
 from __future__ import print_function
 
+import syspaths
 from de.wvsberlin import factory as fac
 from ch.aplu.jgamegrid import GGBitmap
 import json
 from os.path import abspath
 from java.awt import Color
 
-import vektor as vek
+import de.wvsberlin.vektor as vek
 
 __all__ = [
     "ParseError",
@@ -34,7 +35,6 @@ def validateRawNodes(nodes):
     if len(nodes) < 2:  # nicht genug Nodes
         return False
 
-
     for node in nodes:
         try:
             if len(node) != 2:  # keine 2d-Koordinate
@@ -53,11 +53,12 @@ def validateRawNodes(nodes):
                 float(num)  # coerce to Float
             except TypeError:  # lässt sich nicht als Float darstellen
                 return False
-            
+
         node = tuple(node)  # zu Tupel umformen
 
     # keine Fehler gefunden
     return True
+
 
 def printAndReturn(anything):
     print(anything)
@@ -71,7 +72,7 @@ def validateNodes(nodes):
     if len(nodes) < 2:  # nicht genug Nodes
         return False
 
-    return all(map(nodes, lambda node: isinstance(node, vek.Vektor)))
+    return all(map(lambda node: isinstance(node, vek.Vektor), nodes))
 
 
 def loadMapFromJSON(filepath):
@@ -82,13 +83,13 @@ def loadMapFromJSON(filepath):
     fullFilePath = abspath(filepath)
     with open(fullFilePath) as f:
         rawMap = json.load(f)
-    
+
     print("rawMap =", rawMap)
 
     # sichergehen, dass alle notwendigen Elemente enthalten sind
     if not rawMap.__contains__("nodes"):
         raise ParseError("JSON file '%s' has no element 'nodes'." % (fullFilePath))
-    
+
     if rawMap.__contains__("bg-path"):
         bgImg = abspath(rawMap["bgImg"])
     else:
@@ -111,7 +112,7 @@ def loadMapFromJSON(filepath):
 
 
 class Map:
-#class Map(fac.interfaces.MapType):  # für die Verwendung mit Kotlin
+    # class Map(fac.interfaces.MapType):  # für die Verwendung mit Kotlin
     def __init__(self, nodes, bgImgPath, srcUpper=1, relUpper=1):
         print("nodes =", nodes)
 
@@ -135,9 +136,9 @@ class Map:
 
         if debug:
             bg = grid.getBg()
-            cellsize = grid.getCellSize()
-            bgWidth = grid.getNbHorzCells() * cellsize
-            bgHeight = grid.getNbVertCells() * cellsize
+            cellSize = grid.getCellSize()
+            bgWidth = grid.getNbHorzCells() * cellSize
+            bgHeight = grid.getNbVertCells() * cellSize
 
             bg.setPaintColor(Color.RED)
             bg.setLineWidth(2)
@@ -150,9 +151,5 @@ class Map:
                 node1 = self.nodes[c + 1]
                 bg.drawLine(node0.toPoint(xFactor, yFactor), node1.toPoint(xFactor, yFactor))
 
-
     def getDistToTrack(self, x, y):
         pass
-
-
-

@@ -3,8 +3,9 @@
 Projektile UwU
 """
 
+import syspaths
 from ch.aplu.jgamegrid import Actor
-import vektor as vek
+import de.wvsberlin.vektor as vek
 
 
 class Projectile(Actor):

@@ -82,11 +82,10 @@ open class Vektor(x: Number, y: Number) {
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
 
     override operator fun equals(other: Any?): Boolean {
-        if (other !is Vektor) {
-            return false
-        }
-        return this.hashCode() == other.hashCode()
+        if (other !is Vektor) return false
+        return hashCode() == other.hashCode()
     }
+    fun __eq__(other: Any?) = equals(other)
 
     /**
      * Addiere/Subtrahiere Vektor mit Vektor -> Vektor
@@ -176,6 +175,21 @@ class Gerade(val p: Vektor, val v: Vektor) {
     /**
      * 'ne Vektorgerade der Form p> + r * v>
      */
+
+    override fun hashCode(): Int {
+        var result = p.hashCode()
+        result = 31 * result + v.hashCode()
+        return result
+    }
+    override operator fun equals(other: Any?): Boolean {
+        if (other !is Gerade) return false
+        return hashCode() == other.hashCode()
+    }
+    fun __eq__(other: Any?) = equals(other)
+
     operator fun invoke(r: Number) = p + v * (r.toDouble())
     fun __call__(r: Number) = invoke(r)
+
+    fun __repr__() = "de.wvsberlin.vektor.Gerade[p=${p}, v=${v}]@${hashCode()}"
+    fun __str__() = "Gerade(p=(${p.x}, ${p.y}), v=(${v.x}, ${v.y}))"
 }
