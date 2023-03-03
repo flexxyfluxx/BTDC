@@ -1,16 +1,14 @@
 package de.wvsberlin.vektor
 
-import kotlin.math.pow
-import kotlin.math.sqrt
-import kotlin.math.round
-import kotlin.math.abs
 import ch.aplu.jgamegrid.Location
 import java.awt.Point
+import kotlin.math.*
+import java.lang.Math.toDegrees
 
 fun abs(x: Vektor): Double = sqrt(x.x.pow(2) + x.y.pow(2))
 
 fun abs2(x: Vektor): Double = abs(x.x.pow(2) + x.y.pow(2))
-// nützlich, falls nur ermittelt werden soll, welcher Vektor länger/kürzer ist
+// nützlich, falls nur ermittelt werden soll, welcher Vektor länger/kürzer ist. (sqrt ist langsam!)
 
 /**
  * dist:
@@ -18,18 +16,12 @@ fun abs2(x: Vektor): Double = abs(x.x.pow(2) + x.y.pow(2))
  * auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade
  */
 fun dist(a: Vektor, b: Vektor): Double = abs(a - b)
-fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * unitNormal(g.v)
-
-fun unitNormal(vek: Vektor): Vektor {
-    if(vek == Vektor.NullVektor) return Vektor.NullVektor  // Es geschieht sonst eine Division durch Null, die nict sehr knorke ist.
-    val normal = Vektor(vek.y, -vek.x)
-    return normal / abs(normal)
-}
+fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.getUnitNormal()
 
 fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {
     /**
      * clampedDist:
-     * Brechnet den Abstand eines Punktes zu einer Strecke AB (aus geg. A und B):
+     * Berechnet den Abstand eines Punktes zu einer Strecke AB (aus geg. A und B):
      * Falls der Fußpkt auf AB liegt, gebe dies zurück.
      * Sonst, gebe die Entfernung zum nächsten Pkt A oder B zurück.
      */
@@ -77,6 +69,29 @@ open class Vektor(x: Number, y: Number) {
     companion object {
         @JvmField
         val NullVektor = Vektor(0,0)
+    }
+
+    fun getUnitized(): Vektor {
+        if (this == NullVektor)
+            throw IllegalCallerException("Cannot unitize Nullvektor! (The laws of math forbid it)")
+        return this / abs(this)
+    }
+
+    fun getUnitNormal(): Vektor {
+        if (this == NullVektor)
+            throw IllegalCallerException("Cannot get unit normal of NullVektor! (The laws of maths forbid it)")
+        val normal = Vektor(y, -x)
+        return normal / abs(normal)
+    }
+
+    fun getAngle(): Double {
+        val unitized = getUnitized()
+
+        return (
+            if (unitized.x < 0) {
+                180 + toDegrees(asin(unitized.y))
+            } else toDegrees(asin(unitized.y))
+        ) % 360
     }
 
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()

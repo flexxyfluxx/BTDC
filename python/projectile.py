@@ -6,6 +6,7 @@ Projektile UwU
 import syspaths
 from ch.aplu.jgamegrid import Actor
 import de.wvsberlin.vektor as vek
+from math import asin, acos
 
 
 class Projectile(Actor):
@@ -53,14 +54,24 @@ class Projectile(Actor):
         del self
 
 
+def getAngle(vektor):
+    if not isinstance(vektor, vek.Vektor):
+        raise TypeError("Arg must be of type Vektor; %s given."
+                        % type(vektor))
+
+    return
+
+
 if __name__ == "__main__":
     import syspaths
-    from ch.aplu.jgamegrid import GameGrid, GGBitmap
+    from ch.aplu.jgamegrid import GameGrid, GGBitmap, Location
     from os.path import abspath
 
     grid = GameGrid(600, 600)
-    proj = Projectile(vek.Vektor(1, 1), GGBitmap.getScaledImage(abspath("../assets/sprites/sprite.png")), 500)
+    proj = Projectile(vek.Vektor(1, 1), GGBitmap.getScaledImage(abspath("../assets/sprites/sprite.png"), 0.1, 0), 500)
 
-    grid.addActor(proj)
+    grid.addActor(proj, Location())
     grid.show()
     grid.setSimulationPeriod(10)
+
+    grid.doRun()

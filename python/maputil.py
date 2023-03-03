@@ -60,11 +60,6 @@ def validateRawNodes(nodes):
     return True
 
 
-def printAndReturn(anything):
-    print(anything)
-    return anything
-
-
 def validateNodes(nodes):
     """
     Überprüfe eine geg. Liste von Nodes (als Vektoren) auf Korrektheit.
@@ -88,7 +83,7 @@ def loadMapFromJSON(filepath):
 
     # sichergehen, dass alle notwendigen Elemente enthalten sind
     if not rawMap.__contains__("nodes"):
-        raise ParseError("JSON file '%s' has no element 'nodes'." % (fullFilePath))
+        raise ParseError("JSON file '%s' has no element 'nodes'." % fullFilePath)
 
     if rawMap.__contains__("bg-path"):
         bgImg = abspath(rawMap["bgImg"])
@@ -99,9 +94,9 @@ def loadMapFromJSON(filepath):
     print("rawNodes =", rawNodes)
 
     if not validateRawNodes(rawNodes):
-        raise ParseError("Nodes in JSON file '%s' have improper format and cannot be parsed." % (fullFilePath))
+        raise ParseError("Nodes in JSON file '%s' have improper format and cannot be parsed." % fullFilePath)
 
-    nodes = [vek.Vektor(printAndReturn(node)[0], node[1]) for node in rawNodes]
+    nodes = [vek.Vektor(node[0], node[1]) for node in rawNodes]
 
     if rawMap.__contains__("upper"):
         scale = rawMap["upper"]
@@ -114,8 +109,6 @@ def loadMapFromJSON(filepath):
 class Map:
     # class Map(fac.interfaces.MapType):  # für die Verwendung mit Kotlin
     def __init__(self, nodes, bgImgPath, srcUpper=1, relUpper=1):
-        print("nodes =", nodes)
-
         # self.nodes = list(map(list(nodes), lambda node: node / srcUpper * relUpper))
         self.nodes = [node / srcUpper * relUpper for node in nodes]
 
