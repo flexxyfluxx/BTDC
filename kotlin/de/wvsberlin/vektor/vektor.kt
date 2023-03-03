@@ -126,6 +126,10 @@ open class Vektor(x: Number, y: Number) {
 
     fun __abs__() = abs(this)
 
+    fun __repr__() = "de.wvsberlin.vektor.Vektor[${x}, ${y}]@${hashCode()}"
+
+    fun __str__() = "Vektor(${x}, ${y})"
+
     /**
      * Bei Verwendung von Kotlin kann man den Abstand zweier Vektoren als `v1..v2` schreiben.
      */
