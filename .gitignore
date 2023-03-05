@@ -9,5 +9,5 @@
 python/*.class
 **/META-INF
 /java/ch
-.~fm
-.~ava
+*.~fm
+*.~ava
