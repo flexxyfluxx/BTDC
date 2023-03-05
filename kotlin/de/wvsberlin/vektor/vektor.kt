@@ -7,8 +7,6 @@ import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
 
 
-
-
 open class Vektor(x: Number, y: Number) {
     /**
      * 2d vectors wowowowowowo
@@ -46,9 +44,8 @@ open class Vektor(x: Number, y: Number) {
         fun dist(a: Vektor, b: Vektor, doSqrt: Boolean = true): Double = (a - b).abs(doSqrt)
 
         @JvmStatic
-        fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.getUnitNormal()
-        // Bei der Abstandmessung zu einer Gerade brauchen wir komischerweise keine Sqrt-Option,
-        // da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können nicht an der Stelle weitere Performance rausholen.
+        fun dist(a: Vektor, b: Vektor): Double = (a - b).abs(true)
+
 
         @JvmStatic
         fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {  // keine Option doSqrt, da sonst in manchen Fällen noch
@@ -73,16 +70,8 @@ open class Vektor(x: Number, y: Number) {
             return when {
                 distanceAF < 0     -> Vektor.dist(a, p)
                 distanceAF > absAB -> Vektor.dist(b, p)
-                else               -> Vektor.dist(Gerade(a, AB), p)
+                else               -> Gerade.dist(Gerade(a, AB), p)
             }
-            /* wishful thinking
-            return Vektor.dist(when {
-                distanceAF < 0     -> a
-                distanceAF > absAB -> b
-                else               -> Gerade(a, AB)
-            }, p)  // fails, because Kotlin needs to know the exact type at compile time :<
-                   // dynamic scripting langs are more fun in this way.
-             */
         }
     }
 
@@ -162,9 +151,9 @@ open class Vektor(x: Number, y: Number) {
 
     fun __abs__() = abs()
 
-    fun __repr__() = "de.wvsberlin.vektor.Vektor[${x}, ${y}]@${hashCode()}"
+    open fun __repr__() = "de.wvsberlin.vektor.Vektor[${x}, ${y}]@${hashCode()}"
 
-    fun __str__() = "Vektor(${x}, ${y})"
+    open fun __str__() = "Vektor(${x}, ${y})"
 
     /**
      * Bei Verwendung von Kotlin kann man den Abstand zweier Vektoren als `v1..v2` schreiben.
@@ -179,6 +168,15 @@ open class Vektor(x: Number, y: Number) {
 class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
     override var x: Double = x.toDouble()
     override var y: Double = y.toDouble()
+
+    companion object {
+        @JvmStatic
+        fun fromAngle(angle: Double, magnitude: Double = 1.0) =
+            MutableVektor(cos(toRadians(angle)), sin(angle)) * magnitude
+
+        @JvmStatic
+        fun fromImmutable(ivektor: Vektor) = MutableVektor(ivektor.x, ivektor.y)
+    }
 
     operator fun plusAssign(other: Vektor) {
         this.x += other.x
@@ -205,6 +203,10 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
         this.y /= scalar_
     }
     fun __idiv__(other: Number) = divAssign(other)
+
+    override fun __repr__() = "de.wvsberlin.vektor.MutableVektor[${x}, ${y}]@${hashCode()}"
+
+    override fun __str__() = "MutableVektor(${x}, ${y})"
 }
 
 
@@ -226,6 +228,13 @@ class Gerade(val p: Vektor, val v: Vektor) {
 
     operator fun invoke(r: Number) = p + v * (r.toDouble())
     fun __call__(r: Number) = invoke(r)
+
+    companion object {
+        @JvmStatic
+        fun dist(a: Gerade, b: Vektor): Double = abs((b - a.p) * a.v.getUnitNormal())
+        // Bei der Abstandmessung zu einer Gerade brauchen wir komischerweise keine Sqrt-Option,
+        // da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können nicht an der Stelle weitere Performance rausholen.
+    }
 
     fun __repr__() = "de.wvsberlin.vektor.Gerade[p=${p}, v=${v}]@${hashCode()}"
     fun __str__() = "Gerade(p=(${p.x}, ${p.y}), v=(${v.x}, ${v.y}))"
