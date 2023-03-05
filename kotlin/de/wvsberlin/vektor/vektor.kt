@@ -4,60 +4,9 @@ import ch.aplu.jgamegrid.Location
 import java.awt.Point
 import kotlin.math.*
 import java.lang.Math.toDegrees
+import java.lang.Math.toRadians
 
 
-fun abs(v: Vektor, doSqrt: Boolean = true): Double {
-    val unsqrted = v.x.pow(2) + v.y.pow(2)
-
-    if (doSqrt) return sqrt(unsqrted)
-    return unsqrted
-}
-
-/**
- * dist:
- * auf 2 (Orts-)Vektoren angewandt: Abstand zw. den entsprechenden Punkten
- * auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade
- */
-
-fun dist(a: Vektor, b: Vektor, doSqrt: Boolean = true): Double = abs(a - b, doSqrt)
-
-fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.getUnitNormal()
-// Bei der Abstandmessung zu einer Gerade brauchen wir komischerweise keine Sqrt-Option,
-// da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können nicht an der Stelle weitere Performance rausholen.
-
-fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {  // keine Option doSqrt, da sonst in manchen Fällen noch
-                                                            // hoch 2 genommen werden müsste lul
-    /**
-     * clampedDist:
-     * Berechnet den Abstand eines Punktes zu einer Strecke AB (aus geg. A und B):
-     * Falls der Fußpkt auf AB liegt, gebe dies zurück.
-     * Sonst, gebe die Entfernung zum nächsten Pkt A oder B zurück.
-     */
-
-    // herausfinden, ob Fußpkt zwischen A und B (oder nicht)
-    val AB = b - a
-    val absAB = abs(AB)
-    val AP = p - a
-
-    val distanceAF = AB * AP / absAB
-    // Erklärung: https://www.rhetos.de/html/lex/skalarprodukt_anschaulich.htm
-    // basically liefert das Skalarprodukt zweier Vektoren die Länge der Projektion des einen Vektors auf dem anderen
-    // mal die Länge des anderen. Teilt man durch die Länge des anderen (hier AB), erhält man die Länge der Projektion.
-
-    return when {
-        distanceAF < 0     -> dist(a, p)
-        distanceAF > absAB -> dist(b, p)
-        else               -> dist(Gerade(a, AB), p)
-    }
-    /* wishful thinking
-    return dist(when {
-        distanceAF < 0     -> a
-        distanceAF > absAB -> b
-        else               -> Gerade(a, AB)
-    }, p)  // fails, because Kotlin needs to know the exact type at compile time :<
-           // dynamic scripting langs are more fun in this way.
-     */
-}
 
 
 open class Vektor(x: Number, y: Number) {
@@ -74,22 +23,79 @@ open class Vektor(x: Number, y: Number) {
         this.y = y.toDouble()
     }
 
-    companion object {
+    companion object {  // Da wir keine Fields auf Package-Level haben können, weil Java sonst rumheult, müssen wir
+                        // alle Funktionen, die ich sonst gern auf Package-Level hätte, im Companion Object definieren.
+                        // Tun wir dies nicht, erstellt der Compiler eine weitere Klasse `VektorKt`, in der die Sachen,
+                        // die auf Package-Level geschrieben werden, landen, damit Java damit klarkommt... wtf.
+                        // Suboptimal, da ich keinen Bock habe, das erklären zu müssen.
+                        // OOP ist ja toll und so, aber ich will Funktionen auf Package-Level :((( ffs
         @JvmField
         val NullVektor = Vektor(0,0)
+
+        @JvmStatic
+        // um einen Vektor auch mit Richtung und Länge initialisieren zu können
+        fun fromAngle(angle: Double, magnitude: Double = 1.0) = Vektor(cos(toRadians(angle)), sin(angle)) * magnitude
+
+
+        /**
+         * dist:
+         * auf 2 (Orts-)Vektoren angewandt: Abstand zw. den entsprechenden Punkten
+         * auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade
+         */
+        @JvmStatic
+        fun dist(a: Vektor, b: Vektor, doSqrt: Boolean = true): Double = (a - b).abs(doSqrt)
+
+        @JvmStatic
+        fun dist(g: Gerade, p: Vektor): Double = (p - g.p) * g.v.getUnitNormal()
+        // Bei der Abstandmessung zu einer Gerade brauchen wir komischerweise keine Sqrt-Option,
+        // da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können nicht an der Stelle weitere Performance rausholen.
+
+        @JvmStatic
+        fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {  // keine Option doSqrt, da sonst in manchen Fällen noch
+            // hoch 2 genommen werden müsste lul
+            /**
+             * clampedDist:
+             * Berechnet den Abstand eines Punktes zu einer Strecke AB (aus geg. A und B):
+             * Falls der Fußpkt auf AB liegt, gebe dies zurück.
+             * Sonst, gebe die Entfernung zum nächsten Pkt A oder B zurück.
+             */
+
+            // herausfinden, ob Fußpkt zwischen A und B (oder nicht)
+            val AB = b - a
+            val absAB = AB.abs()
+            val AP = p - a
+
+            val distanceAF = AB * AP / absAB
+            // Erklärung: https://www.rhetos.de/html/lex/skalarprodukt_anschaulich.htm
+            // basically liefert das Skalarprodukt zweier Vektoren die Länge der Projektion des einen Vektors auf dem anderen
+            // mal die Länge des anderen. Teilt man durch die Länge des anderen (hier AB), erhält man die Länge der Projektion.
+
+            return when {
+                distanceAF < 0     -> Vektor.dist(a, p)
+                distanceAF > absAB -> Vektor.dist(b, p)
+                else               -> Vektor.dist(Gerade(a, AB), p)
+            }
+            /* wishful thinking
+            return Vektor.dist(when {
+                distanceAF < 0     -> a
+                distanceAF > absAB -> b
+                else               -> Gerade(a, AB)
+            }, p)  // fails, because Kotlin needs to know the exact type at compile time :<
+                   // dynamic scripting langs are more fun in this way.
+             */
+        }
     }
 
     fun getUnitized(): Vektor {
         if (this == NullVektor)
             throw IllegalCallerException("Cannot unitize Nullvektor! (The laws of math forbid it)")
-        return this / abs(this)
+        return this / abs()  // Division durch Null ist nicht gut diese, darum hat ein Nullvektor keinen definierten Einheitsvektor.
     }
 
     fun getUnitNormal(): Vektor {  // Ich kann nicht garantieren, dass der Vektor in die "richtige" Richtung zeigt.
         if (this == NullVektor)
             throw IllegalCallerException("Cannot get unit normal of NullVektor! (The laws of maths forbid it)")
-        val normal = Vektor(y, -x)
-        return normal / abs(normal)
+        return Vektor(y, -x).getUnitized()
     }
 
     fun getAngle(): Double {
@@ -100,6 +106,14 @@ open class Vektor(x: Number, y: Number) {
                 180 + toDegrees(asin(unitized.y))
             } else toDegrees(asin(unitized.y))
         ) % 360
+    }
+
+
+    fun abs(doSqrt: Boolean = true): Double {
+        val unsqrted = x.pow(2) + y.pow(2)
+
+        if (doSqrt) return sqrt(unsqrted)
+        return unsqrted
     }
 
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
@@ -146,7 +160,7 @@ open class Vektor(x: Number, y: Number) {
     }
     fun __div__(other: Number) = div(other)
 
-    fun __abs__() = abs(this)
+    fun __abs__() = abs()
 
     fun __repr__() = "de.wvsberlin.vektor.Vektor[${x}, ${y}]@${hashCode()}"
 
