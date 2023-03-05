@@ -17,7 +17,7 @@ object FGUIForm_1: TFGUIForm
   OnMouseActivate = FormMouseActivate
   OnResize = FormResize
   FrameType = 5
-  Modified = True
+  Modified = False
   Resizable = False
   Undecorated = False
   Background = clBtnFace

@@ -11,7 +11,7 @@ import ch.aplu.jgamegrid.GameGrid;
  * Description
  *
  * @version 1.0 from 04/03/2023
- * @author till
+ * @author 
  */
 
 public class JMainFrame extends JFrame {
@@ -408,14 +408,6 @@ public class JMainFrame extends JFrame {
     // TODO add your code here
     
   } // end of bUpgrade3_ActionPerformed
-
-  public String jButtonGroupDifficultyBG_getSelectedButtonGroupLabel() {
-    for (java.util.Enumeration<AbstractButton> e = jButtonGroupDifficultyBG.getElements(); e.hasMoreElements();) {
-      AbstractButton b = e.nextElement();
-      if (b.isSelected()) return b.getText();
-    }
-    return "";
-  }
 
   // end methods
   
