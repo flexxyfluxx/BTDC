@@ -1,5 +1,5 @@
 import syspaths
-import JMainFrame
+from de.wvsberlin import JMainFrame
 
 class JGameFrame(JMainFrame):
     def __init__(self, startGame, startRound):

@@ -5,6 +5,7 @@ from maputil import *
 class Game():
     def __init__(self):
         self.gameframe = JGameFrame(self.buttonStartGame, self.buttonStartNextRound)
+        self.gameframe.setVisible(True)
         self.grid = self.gameframe.gamegrid
         self.grid.setSimulationPeriod(10)
     

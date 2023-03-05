@@ -8,6 +8,5 @@
 .jython_cache/*
 python/*.class
 **/META-INF
-/java/ch
 *.~fm
 *.~ava
