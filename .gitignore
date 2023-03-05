@@ -1,6 +1,9 @@
 .vim
+.vim/*
 .vscode
+.vscode/*
 .idea
+.idea/*
 **/.jython_cache/*
 .jython_cache/*
 python/*.class
