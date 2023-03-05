@@ -4,7 +4,7 @@ from maputil import *
 
 class Game():
     def __init__(self):
-        self.gameframe = JGameFrame(self.buttonStartGameOnClick, self.buttonStartNextRound)
+        self.gameframe = JGameFrame(self.buttonStartGame, self.buttonStartNextRound)
         self.grid = self.gameframe.gamegrid
         self.grid.setSimulationPeriod(10)
     
@@ -29,7 +29,7 @@ class Game():
     def buttonStartNextRound(self, event):
         self.startRound(self.difficulty, self.currentround)
         
-    def buttonStartGameOnClick(self, event):
+    def buttonStartGame(self, event):
         #implement map loader
         self.difficulty = self.gameframe.getSelectedDifficulty()
         self.startGame(self.difficulty)
