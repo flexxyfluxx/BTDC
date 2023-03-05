@@ -25,7 +25,7 @@ class JGameFrame(JMainFrame):
                            self.jSeparator1,
                            self.bStartRound,
                            self.bAutostart]
-        self.confrimScreen = [self.bConfirm,
+        self.confirmScreen = [self.bConfirm,
                               self.bAbort]
         
         self.startGame = startGame
@@ -43,7 +43,7 @@ class JGameFrame(JMainFrame):
             e.setVisible(bool)
 
     def toggleConfirmScreen(self, bool):
-        for e in self.confrimScreen:
+        for e in self.confirmScreen:
             e.setVisible(bool)
 
     def toggleScreen(self, screen):
