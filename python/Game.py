@@ -39,5 +39,3 @@ class Game():
 
 
     #6 Buttons der Tower function
-
-game = Game()
