@@ -28,11 +28,6 @@ Man kann die meisten Rechenoperationen an Vektoren durchführen:
 * Multiplikation mit einem Skalar
 * Division durch einen Skalar
 
-Man kann literally einfach den jwlg. Rechenoperator benutzen, also zB.
-```python
-vektor1 + vektor2
-```
-
 Die Multiplikation zweier Vektoren ergibt das Skalarprodukt.
 
 Für Assignment-Operationen der Art `vektor1 += vektor2` o.Ä. sind `MutableVektor`s nötig,

@@ -1,4 +1,4 @@
-object FGUIForm: TFGUIForm
+object FGUIForm_1: TFGUIForm
   Left = 1261
   Top = 133
   BorderIcons = [biSystemMenu]
@@ -211,60 +211,6 @@ object FGUIForm: TFGUIForm
     Border.MatteLeft = 0
     Border.MatteBottom = 0
     Border.MatteRight = 0
-  end
-  object jButtonGroupDifficulty: TJ2ButtonGroup
-    Tag = 50
-    Left = 875
-    Top = 120
-    Width = 120
-    Height = 80
-    Hint = 'jButtonGroup2'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Dialog'
-    Font.Style = [fsBold]
-    Foreground = 3355443
-    Background = 15658734
-    JavaType = 'JButtonGroup'
-    Focusable = True
-    Visible = False
-    Opaque = True
-    Items.Strings = (
-      'Easy, selected'
-      'Normal')
-    Columns = 1
-    Checkboxes = False
-    Title = 'Difficulty'
-    Frame = True
-  end
-  object jButtonGroupMaps: TJ2ButtonGroup
-    Tag = 50
-    Left = 40
-    Top = 120
-    Width = 800
-    Height = 500
-    Hint = 'jButtonGroup1'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Dialog'
-    Font.Style = [fsBold]
-    Foreground = 3355443
-    Background = 15658734
-    JavaType = 'JButtonGroup'
-    Focusable = True
-    Visible = False
-    Opaque = True
-    Items.Strings = (
-      'Map 1, selected'
-      'Map 2'
-      'Map 3'
-      'Map 4')
-    Columns = 2
-    Checkboxes = False
-    Title = 'Maps'
-    Frame = True
   end
   object bAbort: TJButton
     Tag = 4
@@ -1014,6 +960,7 @@ object FGUIForm: TFGUIForm
     Top = 50
     Width = 80
     Height = 24
+    Cursor = crIBeam
     Hint = 'jTextField1'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -1029,5 +976,59 @@ object FGUIForm: TFGUIForm
     HorizontalAlignment = LEFT
     Text = ''
     Editable = False
+  end
+  object jButtonGroupMaps: TJ2ButtonGroup
+    Tag = 50
+    Left = 40
+    Top = 120
+    Width = 800
+    Height = 500
+    Hint = 'jButtonGroup1'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Dialog'
+    Font.Style = [fsBold]
+    Foreground = 3355443
+    Background = 15658734
+    JavaType = 'JButtonGroup'
+    Focusable = True
+    Visible = False
+    Opaque = True
+    Items.Strings = (
+      'Map 1, selected'
+      'Map 2'
+      'Map 3'
+      'Map 4')
+    Columns = 2
+    Checkboxes = False
+    Title = 'Maps'
+    Frame = True
+  end
+  object jButtonGroupDifficulty: TJ2ButtonGroup
+    Tag = 50
+    Left = 875
+    Top = 120
+    Width = 120
+    Height = 80
+    Hint = 'jButtonGroup2'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Dialog'
+    Font.Style = [fsBold]
+    Foreground = 3355443
+    Background = 15658734
+    JavaType = 'JButtonGroup'
+    Focusable = True
+    Visible = False
+    Opaque = True
+    Items.Strings = (
+      'Easy'
+      'Normal, selected')
+    Columns = 1
+    Checkboxes = False
+    Title = 'Difficulty'
+    Frame = True
   end
 end

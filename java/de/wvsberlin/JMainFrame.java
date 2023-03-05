@@ -11,7 +11,7 @@ import ch.aplu.jgamegrid.GameGrid;
  * Description
  *
  * @version 1.0 from 04/03/2023
- * @author till
+ * @author 
  */
 
 public class JMainFrame extends JFrame {
@@ -28,10 +28,6 @@ public class JMainFrame extends JFrame {
     public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Map 3");
     public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("Map 4");
   public JPanel jButtonGroupDifficulty = new JPanel();
-    public ButtonGroup jButtonGroupDifficultyBG = new ButtonGroup();
-    public TitledBorder jButtonGroupDifficultyTB = new TitledBorder("Difficulty");
-    public JRadioButton jButtonGroupDifficultyRB0 = new JRadioButton("Easy");
-    public JRadioButton jButtonGroupDifficultyRB1 = new JRadioButton("Normal");
   public JButton bStartGame = new JButton();
   public JButton bBack = new JButton();
   public GameGrid gamegrid = new GameGrid();
@@ -50,6 +46,10 @@ public class JMainFrame extends JFrame {
   public JButton bUpgrade2 = new JButton();
   public JButton bUpgrade3 = new JButton();
   public JTextField tRound = new JTextField();
+    private ButtonGroup jButtonGroupDifficultyBG = new ButtonGroup();
+    private TitledBorder jButtonGroupDifficultyTB = new TitledBorder("Difficulty");
+    private JRadioButton jButtonGroupDifficultyRB0 = new JRadioButton("Easy");
+    private JRadioButton jButtonGroupDifficultyRB1 = new JRadioButton("Normal");
   // end attributes
   
   public JMainFrame() { 
@@ -112,10 +112,10 @@ public class JMainFrame extends JFrame {
     jButtonGroupMapsRB0.setSelected(true);
     jButtonGroupMapsBG.add(jButtonGroupMapsRB0);
     jButtonGroupMaps.add(jButtonGroupMapsRB0);
-    jButtonGroupMapsRB1.setBounds(7, 257, 393, 239);
+    jButtonGroupMapsRB1.setBounds(400, 18, 393, 239);
     jButtonGroupMapsBG.add(jButtonGroupMapsRB1);
     jButtonGroupMaps.add(jButtonGroupMapsRB1);
-    jButtonGroupMapsRB2.setBounds(400, 18, 393, 239);
+    jButtonGroupMapsRB2.setBounds(7, 257, 393, 239);
     jButtonGroupMapsBG.add(jButtonGroupMapsRB2);
     jButtonGroupMaps.add(jButtonGroupMapsRB2);
     jButtonGroupMapsRB3.setBounds(400, 257, 393, 239);
@@ -127,10 +127,10 @@ public class JMainFrame extends JFrame {
     jButtonGroupDifficulty.setBounds(875, 120, 120, 80);
     jButtonGroupDifficulty.setVisible(false);
     jButtonGroupDifficultyRB0.setBounds(7, 18, 106, 29);
-    jButtonGroupDifficultyRB0.setSelected(true);
     jButtonGroupDifficultyBG.add(jButtonGroupDifficultyRB0);
     jButtonGroupDifficulty.add(jButtonGroupDifficultyRB0);
     jButtonGroupDifficultyRB1.setBounds(7, 47, 106, 29);
+    jButtonGroupDifficultyRB1.setSelected(true);
     jButtonGroupDifficultyBG.add(jButtonGroupDifficultyRB1);
     jButtonGroupDifficulty.add(jButtonGroupDifficultyRB1);
     jButtonGroupDifficulty.setBorder(jButtonGroupDifficultyTB);
@@ -324,12 +324,19 @@ public class JMainFrame extends JFrame {
     return "";
   }
 
-  public String getSelectedDifficulty() {
+  public int getSelectedDifficulty() {
     for (java.util.Enumeration<AbstractButton> e = jButtonGroupDifficultyBG.getElements(); e.hasMoreElements();) {
       AbstractButton b = e.nextElement();
-      if (b.isSelected()) return b.getText();
+      if (b.isSelected()) {
+        if (b.getText() == "Easy") {
+          return 0;
+        }else if (b.getText() == "Normal") {
+          return 1;
+        }
+        
+      }
     }
-    return "";
+    return 1;
   }
 
   public void bStartGame_ActionPerformed(ActionEvent evt) {

@@ -3,6 +3,7 @@
 Projektile UwU
 """
 
+import syspaths
 from ch.aplu.jgamegrid import Actor
 from de.wvsberlin.vektor import Vektor
 
