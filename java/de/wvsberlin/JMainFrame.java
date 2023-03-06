@@ -1,8 +1,20 @@
 package de.wvsberlin;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Container;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
+import javax.swing.JToggleButton;
+import javax.swing.JTextField;
+import javax.swing.AbstractButton;
+import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 import ch.aplu.jgamegrid.GameGrid;
 
@@ -72,38 +84,22 @@ public class JMainFrame extends JFrame {
     bSelectMap.setBounds(560, 200, 80, 24);
     bSelectMap.setText("Select Map");
     bSelectMap.setMargin(new Insets(2, 2, 2, 2));
-    bSelectMap.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bSelectMap_ActionPerformed(evt);
-      }
-    });
+    bSelectMap.addActionListener(evt -> bSelectMap_ActionPerformed(evt));
     cp.add(bSelectMap);
     bUpgrades.setBounds(560, 260, 80, 24);
     bUpgrades.setText("Upgrades");
     bUpgrades.setMargin(new Insets(2, 2, 2, 2));
-    bUpgrades.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bUpgrades_ActionPerformed(evt);
-      }
-    });
+    bUpgrades.addActionListener(evt -> bUpgrades_ActionPerformed(evt));
     cp.add(bUpgrades);
     bSettings.setBounds(560, 460, 80, 24);
     bSettings.setText("Settings");
     bSettings.setMargin(new Insets(2, 2, 2, 2));
-    bSettings.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bSettings_ActionPerformed(evt);
-      }
-    });
+    bSettings.addActionListener(evt -> bSettings_ActionPerformed(evt));
     cp.add(bSettings);
     bQuitGame.setBounds(560, 520, 80, 24);
     bQuitGame.setText("Quit Game");
     bQuitGame.setMargin(new Insets(2, 2, 2, 2));
-    bQuitGame.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bQuitGame_ActionPerformed(evt);
-      }
-    });
+    bQuitGame.addActionListener(evt -> bQuitGame_ActionPerformed(evt));
     cp.add(bQuitGame);
     jButtonGroupMaps.setLayout(null);
     jButtonGroupMaps.setBounds(40, 120, 800, 500);
@@ -138,70 +134,46 @@ public class JMainFrame extends JFrame {
     bStartGame.setBounds(895, 360, 80, 24);
     bStartGame.setText("Start Game");
     bStartGame.setMargin(new Insets(2, 2, 2, 2));
-    bStartGame.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bStartGame_ActionPerformed(evt);
-      }
-    });
+    bStartGame.addActionListener(evt -> bStartGame_ActionPerformed(evt));
     bStartGame.setVisible(false);
     cp.add(bStartGame);
     bBack.setBounds(895, 420, 80, 24);
     bBack.setText("Back");
     bBack.setMargin(new Insets(2, 2, 2, 2));
-    bBack.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bBack_ActionPerformed(evt);
-      }
-    });
+    bBack.addActionListener(evt -> bBack_ActionPerformed(evt));
     bBack.setVisible(false);
     cp.add(bBack);
     
-    jGridPanel.setBounds(40, 120, 890, 500);
+    jGridPanel.setBounds(40, 120, 960, 540);
     jGridPanel.setVisible(false);
     cp.add(jGridPanel);
-    gamegrid.setNbHorzCells(890);
-    gamegrid.setNbVertCells(500);
+    gamegrid.setNbHorzCells(960);
+    gamegrid.setNbVertCells(540);
     gamegrid.setCellSize(1);
-    gamegrid.setBounds(40, 120, 890, 500);
+    gamegrid.setBounds(40, 120, 960, 540);
     jGridPanel.add(gamegrid);
     bQuit.setBounds(1170, 10, 80, 24);
     bQuit.setText("Quit");
     bQuit.setMargin(new Insets(2, 2, 2, 2));
-    bQuit.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bQuit_ActionPerformed(evt);
-      }
-    });
+    bQuit.addActionListener(evt -> bQuit_ActionPerformed(evt));
     bQuit.setVisible(false);
     cp.add(bQuit);
     bConfirm.setBounds(320, 330, 80, 24);
     bConfirm.setText("Confirm");
     bConfirm.setMargin(new Insets(2, 2, 2, 2));
-    bConfirm.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bConfirm_ActionPerformed(evt);
-      }
-    });
+    bConfirm.addActionListener(evt -> bConfirm_ActionPerformed(evt));
     bConfirm.setVisible(false);
     cp.add(bConfirm);
     bAbort.setBounds(460, 330, 80, 24);
     bAbort.setText("Abort");
     bAbort.setMargin(new Insets(2, 2, 2, 2));
-    bAbort.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bAbort_ActionPerformed(evt);
-      }
-    });
+    bAbort.addActionListener(evt -> bAbort_ActionPerformed(evt));
     bAbort.setVisible(false);
     cp.add(bAbort);
     bStartRound.setBounds(1100, 580, 24, 24);
     bStartRound.setText(">");
     bStartRound.setMargin(new Insets(2, 2, 2, 2));
-    bStartRound.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bStartRound_ActionPerformed(evt);
-      }
-    });
+    bStartRound.addActionListener(evt -> bStartRound_ActionPerformed(evt));
     bStartRound.setVisible(false);
     cp.add(bStartRound);
     jSeparator1.setBounds(1040, 255, 200, 8);
@@ -210,81 +182,49 @@ public class JMainFrame extends JFrame {
     bAutostart.setBounds(1160, 580, 36, 24);
     bAutostart.setText(">>");
     bAutostart.setMargin(new Insets(2, 2, 2, 2));
-    bAutostart.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bAutostart_ActionPerformed(evt);
-      }
-    });
+    bAutostart.addActionListener(evt -> bAutostart_ActionPerformed(evt));
     bAutostart.setVisible(false);
     cp.add(bAutostart);
     bTower1.setBounds(1050, 180, 80, 24);
     bTower1.setText("Tower1");
     bTower1.setMargin(new Insets(2, 2, 2, 2));
-    bTower1.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bTower1_ActionPerformed(evt);
-      }
-    });
+    bTower1.addActionListener(evt -> bTower1_ActionPerformed(evt));
     bTower1.setVisible(false);
     cp.add(bTower1);
     bTower2.setBounds(1155, 180, 80, 24);
     bTower2.setText("Tower2");
     bTower2.setMargin(new Insets(2, 2, 2, 2));
-    bTower2.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bTower2_ActionPerformed(evt);
-      }
-    });
+    bTower2.addActionListener(evt -> bTower2_ActionPerformed(evt));
     bTower2.setVisible(false);
     cp.add(bTower2);
     bTower3.setBounds(1050, 300, 80, 24);
     bTower3.setText("Tower3");
     bTower3.setMargin(new Insets(2, 2, 2, 2));
-    bTower3.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bTower3_ActionPerformed(evt);
-      }
-    });
+    bTower3.addActionListener(evt -> bTower3_ActionPerformed(evt));
     bTower3.setVisible(false);
     cp.add(bTower3);
     bTower4.setBounds(1155, 300, 80, 24);
     bTower4.setText("Tower4");
     bTower4.setMargin(new Insets(2, 2, 2, 2));
-    bTower4.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bTower4_ActionPerformed(evt);
-      }
-    });
+    bTower4.addActionListener(evt -> bTower4_ActionPerformed(evt));
     bTower4.setVisible(false);
     cp.add(bTower4);
     bUpgrade1.setBounds(150, 50, 80, 24);
     bUpgrade1.setText("Upgrade1");
     bUpgrade1.setMargin(new Insets(2, 2, 2, 2));
-    bUpgrade1.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bUpgrade1_ActionPerformed(evt);
-      }
-    });
+    bUpgrade1.addActionListener(evt -> bUpgrade1_ActionPerformed(evt));
     bUpgrade1.setVisible(false);
     cp.add(bUpgrade1);
     bUpgrade2.setBounds(300, 50, 80, 24);
     bUpgrade2.setText("Upgrade2");
     bUpgrade2.setMargin(new Insets(2, 2, 2, 2));
-    bUpgrade2.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bUpgrade2_ActionPerformed(evt);
-      }
-    });
+    bUpgrade2.addActionListener(evt -> bUpgrade2_ActionPerformed(evt));
     bUpgrade2.setVisible(false);
     cp.add(bUpgrade2);
     bUpgrade3.setBounds(450, 50, 80, 24);
     bUpgrade3.setText("Upgrade3");
     bUpgrade3.setMargin(new Insets(2, 2, 2, 2));
-    bUpgrade3.addActionListener(new ActionListener() { 
-      public void actionPerformed(ActionEvent evt) { 
-        bUpgrade3_ActionPerformed(evt);
-      }
-    });
+    bUpgrade3.addActionListener(evt -> bUpgrade3_ActionPerformed(evt));
     bUpgrade3.setVisible(false);
     cp.add(bUpgrade3);
     tRound.setBounds(950, 50, 80, 24);
@@ -293,6 +233,10 @@ public class JMainFrame extends JFrame {
     cp.add(tRound);
     // end components
   } // end of public JMainFrame
+
+  public static void main(String[] args) {
+    new JMainFrame().setVisible(true);
+  }
   
   // start methods
   
@@ -405,4 +349,3 @@ public class JMainFrame extends JFrame {
   // end methods
   
 } // end of class JMainFrame
-

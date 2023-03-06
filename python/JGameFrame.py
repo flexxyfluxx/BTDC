@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import syspaths
-import JMainFrame
+from de.wvsberlin import JMainFrame
+
 
 class JGameFrame(JMainFrame):
-    def __init__(self, startGame, startRound):
-        JMainFrame.__init__(self, bStartRound_ActionPerformed = startRound)
+    def __init__(self, **kwargs):
+        JMainFrame.__init__(self, **kwargs)
         self.mainMenu = [self.bSelectMap, 
                          self.bUpgrades,
                          self.bSettings,
@@ -28,23 +30,22 @@ class JGameFrame(JMainFrame):
         self.confirmScreen = [self.bConfirm,
                               self.bAbort]
         
-        self.startGame = startGame
 
-    def toggleMainMenu(self, bool):
+    def toggleMainMenu(self, toggle):
         for e in self.mainMenu:
-            e.setVisible(bool)
+            e.setVisible(toggle)
 
-    def toggleMapSelector(self, bool):
+    def toggleMapSelector(self, toggle):
         for e in self.mapSelector:
-            e.setVisible(bool)
+            e.setVisible(toggle)
 
-    def toggleGameScreen(self, bool):
+    def toggleGameScreen(self, toggle):
         for e in self.gameScreen:
-            e.setVisible(bool)
+            e.setVisible(toggle)
 
-    def toggleConfirmScreen(self, bool):
+    def toggleConfirmScreen(self, toggle):
         for e in self.confirmScreen:
-            e.setVisible(bool)
+            e.setVisible(toggle)
 
     def toggleScreen(self, screen):
         if screen == 0:
@@ -79,21 +80,20 @@ class JGameFrame(JMainFrame):
     def bQuitGame_ActionPerformed(self, event):
         self.dispose()
 
-    def bStartGame_ActionPerformed(self, event):
-        #implement Start Game
-        self.toggleScreen(2)
-        self.startGame(event)
-
     def bQuit_ActionPerformed(self, event):
+        self.gamegrid.doPause()
         self.toggleScreen(3)
     
     def bAbort_ActionPerformed(self, event):
+        self.gamegrid.doRun()
         self.toggleScreen(2)
     
     def bConfirm_ActionPerformed(self, event):
         self.toggleScreen(0)
-        #implement stop game
+        # implement stop game
 
-        
-#frame = JGameFrame()
-#frame.toggleScreen(3)
+
+if __name__ == "__main__":
+    frame = JGameFrame()
+    frame.toggleScreen(3)
+    frame.setVisible(True)
