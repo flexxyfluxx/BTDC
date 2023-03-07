@@ -9,7 +9,7 @@ class Menu:
     def __init__(self):
         self.gameFrame = JGameFrame(bStartRound_ActionPerformed=self.buttonStartNextRound,
                                     bStartGame_ActionPerformed=self.buttonStartGame)
-        self.game = None
+        self.game = None  # es existiert noch kein Spiel => ist None
 
     def startGame(self):
         self.game = Game(self, self.gameFrame.getSelectedDifficulty())
@@ -47,16 +47,6 @@ class Game:
 
     def startRound(self, difficulty, roundnumber):
         print(difficulty, roundnumber)
-
-    def buttonStartNextRound(self, event):
-        self.startRound(self.difficulty, self.currentRound)
-
-    def buttonStartGame(self, event):
-        #implement map loader
-        self.difficulty = self.gameFrame.getSelectedDifficulty()
-        self.startGame(self.difficulty)
-        self.currentRound = 1
-        self.gameFrame.toggleGameScreen(2)
 
 
 Difficulty = enum(
