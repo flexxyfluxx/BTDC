@@ -1,42 +1,49 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import syspaths
 from de.wvsberlin import JMainFrame
+from game import Game, Difficulty
+from round import Round, Wave
+from maps import theMaps
+
+DEBUG = False
 
 
-class Menu:
-    def __init__(self, **kwargs):
-        self.frame = JMainFrame(**kwargs)
+class Menu(JMainFrame):
+    def __init__(self):
+        JMainFrame.__init__(self)
+        self.game = None
 
         self.mainMenu = [
-            self.frame.bSelectMap,
-            self.frame.bUpgrades,
-            self.frame.bSettings,
-            self.frame.bQuitGame
+            self.bSelectMap,
+            self.bUpgrades,
+            self.bSettings,
+            self.bQuitGame
         ]
         self.mapSelector = [
-            self.frame.jButtonGroupMaps,
-            self.frame.jButtonGroupDifficulty,
-            self.frame.bStartGame,
-            self.frame.bBack
+            self.jButtonGroupMaps,
+            self.jButtonGroupDifficulty,
+            self.bStartGame,
+            self.bBack
         ]
         self.gameScreen = [
-            self.frame.jGridPanel,
-            self.frame.bQuit,
-            self.frame.bTower1,
-            self.frame.bTower2,
-            self.frame.bTower3,
-            self.frame.bTower4,
-            self.frame.bUpgrade1,
-            self.frame.bUpgrade2,
-            self.frame.bUpgrade3,
-            self.frame.tRound,
-            self.frame.jSeparator1,
-            self.frame.bStartRound,
-            self.frame.bAutostart
+            self.jGridPanel,
+            self.bQuit,
+            self.bTower1,
+            self.bTower2,
+            self.bTower3,
+            self.bTower4,
+            self.bUpgrade1,
+            self.bUpgrade2,
+            self.bUpgrade3,
+            self.tRound,
+            self.jSeparator1,
+            self.bStartRound,
+            self.bAutostart
         ]
         self.confirmScreen = [
-            self.frame.bConfirm,
-            self.frame.bAbort
+            self.bConfirm,
+            self.bAbort
         ]
 
     def toggleMainMenu(self, yesno):
@@ -86,25 +93,37 @@ class Menu:
         self.setCurrentScreen(0)
 
     def bQuitGame_ActionPerformed(self, _):
-        self.frame.dispose()
+        self.dispose()
 
     def bQuit_ActionPerformed(self, _):
-        self.frame.gamegrid.doPause()   # TODO
+        self.gamegrid.doPause()   # TODO
         self.setCurrentScreen(3)
 
     def bAbort_ActionPerformed(self, _):
-        self.frame.gamegrid.doRun()     # TODO
+        self.gamegrid.doRun()     # TODO
         self.setCurrentScreen(2)
 
     def bConfirm_ActionPerformed(self, _):
         self.setCurrentScreen(0)
         # implement stop game
 
-    def setVisible(self, yesno):
-        self.frame.setVisible(yesno)
+    def startGame(self):
+        print("startGame called")
+        print("map = ", self.getSelectedMap())
+        print("difficulty = ", self.getSelectedDifficulty())
+        self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()], debug=DEBUG)
+        self.game.grid.doRun()
+
+    def bStartRound_ActionPerformed(self, _):
+        self.game.startNextRound()
+
+    def bStartGame_ActionPerformed(self, _):
+        print("bStartGame_ActionPerformed called")
+        self.setCurrentScreen(2)
+        self.startGame()
 
 
 if __name__ == "__main__":
+    DEBUG = True
     menu = Menu()
-    menu.setCurrentScreen(3)
     menu.setVisible(True)

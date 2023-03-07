@@ -26,10 +26,11 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
             self._bgImg = GGBitmap(abspath(img))  # ...erstelle neues BufferedImage
         elif isinstance(img, BufferedImage):  # Falls schon BufferedImage:
             self._bgImg = img  # ...setze Attribut.
+        elif img is None:
+            pass
         else:
-            raise TypeError(
-                "Image must either be supplied via filepath as string, or as java.awt.image.BufferedImage; %s given."
-                % type(img))
+            raise TypeError("Image must either be supplied via filepath as string, or as java.awt.image.BufferedImage; %s given."
+                            % type(img))
 
         return self
 
@@ -47,6 +48,7 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
                             % type(num))
 
         self._relUpper = num
+        return self
 
     def setBgOfGrid(self, grid, debug=False):
         """

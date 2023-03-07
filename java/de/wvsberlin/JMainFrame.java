@@ -17,6 +17,7 @@ import javax.swing.AbstractButton;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 import ch.aplu.jgamegrid.GameGrid;
+import java.util.HashMap;
 
 /**
  *
@@ -62,6 +63,8 @@ public class JMainFrame extends JFrame {
   public JButton bUpgrade2 = new JButton();
   public JButton bUpgrade3 = new JButton();
   public JTextField tRound = new JTextField();
+
+  private final HashMap<String, Integer> mapIDs = new HashMap<>();
   // end attributes
   
   public JMainFrame() { 
@@ -232,7 +235,13 @@ public class JMainFrame extends JFrame {
     tRound.setVisible(false);
     cp.add(tRound);
     // end components
+
+    mapIDs.put("Map 1", 0);
+    mapIDs.put("Map 2", 1);
+    mapIDs.put("Map 3", 2);
+    mapIDs.put("Map 4", 3);
   } // end of public JMainFrame
+
 
   public static void main(String[] args) {
     new JMainFrame().setVisible(true);
@@ -260,12 +269,12 @@ public class JMainFrame extends JFrame {
     
   } // end of bQuitGame_ActionPerformed
 
-  public String getSelectedMap() {
+  public int getSelectedMap() {
     for (java.util.Enumeration<AbstractButton> e = jButtonGroupMapsBG.getElements(); e.hasMoreElements();) {
       AbstractButton b = e.nextElement();
-      if (b.isSelected()) return b.getText();
+      if (b.isSelected()) return mapIDs.get(b.getText());
     }
-    return "";
+    return 0;
   }
 
   public String getSelectedDifficulty() {
@@ -277,8 +286,7 @@ public class JMainFrame extends JFrame {
   }
 
   public void bStartGame_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+    System.out.println("Java bStartGame_actionPerformed called");
   } // end of bStartGame_ActionPerformed
 
   public void bBack_ActionPerformed(ActionEvent evt) {

@@ -5,5 +5,5 @@ enums. literally enums.
 """
 
 
-def enum(**enums):
+def makeEnum(**enums):
     return type('Enum', (), enums)
