@@ -46,6 +46,7 @@ public class JMainFrame extends JFrame {
     public TitledBorder jButtonGroupDifficultyTB = new TitledBorder("Difficulty");
     public JRadioButton jButtonGroupDifficultyRB0 = new JRadioButton("Easy");
     public JRadioButton jButtonGroupDifficultyRB1 = new JRadioButton("Normal");
+    public JRadioButton jButtonGroupDifficultyRB2 = new JRadioButton("Hard");
   public JButton bStartGame = new JButton();
   public JButton bBack = new JButton();
   public GameGrid gamegrid = new GameGrid();
@@ -124,7 +125,7 @@ public class JMainFrame extends JFrame {
     jButtonGroupMaps.setBorder(jButtonGroupMapsTB);
     cp.add(jButtonGroupMaps);
     jButtonGroupDifficulty.setLayout(null);
-    jButtonGroupDifficulty.setBounds(875, 120, 120, 80);
+    jButtonGroupDifficulty.setBounds(875, 120, 120, 120);
     jButtonGroupDifficulty.setVisible(false);
     jButtonGroupDifficultyRB0.setBounds(7, 18, 106, 29);
     jButtonGroupDifficultyRB0.setSelected(true);
@@ -133,6 +134,9 @@ public class JMainFrame extends JFrame {
     jButtonGroupDifficultyRB1.setBounds(7, 47, 106, 29);
     jButtonGroupDifficultyBG.add(jButtonGroupDifficultyRB1);
     jButtonGroupDifficulty.add(jButtonGroupDifficultyRB1);
+    jButtonGroupDifficultyRB2.setBounds(7, 76, 106, 29);
+    jButtonGroupDifficultyBG.add(jButtonGroupDifficultyRB2);
+    jButtonGroupDifficulty.add(jButtonGroupDifficultyRB2);
     jButtonGroupDifficulty.setBorder(jButtonGroupDifficultyTB);
     cp.add(jButtonGroupDifficulty);
     bStartGame.setBounds(895, 360, 80, 24);
