@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 import ch.aplu.jgamegrid.GameGrid;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  *
@@ -281,9 +282,9 @@ public class JMainFrame extends JFrame {
     for (java.util.Enumeration<AbstractButton> e = jButtonGroupDifficultyBG.getElements(); e.hasMoreElements();) {
       AbstractButton b = e.nextElement();
       if (b.isSelected()) {
-        if (b.getText() == "Easy") {
+        if (Objects.equals(b.getText(), "Easy")) {
           return 0;
-        }else if (b.getText() == "Normal") {
+        }else if (Objects.equals(b.getText(), "Normal")) {
           return 1;
         }
         
