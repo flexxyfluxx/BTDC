@@ -34,9 +34,9 @@ class Game:
 
 
 Difficulty = makeEnum(
-    EASY=0,
-    NORMAL=1,
-    HARD=2
+    EASY=object(),
+    NORMAL=object(),
+    HARD=object()
 )
 
 if __name__ == "__main__":
