@@ -1,2 +1,2 @@
 cd python || exit
-jython -J-Xmx2g Runtime.py -Q new
+jython -J-Xmx2g main.py -Q new

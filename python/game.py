@@ -29,6 +29,9 @@ class Game:
     def startNextRound(self):
         pass
 
+    def spawnEnemy(self, enemyType):
+        pass
+
 
 Difficulty = makeEnum(
     EASY=0,
