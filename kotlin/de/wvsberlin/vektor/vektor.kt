@@ -5,6 +5,7 @@ import java.awt.Point
 import kotlin.math.*
 import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
+import kotlin.random.Random
 
 
 open class Vektor(x: Number, y: Number) {
@@ -77,13 +78,13 @@ open class Vektor(x: Number, y: Number) {
 
     fun getUnitized(): Vektor {
         if (this == NullVektor)
-            throw IllegalCallerException("Cannot unitize Nullvektor! (The laws of math forbid it)")
+            throw IllegalStateException("Cannot unitize Nullvektor! (The laws of math forbid it)")
         return this / abs()  // Division durch Null ist nicht gut diese, darum hat ein Nullvektor keinen definierten Einheitsvektor.
     }
 
     fun getUnitNormal(): Vektor {  // Ich kann nicht garantieren, dass der Vektor in die "richtige" Richtung zeigt.
         if (this == NullVektor)
-            throw IllegalCallerException("Cannot get unit normal of NullVektor! (The laws of maths forbid it)")
+            throw IllegalStateException("Cannot get unit normal of NullVektor! (The laws of maths forbid it)")
         return Vektor(y, -x).getUnitized()
     }
 
@@ -169,10 +170,22 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
     override var x: Double = x.toDouble()
     override var y: Double = y.toDouble()
 
+    fun setAngle(angle: Number) {
+        val vekLength = abs()
+        x = cos(toRadians(angle.toDouble())) * vekLength
+        y = sin(toRadians(angle.toDouble())) * vekLength
+    }
+
+    fun setLength(length: Number) {
+        val factor = length.toDouble() / abs()
+        x *= factor
+        y *= factor
+    }
+
     companion object {
         @JvmStatic
-        fun fromAngle(angle: Double, magnitude: Double = 1.0) =
-            MutableVektor(cos(toRadians(angle)), sin(angle)) * magnitude
+        fun fromAngle(angle: Number, magnitude: Number = 1) =
+            MutableVektor(cos(toRadians(angle.toDouble())), sin(angle.toDouble())) * magnitude
 
         @JvmStatic
         fun fromImmutable(ivektor: Vektor) = MutableVektor(ivektor.x, ivektor.y)

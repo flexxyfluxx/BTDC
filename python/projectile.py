@@ -4,7 +4,8 @@ Projektile UwU
 """
 
 from ch.aplu.jgamegrid import Actor
-from de.wvsberlin.vektor import Vektor
+from de.wvsberlin.vektor import Vektor, MutableVektor
+from java.lang import IllegalStateException
 
 
 class Projectile(Actor):
@@ -15,7 +16,7 @@ class Projectile(Actor):
     """
 
     def __init__(self, richtungsvektor, sprite, lifetime, pierce, size, initpos=Vektor.NullVektor):
-        if not isinstance(richtungsvektor, Vektor):
+        if not (isinstance(richtungsvektor, Vektor) or isinstance(richtungsvektor, MutableVektor)):
             raise TypeError("First (non-self) argument must be of type Vektor; %s given."
                             % type(richtungsvektor))
 
@@ -96,6 +97,21 @@ class Projectile(Actor):
     def onEnemyTouched(self, enemy):  # stub
         # TODO implement this
         raise NotImplementedError("This function has not been implemented yet!")
+
+    def getAngle(self):
+        return self.richtungsvektor.getAngle()
+
+    def setMoveDirection(self, angle):
+        if not isinstance(self.richtungsvektor, MutableVektor):
+            raise IllegalStateException("Cannot mutate Richtungsvektor if it isn't initialized as MutableVektor.")
+
+        self.richtungsvektor.setAngle(angle)
+
+    def setMoveSpeed(self, speed):
+        if not isinstance(self.richtungsvektor, MutableVektor):
+            raise IllegalStateException("Cannot mutate Richtungsvektor if it isn't initialized as MutableVektor.")
+
+        self.richtungsvektor.setLength(speed)
 
 
 if __name__ == "__main__":
