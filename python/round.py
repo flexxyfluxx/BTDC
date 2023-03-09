@@ -4,36 +4,40 @@
 Runden OwO
 """
 
-from __future__ import print_function
-from os.path import abspath
-
 
 class Round:
     def __init__(self):
-        self.currentRound = 0
-        self.waves = []
+        self.remainingWaves = []
+        self.activeWaveFuns = []
+
+        self.game = None
+
+    def addWave(self, wave):
+        self.remainingWaves.append(wave)
+        return self
+
+    def tick(self):
+        if self.remainingWaves[0].startDelay <= 0:
+            if not self.remainingWaves[0].waitsForLastRoundToBeFullySent:
+                self.activeWaveFuns.append(lambda: self.remainingWaves.pop(0).tick(self.game))
+
+            elif not self.activeWaveFuns:
+                self.activeWaveFuns.append(self.remainingWaves.pop(0))
+
+        else:
+            self.remainingWaves[0].startDelay -= 1
 
 
 class Wave:
-    """
-    Wave:
-    Folgendermaßen zu instantiieren:
-    myWave = Wave() \
-        # und dann beliebig die verfügbaren Modifiers aneinanderketten, zB:
-        .startDelay(12) \
-        .spacing(3) \
-        .count(1073741824) \
-        .waitsForLastRoundToBeFullySent()
-        # die Reihenfolge ist natürlich egal.
-    """
     def __init__(self):
-        self._startDelay = 0
-        self._spacing = 0
-        self._count = 1
-        self._type = None  # todo replace w/ "normie" nme
-        self._waitsForLastRoundToBeFullySent = False
+        self.startDelay = 0
+        self.spacing = 0
+        self.sendCooldown = 0
+        self.count = 1
+        self.enemyType = None  # todo replace w/ "normie" nme
+        self.waitsForLastRoundToBeFullySent = False
 
-    def startDelay(self, startDelay):
+    def setStartDelay(self, startDelay):
         """
         setze zeitlichen Intervall, bevor die Wave ausgeschickt wird
         """
@@ -43,10 +47,10 @@ class Wave:
         if startDelay < 0:
             raise ValueError("Start Delay must not be less than zero.")
 
-        self._startDelay = startDelay
+        self.startDelay = startDelay
         return self
 
-    def spacing(self, spacing):
+    def setSpacing(self, spacing):
         """
         setze zeitlichen Intervall zw. den Gegnern einer Wave in Ticks
         """
@@ -56,10 +60,10 @@ class Wave:
         if spacing < 0:
             raise ValueError("Spacing must not be less than zero.")
 
-        self._spacing = spacing
+        self.spacing = spacing
         return self
 
-    def count(self, count):
+    def setCount(self, count):
         """
         setze Menge an Gegnern in der Wave
         """
@@ -69,18 +73,24 @@ class Wave:
         if count < 0:
             raise ValueError("Count must not be less than zero.")
 
-        self._count = count
+        self.count = count
+        return self
 
-    def type(self, type_):  # stub; requires enemy class
+    def setEnemyType(self, enemyType):  # stub; requires enemy class
         """
         setze Art des Gegners
         """
+        # TODO add type checking
+        self.enemyType = enemyType
         return self
 
-    def waitsForLastRoundToBeFullySent(self):
+    def setWaitsForLastRoundToBeFullySent(self):
         """
         Stellt ein, dass die vorherige Runde komplett fertig ausgesandt werden muss, bevor der StartDelay beginnt.
         Dadurch können Waves auf Wunsch beliebig einfach und nahtlos aneinandergekettet werden.
         """
-        self._waitsForLastRoundToBeFullySent = True
+        self.waitsForLastRoundToBeFullySent = True
         return self
+
+    def tick(self, game):
+        pass

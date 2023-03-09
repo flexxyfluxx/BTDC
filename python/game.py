@@ -29,7 +29,7 @@ class Game:
     def startNextRound(self):
         pass
 
-    def spawnEnemy(self):
+    def spawnEnemy(self, enemyType):
         pass
 
 
