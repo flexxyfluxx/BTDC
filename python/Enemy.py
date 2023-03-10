@@ -1,5 +1,5 @@
 from ch.aplu.jgamegrid import Actor
-
+from maps import theMaps
 
 
 class Enemy(Actor):
@@ -10,7 +10,8 @@ class Enemy(Actor):
         self.speed = speed
 
     def act(self):
-        self.setLocation(startLoc)
+        self.startLocation(startLoc)
+        self.setLocation(setLoc)
+        
         
         pass
-
