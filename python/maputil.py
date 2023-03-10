@@ -18,10 +18,10 @@ from de.wvsberlin.vektor import Vektor
 # class Map(fac.interfaces.MapType):  # für die Verwendung mit Kotlin, sofern nötig
 class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon von Python verwendet => don't use pls UwU
     def __init__(self):
-        self._bgImg = None
-        self._pathNodes = []
+        self.bgImg = None
+        self.pathNodes = []
 
-    def bgImg(self, img):
+    def setBgImg(self, img):
         if isinstance(img, str):  # falls Filepath zu Bild gegeben...
             self._bgImg = GGBitmap(abspath(img))  # ...erstelle neues BufferedImage
         elif isinstance(img, BufferedImage):  # Falls schon BufferedImage:
@@ -40,7 +40,7 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
                             % type(node))
         return self
 
-    def relUpper(self, num):
+    def setRelUpper(self, num):
         try:
             float(num)
         except TypeError:

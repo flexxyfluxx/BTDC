@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import maputil as mu
-from enum import makeEnum
-from rounds import theRounds
+from rounds import getAllRounds, getRound
+from de.wvsberlin import Difficulty
 
 
 class Game:
@@ -32,12 +32,6 @@ class Game:
     def spawnEnemy(self, enemyType):
         pass
 
-
-Difficulty = makeEnum(
-    EASY=object(),
-    NORMAL=object(),
-    HARD=object()
-)
 
 if __name__ == "__main__":
     pass

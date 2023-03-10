@@ -6,7 +6,7 @@ from game import Game, Difficulty
 from round import Round, Wave
 from maps import theMaps
 
-DEBUG = False
+DEBUG = True
 
 
 class Menu(JMainFrame):
@@ -124,6 +124,5 @@ class Menu(JMainFrame):
 
 
 if __name__ == "__main__":
-    DEBUG = True
     menu = Menu()
     menu.setVisible(True)

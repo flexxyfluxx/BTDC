@@ -9,8 +9,8 @@ from de.wvsberlin.vektor import Vektor
 
 
 MAP_EXAMPLE = (Map()
-               .bgImg(None)
-               .relUpper(10)
+               .setBgImg(None)
+               .setRelUpper(10)
                .addNode(Vektor( 0 , 2 ))
                .addNode(Vektor( 4 , 2 ))
                .addNode(Vektor( 4 , 8 ))

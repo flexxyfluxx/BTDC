@@ -6,11 +6,11 @@ Runden OwO
 
 
 class Round:
-    def __init__(self):
+    def __init__(self, game):
         self.remainingWaves = []
         self.activeWaveFuns = []
 
-        self.game = None
+        self.game = game
 
     def addWave(self, wave):
         self.remainingWaves.append(wave)
@@ -19,13 +19,16 @@ class Round:
     def tick(self):
         if self.remainingWaves[0].startDelay <= 0:
             if not self.remainingWaves[0].waitsForLastRoundToBeFullySent:
-                self.activeWaveFuns.append(lambda: self.remainingWaves.pop(0).tick(self.game))
+                self.activeWaveFuns.append(self.remainingWaves.pop(0).tick)
 
             elif not self.activeWaveFuns:
                 self.activeWaveFuns.append(self.remainingWaves.pop(0))
 
         else:
             self.remainingWaves[0].startDelay -= 1
+
+        for fun in self.activeWaveFuns:
+            fun(self.game)
 
 
 class Wave:
