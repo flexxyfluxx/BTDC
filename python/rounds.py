@@ -6,7 +6,13 @@ Hier werden die Runden instantiiert und initialisiert.
 
 from round import Round, Wave
 
-theRounds = [  # stub
+def getAllRounds(game):
+    return [supplier(game) for supplier in ROUND_SUPPLIERS]
+
+def getRound(id):
+    return ROUND_SUPPLIERS[id]()
+
+ROUND_SUPPLIERS = [
 ]
 
 # Falls kein EXAMPLE_TYPE existiert: definieren als 0. Verwenden wir in dem Fall offensichtlich eh nicht.
@@ -21,14 +27,14 @@ except NameError:
 # Orientierungsbeispiel für die Erstellung einer Runde.
 EXAMPLE_ROUND = (Round()
     .addWave(
-        Wave()
+        lambda: Wave()
             .setEnemyType(EXAMPLE_TYPE)
             .setCount(10)
             .setSpacing(20)
             .setStartDelay(100)
     )
     .addWave(
-        Wave()
+        lambda: Wave()
             .setEnemyType(EXAMPLE_TYPE)
             .setCount(15)
             .setSpacing(10)
@@ -36,7 +42,7 @@ EXAMPLE_ROUND = (Round()
             .setWaitsForLastRoundToBeFullySent()
     )
     .addWave(
-        Wave()
+        lambda: Wave()
             .setEnemyType(EXAMPLE_TYPE)
             .setCount(7)
             .setSpacing(25)

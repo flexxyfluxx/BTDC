@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import maputil as mu
-from enum import makeEnum
-from rounds import theRounds
+from rounds import getAllRounds, getRound
+from de.wvsberlin import Difficulty
 
 
 class Game:
-    def __init__(self, menu, difficulty, gameMap, debug=False):  # gameMap, bc map is taken by python and map_ is ugly
+    def __init__(self, menu, difficulty, gameMap):  # gameMap, bc map is taken by python and map_ is ugly
         self.menu = menu
         self.grid = self.menu.gamegrid
         self.grid.setSimulationPeriod(10)
@@ -32,12 +32,6 @@ class Game:
     def spawnEnemy(self, enemyType):
         pass
 
-
-Difficulty = makeEnum(
-    EASY=0,
-    NORMAL=1,
-    HARD=2
-)
 
 if __name__ == "__main__":
     pass

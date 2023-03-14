@@ -14,7 +14,7 @@
       </configuration>
     </facet>
     <facet type="Python" name="Python">
-      <configuration sdkName="Jython 2.7 (BTDC)" />
+      <configuration sdkName="Jython 2.7" />
     </facet>
   </component>
   <component name="NewModuleRootManager">
@@ -24,13 +24,14 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/python" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/assets" />
-      <excludeFolder url="file://$MODULE_DIR$/python" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="python.jython" level="project" />
     <orderEntry type="library" exported="" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" exported="" name="jgamegrid" level="project" />
+    <orderEntry type="library" name="Jython 2.7 interpreter library" level="application" />
   </component>
 </module>

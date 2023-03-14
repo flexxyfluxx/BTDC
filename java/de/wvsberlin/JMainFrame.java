@@ -1,24 +1,13 @@
 package de.wvsberlin;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Container;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
-import javax.swing.JToggleButton;
-import javax.swing.JTextField;
-import javax.swing.AbstractButton;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import ch.aplu.jgamegrid.GameGrid;
 import java.util.HashMap;
 import java.util.Objects;
+import de.wvsberlin.Difficulty;
 
 /**
  *
@@ -158,6 +147,7 @@ public class JMainFrame extends JFrame {
     gamegrid.setNbHorzCells(960);
     gamegrid.setNbVertCells(540);
     gamegrid.setCellSize(1);
+    gamegrid.setBgColor(Color.BLACK);
     gamegrid.setBounds(40, 120, 960, 540);
     jGridPanel.add(gamegrid);
     bQuit.setBounds(1170, 10, 80, 24);
@@ -282,19 +272,22 @@ public class JMainFrame extends JFrame {
     return 0;
   }
 
-  public int getSelectedDifficulty() {
+  public Difficulty getSelectedDifficulty() {
     for (java.util.Enumeration<AbstractButton> e = jButtonGroupDifficultyBG.getElements(); e.hasMoreElements();) {
       AbstractButton b = e.nextElement();
       if (b.isSelected()) {
-        if (Objects.equals(b.getText(), "Easy")) {
-          return 0;
-        }else if (Objects.equals(b.getText(), "Normal")) {
-          return 1;
+        String btnText = b.getText();
+        switch (btnText) {
+          case "Easy":
+            return Difficulty.EASY;
+          case "Normal":
+            return Difficulty.NORMAL;
+          case "Hard":
+            return Difficulty.HARD;
         }
-        
       }
     }
-    return 1;
+    throw new IllegalComponentStateException("No difficulty is selected. This should not regularly be able to happen!");
   }
 
   public void bStartGame_ActionPerformed(ActionEvent evt) {
