@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import maputil as mu
-from rounds import getAllRounds, getRound
 from de.wvsberlin import Difficulty
 
 
@@ -13,6 +11,9 @@ class Game:
         self.currentRound = 0
         self.roundActive = False
         self.gameMap = gameMap
+
+        self.enemyKeyGen = Counter()
+        self.activeEnemies = {}  # Ein Dict löst viele Probleme, was Löschen von toten Gegnern angeht
 
         if difficulty == Difficulty.EASY:
             self.health = 100
@@ -30,7 +31,23 @@ class Game:
         pass
 
     def spawnEnemy(self, enemyType):
-        pass
+        key = next(self.enemyKeyGen)
+        newEnemy = enemyType(self, key)
+        self.activeEnemies[key] = newEnemy
+        self.grid.addActor(newEnemy, self.gameMap.nodes[0].toLocation())
+
+
+
+class Counter:
+    def __init__(self):
+        self.c = -1
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        self.c += 1
+        return self.c
 
 
 if __name__ == "__main__":
