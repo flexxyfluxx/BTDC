@@ -3,29 +3,61 @@
 """
 Runden OwO
 """
+from java.lang import IllegalStateException
 
 
 class Round:
     def __init__(self):
+        # ideally assign-once; never assign again
+        self.waveSuppliers = []
+
+        # volatile: init, then watch it destroy itself, and do it again.
         self.remainingWaves = []
-        self.activeWaveFuns = []
+        self.activeWaves = []
 
         self.game = None
 
-    def addWave(self, wave):
-        self.remainingWaves.append(wave)
+    def initRound(self, game):
+        """
+        Binde die Runde an ein Game-Objekt.
+        """
+        self.game = game
+        self.remainingWaves = [waveSupplier() for waveSupplier in self.waveSuppliers]
+
+    def deinitRound(self):
+        """
+        Entkopple die Runde vom Game-Objekt und leere die vergänglichen Arrays.
+        """
+        self.game = None
+        self.remainingWaves = []
+        self.activeWaves = []
+
+    def addWave(self, waveSupplier):
+        self.waveSuppliers.append(waveSupplier)
         return self
 
     def tick(self):
+        if self.game is None:
+            raise IllegalStateException("Cannot call tick: Round not initialized! \nCall self.initRound to initialize.")
+        if not self.remainingWaves:
+            raise StopIteration
+            # Da dies der offizielle, pythonische Weg ist, Iterations zu beenden, tun wir dies auch.
+            # try-except wowowowowow
+
         if self.remainingWaves[0].startDelay <= 0:
             if not self.remainingWaves[0].waitsForLastRoundToBeFullySent:
-                self.activeWaveFuns.append(lambda: self.remainingWaves.pop(0).tick(self.game))
+                newEnemy = self.remainingWaves.pop(0)
+                self.game.spawnEnemy(newEnemy)
+                self.activeWaves.append(newEnemy)
 
-            elif not self.activeWaveFuns:
-                self.activeWaveFuns.append(self.remainingWaves.pop(0))
+            elif not self.activeWaves:
+                self.activeWaves.append(self.remainingWaves.pop(0))
 
         else:
             self.remainingWaves[0].startDelay -= 1
+
+        for wave in self.activeWaves:
+            wave.tick(self.game)
 
 
 class Wave:
