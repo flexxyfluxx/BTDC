@@ -1,3 +1,5 @@
+# -*- coding=utf-8 -*-
+
 from ch.aplu.jgamegrid import Actor
 from maps import theMaps
 
@@ -8,10 +10,20 @@ class Enemy(Actor):
         self.dmg = dmg
         self.health = health
         self.speed = speed
-
+        self.theMap = theMaps[0]
+        
+    def startLocation(self): #setzt den Enemy auf die Startkoordinate des Pfades
+        self.setLocation(Vektor(self.theMap.pathNodes[0]))
+        
+    def nextLocation(self): #setzt den Enemy auf die nächste Koordinate des Pfades
+        for node in self.theMap.pathNodes:
+            self.setLocation(Vektor(self.theMap.pathNodes[Vektor(node)]))    
+        
     def act(self):
-        self.startLocation(startLoc)
-        self.setLocation(setLoc)
+        self.startLocation()
+        self.nextLocation()
+    
+    
+    
+
         
-        
-        pass
