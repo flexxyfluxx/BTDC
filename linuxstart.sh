@@ -1,3 +1,3 @@
+#!/bin/bash
 cd python || exit
-jython main.py -Q new
-
+jython -J-Xmx2g main.py -Q new
