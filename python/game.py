@@ -6,7 +6,7 @@ from de.wvsberlin import Difficulty
 
 
 class Game:
-    def __init__(self, menu, difficulty, gameMap, debug=False):  # gameMap, bc map is taken by python and map_ is ugly
+    def __init__(self, menu, difficulty, gameMap):  # gameMap, bc map is taken by python and map_ is ugly
         self.menu = menu
         self.grid = self.menu.gamegrid
         self.grid.setSimulationPeriod(10)
