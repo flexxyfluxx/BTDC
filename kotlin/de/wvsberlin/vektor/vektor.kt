@@ -145,8 +145,8 @@ open class Vektor(x: Number, y: Number) {
      * Teile Vektor durch Skalar → Vektor
      */
     operator fun div(scalar: Number): Vektor {
-        val scalar_ = scalar.toDouble()
-        return Vektor(x * scalar_, y * scalar_)
+        val Dscalar = scalar.toDouble()
+        return Vektor(x * Dscalar, y * Dscalar)
     }
     fun __div__(other: Number) = div(other)
 
@@ -195,27 +195,39 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
         this.x += other.x
         this.y += other.y
     }
-    fun __iadd__(other: Vektor) = plusAssign(other)
+    fun __iadd__(other: Vektor): MutableVektor {
+        plusAssign(other)
+        return this
+    }
 
     operator fun minusAssign(other: Vektor) {
         this.x -= other.x
         this.y -= other.y
     }
-    fun __isub__(other: Vektor) = minusAssign(other)
+    fun __isub__(other: Vektor): MutableVektor {
+        minusAssign(other)
+        return this
+    }
 
     operator fun timesAssign(other: Number) {
         val other_ = other.toDouble()
         this.x *= other_
         this.y *= other_
     }
-    fun __imul__(other: Number) = times(other)
+    fun __imul__(other: Number): MutableVektor {
+        times(other)
+        return this
+    }
 
     operator fun divAssign(scalar: Number) {
-        val scalar_ = scalar.toDouble()
-        this.x /= scalar_
-        this.y /= scalar_
+        val Dscalar = scalar.toDouble()
+        this.x /= Dscalar
+        this.y /= Dscalar
     }
-    fun __idiv__(other: Number) = divAssign(other)
+    fun __idiv__(other: Number): MutableVektor{
+        divAssign(other)
+        return this
+    }
 
     override fun __repr__() = "de.wvsberlin.vektor.MutableVektor[${x}, ${y}]@${hashCode()}"
 
