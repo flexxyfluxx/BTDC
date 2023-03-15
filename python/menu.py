@@ -111,7 +111,7 @@ class Menu(JMainFrame):
         print("startGame called")
         print("map = ", self.getSelectedMap())
         print("difficulty = ", self.getSelectedDifficulty())
-        self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()], debug=DEBUG)
+        self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()])#, debug=DEBUG)
         self.game.grid.doRun()
 
     def bStartRound_ActionPerformed(self, _):
@@ -121,6 +121,20 @@ class Menu(JMainFrame):
         print("bStartGame_ActionPerformed called")
         self.setCurrentScreen(2)
         self.startGame()
+
+    def bTower1_ActionPerformed(self, _):
+        self.game.heldTower = 0
+
+    def bTower2_ActionPerformed(self, _):
+        self.game.heldTower = 1
+    
+    def bTower3_ActionPerformed(self, _):
+        #self.game.heldTower = 2
+        print("This tower does not currently exist.")
+
+    def bTower4_ActionPerformed(self, _):
+        #self.game.heldTower = 3
+        print("This tower does not currently exist.")
 
 
 if __name__ == "__main__":

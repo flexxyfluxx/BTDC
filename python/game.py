@@ -2,6 +2,9 @@
 
 import maputil as mu
 from rounds import getAllRounds, getRound
+from ch.aplu.jgamegrid import Location, GGMouse
+from Tower1 import *
+from Tower2 import *
 from de.wvsberlin import Difficulty
 
 
@@ -13,6 +16,10 @@ class Game:
         self.currentRound = 0
         self.roundActive = False
         self.gameMap = gameMap
+        self.grid.mouseReleased = self.mouseReleased
+        self.heldTower = None
+        self.selectedTower = None
+        self.towers = []
 
         if difficulty == Difficulty.EASY:
             self.health = 100
@@ -31,6 +38,26 @@ class Game:
 
     def spawnEnemy(self, enemyType):
         pass
+
+    def selectTower(self, actor, mouse, location):
+        self.selectedTower = actor
+
+    def mouseReleased(self, event):
+        if self.heldTower != None:
+            self.grid.removeActor(self.heldTower)
+            if self.heldTower.towerID == 0:
+                tower = Tower1(event.getX(), event.getY())
+            elif self.heldTower.towerID == 1:
+                tower = Tower2(event.getX(), event.getY())
+            self.towers.append(tower)
+            self.grid.addActor(tower, Location(event.getX(), event.getY()))
+            tower.addMouseTouchListener(self.selectTower, GGMouse.lPress)
+            del self.heldTower
+            self.heldTower = None
+        elif self.selectedTower != None:
+            self.selectedTower.targetX = event.getX()
+            self.selectedTower.targetY = event.getY()
+            self.selectedTower = None
 
 
 if __name__ == "__main__":
