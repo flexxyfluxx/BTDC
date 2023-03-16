@@ -19,9 +19,7 @@ class Tower(Actor):
             self.key = key
             
         def upgradeAttackSpeed(self):
-            self.asp = self.asp*self.upAsp # upAsp as percentile increase so asp*1.15 ors so every tower has own increase percentage value
-            self.x += 10
-            
+            self.asp = self.asp*self.upAsp # upAsp as percentile increase so asp*1.15 ors so every tower has own increase percentage value            
             
         def upgradeAttackDamage(self):
             self.admg = self.admg*self.upAdmg

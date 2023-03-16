@@ -23,9 +23,9 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
 
     def setBgImg(self, img):
         if isinstance(img, str):  # falls Filepath zu Bild gegeben...
-            self._bgImg = GGBitmap(abspath(img))  # ...erstelle neues BufferedImage
+            self.bgImg = GGBitmap.getImage(abspath(img))  # ...erstelle neues BufferedImage
         elif isinstance(img, BufferedImage):  # Falls schon BufferedImage:
-            self._bgImg = img  # ...setze Attribut.
+            self.bgImg = img  # ...setze Attribut.
         elif img is None:
             pass
         else:
@@ -38,6 +38,8 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
         if not isinstance(node, Vektor):
             raise TypeError("Vektor required; %s given."
                             % type(node))
+        else:
+            self.pathNodes.append(node)
         return self
 
     def setRelUpper(self, num):

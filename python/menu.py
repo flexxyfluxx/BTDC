@@ -7,6 +7,7 @@ from round import Round, Wave
 from maps import theMaps
 from HeldTower import HeldTower
 from ch.aplu.jgamegrid import Location
+from debug import *
 
 DEBUG = True
 
@@ -137,7 +138,12 @@ class Menu(JMainFrame):
     
     def bTower3_ActionPerformed(self, _):
         #self.game.heldTower = 2
-        raise NotImplementedError("This tower has not been implemented so far.")
+        #raise NotImplementedError("This tower has not been implemented so far.")
+        for x in range(0, 960):
+            for y in range(0, 54):
+                self.game.heldTower = HeldTower(1) 
+                self.game.placeTower(Debug(x, y*10))
+
 
     def bTower4_ActionPerformed(self, _):
         #self.game.heldTower = 3
