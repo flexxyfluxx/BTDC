@@ -1,10 +1,12 @@
 from TowerBaseClass import * 
 
-class Tower1(Tower):
-    def __init__(self, placeX, placeY):
+class Tower2(Tower):
+    def __init__(self, placeX, placeY, key):
         
-        Tower.__init__(self, 400, 400, 300, 300, placeX, placeY, 0.99, 1.3, "sprite2.png", 150, 300)
+        Tower.__init__(self, 400, 400, 300, 300, placeX, placeY, 1.01, 1.3, abspath("../assets/sprites/sprite2.png"), key)
     
-    def sonderenemyzerstörer(self):
-        def getClosestEnemy(self):
-            raise NotImplementedError("This function has not been implemented yet!")
+    def sonderenemyzerstoerer(self):
+        pass
+
+    def getClosestEnemy(self):
+        raise NotImplementedError("This function has not been implemented yet!")

@@ -54,6 +54,7 @@ public class JMainFrame extends JFrame {
   public JButton bUpgrade2 = new JButton();
   public JButton bUpgrade3 = new JButton();
   public JTextField tRound = new JTextField();
+  public JTextField tMoney = new JTextField();
 
   private final HashMap<String, Integer> mapIDs = new HashMap<>();
   // end attributes
@@ -229,6 +230,10 @@ public class JMainFrame extends JFrame {
     tRound.setEditable(false);
     tRound.setVisible(false);
     cp.add(tRound);
+    tMoney.setBounds(950, 80, 80, 24);
+    tMoney.setEditable(false);
+    tMoney.setVisible(false);
+    cp.add(tMoney);
     // end components
 
     mapIDs.put("Map 1", 0);

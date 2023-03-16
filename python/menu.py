@@ -5,6 +5,8 @@ from de.wvsberlin import JMainFrame
 from game import Game, Difficulty
 from round import Round, Wave
 from maps import theMaps
+from HeldTower import HeldTower
+from ch.aplu.jgamegrid import Location
 
 DEBUG = True
 
@@ -39,7 +41,8 @@ class Menu(JMainFrame):
             self.tRound,
             self.jSeparator1,
             self.bStartRound,
-            self.bAutostart
+            self.bAutostart,
+            self.tMoney
         ]
         self.confirmScreen = [
             self.bConfirm,
@@ -104,6 +107,8 @@ class Menu(JMainFrame):
         self.setCurrentScreen(2)
 
     def bConfirm_ActionPerformed(self, _):
+        self.game.close()
+        self.game = None
         self.setCurrentScreen(0)
         # implement stop game
 
@@ -123,18 +128,29 @@ class Menu(JMainFrame):
         self.startGame()
 
     def bTower1_ActionPerformed(self, _):
-        self.game.heldTower = 0
+        self.game.heldTower = HeldTower(0) 
+        self.gamegrid.addActor(self.game.heldTower, Location(self.game.heldTower.xPos, self.game.heldTower.yPos))
 
     def bTower2_ActionPerformed(self, _):
-        self.game.heldTower = 1
+        self.game.heldTower = HeldTower(1) 
+        self.gamegrid.addActor(self.game.heldTower, Location(self.game.heldTower.xPos, self.game.heldTower.yPos))
     
     def bTower3_ActionPerformed(self, _):
         #self.game.heldTower = 2
-        print("This tower does not currently exist.")
+        raise NotImplementedError("This tower has not been implemented so far.")
 
     def bTower4_ActionPerformed(self, _):
         #self.game.heldTower = 3
-        print("This tower does not currently exist.")
+        raise NotImplementedError("This tower has not been implemented so far.")
+
+    def bUpgrade1_ActionPerformed(self, _):
+        pass #why do I have to do this
+
+    def bUpgrade2_ActionPerformed(self, _):
+        pass #why do I have to do this
+
+    def bUpgrade3_ActionPerformed(self, _):
+        pass #why do I have to do this
 
 
 if __name__ == "__main__":
