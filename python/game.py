@@ -33,7 +33,7 @@ class Game:
     def startNextRound(self):
         pass
 
-    def spawnEnemy(self, enemySupplier, segmentIdx, segmentProgress):
+    def spawnEnemy(self, enemySupplier, segmentIdx=0, segmentProgress=0):
         key = next(self.enemyKeyGen)
         newEnemy = enemySupplier(self, key, segmentIdx, segmentProgress)
         self.activeEnemies[key] = newEnemy
