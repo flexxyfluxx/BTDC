@@ -18,7 +18,8 @@ class Enemy(Actor):
 
         prevNodeToNextNodeVektor = self.pathNodes[1] - self.pathNodes[0]
         self.currentSegmentLength = abs(prevNodeToNextNodeVektor)
-        self.currentSegmentRichtungsvektor = prevNodeToNextNodeVektor.getUnitized() * self.speed
+        self.currentSegmentUnitVektor = prevNodeToNextNodeVektor.getUnitized()
+        self.currentSegmentRichtungsvektor = self.currentSegmentUnitVektor * self.speed
 
         self.currentSegmentProgress = segmentProgress
 

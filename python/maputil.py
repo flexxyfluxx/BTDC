@@ -50,20 +50,13 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
             bg.drawImage(self.bgImg)
 
         if debug:
-            cellSize = grid.getCellSize()
-            bgWidth = grid.getNbHorzCells() * cellSize
-            bgHeight = grid.getNbVertCells() * cellSize
-
             bg.setPaintColor(Color.RED)
             bg.setLineWidth(3)
-
-            xFactor = bgWidth
-            yFactor = bgHeight
 
             for c in range(len(self.pathNodes) - 1):
                 node0 = self.pathNodes[c]
                 node1 = self.pathNodes[c + 1]
-                bg.drawLine(node0.toPoint(xFactor, yFactor), node1.toPoint(xFactor, yFactor))
+                bg.drawLine(node0.toPoint(), node1.toPoint())
 
     def getDistToPath(self, pos):
         pass
