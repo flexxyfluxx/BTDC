@@ -110,6 +110,7 @@ class Game:
 
     def mousePressed(self, event):
         clickPos = Vektor(event.getX(), event.getY())
+        print("Mouse click at (%s, %s)" % (clickPos.x, clickPos.y))
         if self.heldTower is not None:
             self.placeTower(clickPos)
         elif self.selectedTower is not None:

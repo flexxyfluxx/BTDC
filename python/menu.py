@@ -118,7 +118,13 @@ class Menu(JMainFrame):
             print("map = ", self.getSelectedMap())
             print("difficulty = ", self.getSelectedDifficulty())
 
-        self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()])
+        try:
+            self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()])
+        except IndexError:
+            self.setCurrentScreen(1)
+            if DEBUG:
+                print("Illegal map ID; returning to map select.")
+            return
         self.game.grid.doRun()
 
     def bStartRound_ActionPerformed(self, _):
@@ -132,12 +138,12 @@ class Menu(JMainFrame):
         self.startGame()
 
     def bTower1_ActionPerformed(self, _):
-        self.game.heldTower = HeldTower(0) 
-        self.gamegrid.addActor(self.game.heldTower, Location(self.game.heldTower.xPos, self.game.heldTower.yPos))
+        self.game.heldTower = newHeldTower = HeldTower(0)
+        self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
 
     def bTower2_ActionPerformed(self, _):
-        self.game.heldTower = HeldTower(1) 
-        self.gamegrid.addActor(self.game.heldTower, Location(self.game.heldTower.xPos, self.game.heldTower.yPos))
+        self.game.heldTower = newHeldTower = HeldTower(1)
+        self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
     
     def bTower3_ActionPerformed(self, _):
         # self.game.heldTower = HeldTower(2)
