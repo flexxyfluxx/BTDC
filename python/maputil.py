@@ -38,18 +38,7 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
         if not isinstance(node, Vektor):
             raise TypeError("Vektor required; %s given."
                             % type(node))
-        else:
-            self.pathNodes.append(node)
-        return self
-
-    def setRelUpper(self, num):
-        try:
-            float(num)
-        except TypeError:
-            raise TypeError("Number required; %s given."
-                            % type(num))
-
-        self._relUpper = num
+        self.pathNodes.append(node)
         return self
 
     def setBgOfGrid(self, grid, debug=False):
@@ -68,8 +57,8 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
             bg.setPaintColor(Color.RED)
             bg.setLineWidth(3)
 
-            xFactor = bgWidth / self.relUpper
-            yFactor = bgHeight / self.relUpper
+            xFactor = bgWidth
+            yFactor = bgHeight
 
             for c in range(len(self.pathNodes) - 1):
                 node0 = self.pathNodes[c]
