@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+import syspaths
 import maputil as mu
-from rounds import getAllRounds, getRound
+from rounds import ROUNDS
 from ch.aplu.jgamegrid import Location, GGMouse
 from Tower1 import *
 from Tower2 import *
 from de.wvsberlin import Difficulty
 from de.wvsberlin.vektor import Vektor
+
+DEBUG = True
 
 
 class Game:
@@ -14,20 +18,15 @@ class Game:
         self.menu = menu
         self.grid = self.menu.gamegrid
         self.grid.setSimulationPeriod(10)
-        self.currentRound = 0
+        self.currentRound = -1
         self.roundActive = False
         self.gameMap = gameMap
-        self.gameMap.setBgOfGrid(self.grid)
-        self.grid.mousePressed = self.mouseReleased
+        self.gameMap.setBgOfGrid(self.grid, debug=DEBUG)
+        self.grid.mousePressed = self.mousePressed
         self.heldTower = None
         self.selectedTower = None
         self.towerKeyGen = Counter()
         self.towers = {}
-        self.enemiesKeyGen = Counter()
-        self.enemies = {}
-        self.menu.bUpgrade1_ActionPerformed = self.bUpgrade1_ActionPeformed
-        self.menu.bUpgrade2_ActionPerformed = self.bUpgrade2_ActionPeformed
-        self.menu.bUpgrade3_ActionPerformed = self.bUpgrade3_ActionPeformed
 
         self.enemyKeyGen = Counter()
         self.activeEnemies = {}  # Ein Dict löst viele Probleme, was Löschen von toten Gegnern angeht
@@ -48,7 +47,10 @@ class Game:
             raise ValueError("Illegal difficulty")
 
     def startNextRound(self):
-        pass
+        self.currentRound += 1
+
+    def tick(self):
+        raise NotImplementedError("This method hasn't been implemented yet!")
 
     def spawnEnemy(self, enemySupplier, segmentIdx=0, segmentProgress=0):
         key = next(self.enemyKeyGen)
@@ -64,97 +66,90 @@ class Game:
         self.grid.addActor(newProjectile)
         return newProjectile
 
-
-class Counter:
-    def __init__(self):
-        self.c = -1
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        self.c += 1
-        return self.c
-
     def selectTower(self, actor, mouse, location):
         self.selectedTower = actor
 
-    def placeTower(self, event):
-        #implement check for illegal positions
-        dist = 2048
-        for e in range(len(self.gameMap.pathNodes)-1):
+    def placeTower(self, pos):
+        # implement check for illegal positions
+        dist = 2048  # unreasonably large distance to start off with
+        for e in range(len(self.gameMap.pathNodes) - 1):
             node1 = self.gameMap.pathNodes[e]
-            node2 = self.gameMap.pathNodes[e+1]
-            clampedDist = Vektor.clampedDist(node1, node2, Vektor(event.getX(), event.getY()))
-            #print(clampedDist)
+            node2 = self.gameMap.pathNodes[e + 1]
+            clampedDist = Vektor.clampedDist(node1, node2, pos)
+            if DEBUG:
+                print("clampedDist = ", clampedDist)
             if clampedDist < dist:
                 dist = clampedDist
-        #print("dist: " + str(dist))
-        #print("---")
-        if dist >= 80:
+        if DEBUG:
+            print("dist: ", dist)
+            print("---")
+        if dist >= 40:
             self.grid.removeActor(self.heldTower)
             key = next(self.towerKeyGen)
             if self.heldTower.towerID == 0:
-                tower = Tower1(event.getX(), event.getY(), key)
+                tower = Tower1(pos, key)
             elif self.heldTower.towerID == 1:
-                tower = Tower2(event.getX(), event.getY(), key)
+                tower = Tower2(pos, key)
+            else:
+                raise ValueError("Illegal tower ID")
+
             self.towers[key] = tower
-            self.grid.addActor(tower, Location(event.getX(), event.getY()))
+            self.grid.addActor(tower, pos.toLocation())
             tower.addMouseTouchListener(self.selectTower, GGMouse.lPress)
             self.heldTower = None
 
-    def changeTowerTarget(self, event):
-        print(self.selectedTower.targetX, self.selectedTower.targetY)
-        self.selectedTower.targetX = event.getX()
-        self.selectedTower.targetY = event.getY()
-        print(self.selectedTower.targetX, self.selectedTower.targetY)
+    def changeTowerTarget(self, pos):
+        if DEBUG:
+            print(self.selectedTower.targetPos.x, self.selectedTower.targetPos.y, sep=", ")
+
+        self.selectedTower.targetPos = pos
+        if DEBUG:
+            print(self.selectedTower.targetPos.x, self.selectedTower.targetPos.y, sep=", ")
+
         self.selectedTower = None
-        
-    def mouseReleased(self, event):
-        if self.heldTower != None:
-            self.placeTower(event)
-        elif self.selectedTower != None:
-            self.changeTowerTarget(event)
 
-    def bUpgrade1_ActionPeformed(self, _):
-        if self.selectedTower != None:
-            print(self.selectedTower.asp)
-            self.selectedTower.upgradeAttackSpeed()
-            print(self.selectedTower.asp)
-    
-    def bUpgrade2_ActionPeformed(self, _):
-        if self.selectedTower != None:
-            print(self.selectedTower.admg)
-            self.selectedTower.upgradeAttackDamage()
-            print(self.selectedTower.admg)
+    def mousePressed(self, event):
+        clickPos = Vektor(event.getX(), event.getY())
+        print("Mouse click at (%s, %s)" % (clickPos.x, clickPos.y))
+        if self.heldTower is not None:
+            self.placeTower(clickPos)
+        elif self.selectedTower is not None:
+            self.changeTowerTarget(clickPos)
 
-    def bUpgrade3_ActionPeformed(self, _):
-        if self.selectedTower != None:
-            #self.heldTower.upgrade...()
-            raise NotImplementedError("This upgrade has not been implemented so far.")
-
-    def close(self):
-        if self.heldTower != None:
+    def removeAllActors(self):
+        # deinitialize the game
+        if self.heldTower is not None:
             self.grid.removeActor(self.heldTower)
             self.heldTower = None
-        if self.selectedTower != None:
+        if self.selectedTower is not None:
             self.selectedTower = None
-        for key in self.towers:
-            self.grid.removeActor(self.towers[key])
-            del self.towers[key]
-        for key in self.enemies:
-            self.grid.removeActor(self.towers[key])
-            del self.enemies[key]
-        #implement removing projectiles
+        for tower in self.towers.values():
+            self.grid.removeActor(tower)
+        for enemy in self.activeEnemies.values():
+            self.grid.removeActor(enemy)
+        for projectile in self.activeProjectiles.values():
+            self.grid.removeActor(projectile)
         self.grid.getBg().clear()
-            
+
+    def upgradeSelectedTower(self, path):
+        if self.selectedTower is None:
+            return
+
+        if path == Upgrade.ATK_SPEED:
+            self.selectedTower.upgradeAttackSpeed()
+        elif path == Upgrade.ATK_DMG:
+            self.selectedTower.upgradeAttackDamage()
+        else:
+            raise ValueError("Illegal upgrade path")
+
+
 class Counter:
     def __init__(self):
         self.c = -1
 
     def __iter__(self):
         return self
-    
+
     def next(self):
         self.c += 1
         return self.c

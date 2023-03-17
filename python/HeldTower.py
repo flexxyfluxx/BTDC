@@ -1,6 +1,7 @@
 import syspaths
 from ch.aplu.jgamegrid import Actor
 from os.path import abspath
+from de.wvsberlin.vektor import Vektor
 
 class HeldTower(Actor):
     def __init__(self, towerID):
@@ -12,5 +13,4 @@ class HeldTower(Actor):
         Actor.__init__(self, self.sprites)
         self.show(towerID)
         self.towerID = towerID
-        self.xPos = 480
-        self.yPos = 270
+        self.pos = Vektor(480, 270)

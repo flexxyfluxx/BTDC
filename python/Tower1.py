@@ -1,11 +1,11 @@
-from TowerBaseClass import * 
+from TowerBaseClass import *
+
 
 class Tower1(Tower):
-    def __init__(self, placeX, placeY, key):
-        
-        Tower.__init__(self, 15, 5, 200, 250, placeX, placeY, 1.05, 1.15, abspath('../assets/sprites/sprite.png'), key)
-        
-    def upAR(self):
-        self.aR += 20
+    def __init__(self, pos, key):
+        Tower.__init__(self, atkSpeed=15, atkDmg=5, atkRange=200, cost=250, pos=pos,
+                       atkSpeedIncrement=1.05, atkDmgIncrement=1.15,
+                       sprite=abspath('../assets/sprites/sprite.png'), key=key)
 
-        
+    def upgradeAtkRange(self):
+        self.atkRange += 20

@@ -2,12 +2,11 @@
 from __future__ import print_function
 import syspaths
 from de.wvsberlin import JMainFrame
+from de.wvsberlin.vektor import Vektor
 from game import Game, Difficulty
-from round import Round, Wave
 from maps import theMaps
 from HeldTower import HeldTower
 from ch.aplu.jgamegrid import Location
-from debug import *
 
 DEBUG = True
 
@@ -108,7 +107,7 @@ class Menu(JMainFrame):
         self.setCurrentScreen(2)
 
     def bConfirm_ActionPerformed(self, _):
-        self.game.close()
+        self.game.removeAllActors()
         self.game = None
         self.setCurrentScreen(0)
         # implement stop game
@@ -119,7 +118,13 @@ class Menu(JMainFrame):
             print("map = ", self.getSelectedMap())
             print("difficulty = ", self.getSelectedDifficulty())
 
-        self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()], debug=DEBUG)
+        try:
+            self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()])
+        except IndexError:
+            self.setCurrentScreen(1)
+            if DEBUG:
+                print("Illegal map ID; returning to map select.")
+            return
         self.game.grid.doRun()
 
     def bStartRound_ActionPerformed(self, _):
@@ -133,34 +138,40 @@ class Menu(JMainFrame):
         self.startGame()
 
     def bTower1_ActionPerformed(self, _):
-        self.game.heldTower = HeldTower(0) 
-        self.gamegrid.addActor(self.game.heldTower, Location(self.game.heldTower.xPos, self.game.heldTower.yPos))
+        self.game.heldTower = newHeldTower = HeldTower(0)
+        self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
 
     def bTower2_ActionPerformed(self, _):
-        self.game.heldTower = HeldTower(1) 
-        self.gamegrid.addActor(self.game.heldTower, Location(self.game.heldTower.xPos, self.game.heldTower.yPos))
+        self.game.heldTower = newHeldTower = HeldTower(1)
+        self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
     
     def bTower3_ActionPerformed(self, _):
-        #self.game.heldTower = 2
-        #raise NotImplementedError("This tower has not been implemented so far.")
-        for x in range(0, 960):
+        # self.game.heldTower = HeldTower(2)
+        # raise NotImplementedError("This tower has not been implemented so far.")
+        for x in range(0, 96):
             for y in range(0, 54):
                 self.game.heldTower = HeldTower(1) 
-                self.game.placeTower(Debug(x, y*10))
-
+                self.game.placeTower(Vektor(x*10, y*10))
 
     def bTower4_ActionPerformed(self, _):
-        #self.game.heldTower = 3
+        # self.game.heldTower = 3
         raise NotImplementedError("This tower has not been implemented so far.")
 
-    def bUpgrade1_ActionPerformed(self, _):
-        pass #why do I have to do this
+    def bUpgrade1_ActionPeformed(self, _):
+        if self.game.selectedTower is None:
+            return
+        self.game.selectedTower.upgradeAttackSpeed()
 
-    def bUpgrade2_ActionPerformed(self, _):
-        pass #why do I have to do this
+    def bUpgrade2_ActionPeformed(self, _):
+        if self.selectedTower is None:
+            return
+        self.selectedTower.upgradeAttackDamage()
 
-    def bUpgrade3_ActionPerformed(self, _):
-        pass #why do I have to do this
+    def bUpgrade3_ActionPeformed(self, _):
+        if self.selectedTower is None:
+            return
+        # self.heldTower.upgrade...()
+        raise NotImplementedError("This upgrade has not been implemented so far.")
 
 
 if __name__ == "__main__":

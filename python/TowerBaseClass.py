@@ -1,33 +1,34 @@
+import syspaths
 from ch.aplu.jgamegrid import Actor
 from os.path import abspath
+from de.wvsberlin.vektor import Vektor
 
-class Tower(Actor): 
-        def __init__(self, asp, admg, aR, cost, placeX, placeY, upAsp, upAdmg, sprite, key): 
-        #asp = attackspeed , admg = atackdamage, cost = price, place = location on map, upAsp/-Admg = upgrades for attackspeed and damage, sprite = variable for sprite datapath, aR = attack Range
-            Actor.__init__(self,abspath(sprite)) 
-            self.asp = asp 
-            self.admg = admg
-            self.cost = cost
-            self.placeX = placeX
-            self.placeY = placeY
-            self.upAsp = upAsp
-            self.upAdmg = upAdmg
-            self.x = self.asp
-            self.aR = aR
-            self.targetX = 480
-            self.targetY = 270
-            self.key = key
+
+class Tower(Actor):
+    def __init__(self, atkSpeed, atkDmg, atkRange, cost, pos, atkSpeedIncrement, atkDmgIncrement, sprite, key):
+        Actor.__init__(self, abspath(sprite))
+        self.atkSpeed = atkSpeed
+        self.atkDmg = atkDmg
+        self.cost = cost
+        self.pos = pos
+        self.atkSpeedIncrement = atkSpeedIncrement
+        self.atkDmgIncrement = atkDmgIncrement
+        self.atkCooldown = 0
+        self.atkRange = atkRange
+        self.targetPos = Vektor(480, 270)
+        self.key = key
+
+    def upgradeAttackSpeed(self):
+        # Attack speed increment as a factor, eg. every level, attack speed is multiplied by 1.15
+        self.atkSpeed = self.atkSpeed * self.atkSpeedIncrement
+
+    def upgradeAttackDamage(self):
+        self.atkDmg = self.atkDmg * self.atkDmgIncrement
+
+    """def act(self):
             
-        def upgradeAttackSpeed(self):
-            self.asp = self.asp*self.upAsp # upAsp as percentile increase so asp*1.15 ors so every tower has own increase percentage value            
-            
-        def upgradeAttackDamage(self):
-            self.admg = self.admg*self.upAdmg
-        
-        """def act(self):
-            
-            self.x = self.x - 1
-            if self.x == 0:
-                self.x = self.asp
-                if sqrt((self.placeX-enemy.placeX)+(self.placeY-enemy.placeY))<= aR:
-                    projectile = Projectile(self.admg, enemy(felixproblem))"""
+            self.atkCooldown = self.atkCooldown - 1
+            if self.atkCooldown == 0:
+                self.atkCooldown = self.atkSpeed
+                if sqrt((self.placeX-enemy.placeX)+(self.placeY-enemy.placeY))<= atkRange:
+                    projectile = Projectile(self.atkDmg, enemy(feliatkCooldownproblem))"""
