@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import maputil as mu
-from rounds import getAllRounds, getRound
+from rounds import ROUNDS
 from ch.aplu.jgamegrid import Location, GGMouse
 from Tower1 import *
 from Tower2 import *
@@ -64,17 +64,6 @@ class Game:
         self.grid.addActor(newProjectile)
         return newProjectile
 
-
-class Counter:
-    def __init__(self):
-        self.c = -1
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        self.c += 1
-        return self.c
 
     def selectTower(self, actor, mouse, location):
         self.selectedTower = actor

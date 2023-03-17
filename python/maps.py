@@ -10,8 +10,7 @@ from de.wvsberlin.vektor import Vektor
 
 RAUM208 = (Map()
                .setBgImg('../assets/maps/raum208v2.png')
-               .setRelUpper(10)
-               .addNode(Vektor(840,539)) 
+               .addNode(Vektor(840,539))
                .addNode(Vektor(840,453)) 
                .addNode(Vektor(577,453)) 
                .addNode(Vektor(577,216)) 
@@ -32,7 +31,6 @@ RAUM208 = (Map()
 
 MAP_Example = (Map()
                .setBgImg(None)
-               .setRelUpper(10)
                .addNode(Vektor( 0 , 2 ))
                .addNode(Vektor( 4 , 2 ))
                .addNode(Vektor( 4 , 8 ))

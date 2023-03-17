@@ -1,7 +1,7 @@
 # -*- coding=utf-8 -*-
 
 from ch.aplu.jgamegrid import Actor
-from de.wvsberlin import Vektor, MutableVektor, Gerade
+from de.wvsberlin.vektor import Vektor, MutableVektor, Gerade
 
 
 class Enemy(Actor):
