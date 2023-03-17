@@ -71,9 +71,9 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
             xFactor = bgWidth / self.relUpper
             yFactor = bgHeight / self.relUpper
 
-            for c in range(len(self._pathNodes) - 1):
-                node0 = self._pathNodes[c]
-                node1 = self._pathNodes[c + 1]
+            for c in range(len(self.pathNodes) - 1):
+                node0 = self.pathNodes[c]
+                node1 = self.pathNodes[c + 1]
                 bg.drawLine(node0.toPoint(xFactor, yFactor), node1.toPoint(xFactor, yFactor))
 
     def getDistToPath(self, pos):

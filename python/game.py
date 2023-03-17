@@ -17,7 +17,7 @@ class Game:
         self.currentRound = 0
         self.roundActive = False
         self.gameMap = gameMap
-        self.gameMap.setBgOfGrid(self.grid)
+        self.gameMap.setBgOfGrid(self.grid, debug=True)
         self.grid.mousePressed = self.mouseReleased
         self.heldTower = None
         self.selectedTower = None
