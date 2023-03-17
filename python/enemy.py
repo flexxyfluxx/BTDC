@@ -6,7 +6,7 @@ from de.wvsberlin import Vektor, MutableVektor, Gerade
 
 class Enemy(Actor):
     def __init__(self, game, key, dmg, health, speed, sprite, segmentIdx=0, segmentProgress=0,
-                 childSupplier=None,childCount=1, childSpacing=10):
+                 childSupplier=None, childCount=1, childSpacing=10):
         Actor.__init__(self, sprite)
         self.game = game
         self.key = key
@@ -20,15 +20,9 @@ class Enemy(Actor):
         self.currentSegmentLength = abs(prevNodeToNextNodeVektor)
         self.currentSegmentRichtungsvektor = prevNodeToNextNodeVektor.getUnitized() * self.speed
 
-        if location is not None:
-            if isinstance(location, MutableVektor):
-                self.pos = location
-            else:
-                self.pos = MutableVektor.fromImmutable(location)
-
-        else:
-            self.pos = MutableVektor.fromImmutable(self.pathNodes[0])
         self.currentSegmentProgress = segmentProgress
+
+        self.setLocation((self.pathNodes[0] + self.currentSegmentUnitVektor * self.currentSegmentProgress).toLocation())
 
         self.childSupplier = childSupplier
         self.childCount = childCount
