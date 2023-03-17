@@ -5,6 +5,7 @@ Hier werden die Runden instantiiert und initialisiert.
 """
 
 from round import Round, Wave
+from enemies import *
 
 
 # Falls kein EXAMPLE_TYPE existiert: definieren als 0. Verwenden wir in dem Fall offensichtlich eh nicht.
@@ -41,3 +42,23 @@ EXAMPLE_ROUND = (Round()
             .setStartDelay(100)
     )
 )
+
+
+ROUNDS = [
+    (Round()
+        .addWave(
+            lambda: Wave()
+                .setEnemyType(WEAKEST)
+                .setCount(20)
+                .setSpacing(40)
+        )
+    ),
+    (Round()
+        .addWave(
+            lambda: Wave()
+                .setEnemyType(WEAKEST)
+                .setCount(35)
+                .setSpacing(30)
+        )
+    )
+]

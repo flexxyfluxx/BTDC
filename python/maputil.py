@@ -38,6 +38,7 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
         if not isinstance(node, Vektor):
             raise TypeError("Vektor required; %s given."
                             % type(node))
+        self.pathNodes.append(node)
         return self
 
     def setBgOfGrid(self, grid, debug=False):

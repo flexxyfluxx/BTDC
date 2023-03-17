@@ -108,9 +108,11 @@ class Menu(JMainFrame):
         # implement stop game
 
     def startGame(self):
-        print("startGame called")
-        print("map = ", self.getSelectedMap())
-        print("difficulty = ", self.getSelectedDifficulty())
+        if DEBUG:
+            print("startGame called")
+            print("map = ", self.getSelectedMap())
+            print("difficulty = ", self.getSelectedDifficulty())
+
         self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()], debug=DEBUG)
         self.game.grid.doRun()
 
@@ -118,7 +120,9 @@ class Menu(JMainFrame):
         self.game.startNextRound()
 
     def bStartGame_ActionPerformed(self, _):
-        print("bStartGame_ActionPerformed called")
+        if DEBUG:
+            print("bStartGame_ActionPerformed called")
+
         self.setCurrentScreen(2)
         self.startGame()
 

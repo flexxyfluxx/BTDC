@@ -15,6 +15,9 @@ class Game:
         self.enemyKeyGen = Counter()
         self.activeEnemies = {}  # Ein Dict löst viele Probleme, was Löschen von toten Gegnern angeht
 
+        self.projectileKeyGen = Counter()
+        self.activeProjectiles = {}
+
         if difficulty == Difficulty.EASY:
             self.health = 100
             self.money = 1000
@@ -30,12 +33,19 @@ class Game:
     def startNextRound(self):
         pass
 
-    def spawnEnemy(self, enemyType):
+    def spawnEnemy(self, enemySupplier, segmentIdx, segmentProgress):
         key = next(self.enemyKeyGen)
-        newEnemy = enemyType(self, key)
+        newEnemy = enemySupplier(self, key, segmentIdx, segmentProgress)
         self.activeEnemies[key] = newEnemy
         self.grid.addActor(newEnemy, self.gameMap.nodes[0].toLocation())
+        return newEnemy
 
+    def spawnProjectile(self, location, direction, projSupplier):
+        key = next(self.projectileKeyGen)
+        newProjectile = projSupplier(self, direction, location)
+        self.activeProjectiles[key] = newProjectile
+        self.grid.addActor(newProjectile)
+        return newProjectile
 
 
 class Counter:
