@@ -33,7 +33,7 @@ open class Vektor(x: Number, y: Number) {
 
         @JvmStatic
         // um einen Vektor auch mit Richtung und Länge initialisieren zu können
-        fun fromAngle(angle: Double, magnitude: Double = 1.0) = Vektor(cos(toRadians(angle)), sin(angle)) * magnitude
+        fun fromAngleAndMagnitude(angle: Double, magnitude: Double) = Vektor(cos(toRadians(angle)), sin(angle)) * magnitude
 
 
         /**
@@ -42,7 +42,7 @@ open class Vektor(x: Number, y: Number) {
          * auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade
          */
         @JvmStatic
-        fun dist(a: Vektor, b: Vektor, doSqrt: Boolean = true): Double = (a - b).abs(doSqrt)
+        fun dist(a: Vektor, b: Vektor, doSqrt: Boolean): Double = (a - b).abs(doSqrt)
 
         @JvmStatic
         fun dist(a: Vektor, b: Vektor): Double = (a - b).abs(true)
@@ -59,19 +59,19 @@ open class Vektor(x: Number, y: Number) {
              */
 
             // herausfinden, ob Fußpkt zwischen A und B (oder nicht)
-            val AB = b - a
-            val absAB = AB.abs()
-            val AP = p - a
+            val ABvek = b - a
+            val absAB = ABvek.abs()
+            val APvek = p - a
 
-            val distanceAF = AB * AP / absAB
+            val distanceAF = (ABvek * APvek) / absAB
             // Erklärung: https://www.rhetos.de/html/lex/skalarprodukt_anschaulich.htm
             // basically liefert das Skalarprodukt zweier Vektoren die Länge der Projektion des einen Vektors auf dem anderen
             // mal die Länge des anderen. Teilt man durch die Länge des anderen (hier AB), erhält man die Länge der Projektion.
 
-            return when {
-                distanceAF < 0     -> Vektor.dist(a, p)
-                distanceAF > absAB -> Vektor.dist(b, p)
-                else               -> Gerade.dist(Gerade(a, AB), p)
+            when {
+                distanceAF < 0     -> return dist(a, p)
+                distanceAF > absAB -> return dist(b, p)
+                else               -> return Gerade.dist(Gerade(a, ABvek), p)
             }
         }
     }
@@ -79,7 +79,7 @@ open class Vektor(x: Number, y: Number) {
     fun getUnitized(): Vektor {
         if (this == NullVektor)
             throw IllegalStateException("Cannot unitize Nullvektor! (The laws of math forbid it)")
-        return this / abs()  // Division durch Null ist nicht gut diese, darum hat ein Nullvektor keinen definierten Einheitsvektor.
+        return this / this.abs()  // Division durch Null ist nicht gut diese, darum hat ein Nullvektor keinen definierten Einheitsvektor.
     }
 
     fun getUnitNormal(): Vektor {  // Ich kann nicht garantieren, dass der Vektor in die "richtige" Richtung zeigt.
@@ -100,11 +100,16 @@ open class Vektor(x: Number, y: Number) {
 
 
     fun abs(doSqrt: Boolean = true): Double {
-        val unsqrted = x.pow(2) + y.pow(2)
+        val unsqrted = x*x + y*y
 
-        if (doSqrt) return sqrt(unsqrted)
-        return unsqrted
+        return if (doSqrt) {
+            sqrt(unsqrted)
+        } else {
+            unsqrted
+        }
     }
+
+    fun abs(): Double = abs(true)
 
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
 
@@ -127,14 +132,14 @@ open class Vektor(x: Number, y: Number) {
      * Multipliziere Vektor mit Skalar -> Vektor
      */
     operator fun times(other: Number): Vektor {
-        val other_ = other.toDouble()
-        return Vektor(x * other_, y * other_)
+        val otherD = other.toDouble()
+        return Vektor(x * otherD, y * otherD)
     }
 
     /**
      * Multipliziere Vektor mit Vektor -> Skalarprodukt
      */
-    operator fun times(other: Vektor): Double = this.x * other.x + this.y * other.y
+    operator fun times(other: Vektor): Double = (this.x * other.x) + (this.y * other.y)
     // kein timesAssign mit Vektor, da sich dann der Objekttyp ändert
 
     fun __mul__(other: Number) = times(other)
@@ -145,8 +150,8 @@ open class Vektor(x: Number, y: Number) {
      * Teile Vektor durch Skalar → Vektor
      */
     operator fun div(scalar: Number): Vektor {
-        val scalar_ = scalar.toDouble()
-        return Vektor(x * scalar_, y * scalar_)
+        val Dscalar = scalar.toDouble()
+        return Vektor(x / Dscalar, y / Dscalar)
     }
     fun __div__(other: Number) = div(other)
 
@@ -184,7 +189,7 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
 
     companion object {
         @JvmStatic
-        fun fromAngle(angle: Number, magnitude: Number = 1) =
+        fun fromAngleAndMagnitude(angle: Number, magnitude: Number = 1) =
             MutableVektor(cos(toRadians(angle.toDouble())), sin(angle.toDouble())) * magnitude
 
         @JvmStatic
@@ -195,27 +200,39 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
         this.x += other.x
         this.y += other.y
     }
-    fun __iadd__(other: Vektor) = plusAssign(other)
+    fun __iadd__(other: Vektor): MutableVektor {
+        plusAssign(other)
+        return this
+    }
 
     operator fun minusAssign(other: Vektor) {
         this.x -= other.x
         this.y -= other.y
     }
-    fun __isub__(other: Vektor) = minusAssign(other)
+    fun __isub__(other: Vektor): MutableVektor {
+        minusAssign(other)
+        return this
+    }
 
     operator fun timesAssign(other: Number) {
-        val other_ = other.toDouble()
-        this.x *= other_
-        this.y *= other_
+        val otherD = other.toDouble()
+        this.x *= otherD
+        this.y *= otherD
     }
-    fun __imul__(other: Number) = times(other)
+    fun __imul__(other: Number): MutableVektor {
+        times(other)
+        return this
+    }
 
     operator fun divAssign(scalar: Number) {
-        val scalar_ = scalar.toDouble()
-        this.x /= scalar_
-        this.y /= scalar_
+        val Dscalar = scalar.toDouble()
+        this.x /= Dscalar
+        this.y /= Dscalar
     }
-    fun __idiv__(other: Number) = divAssign(other)
+    fun __idiv__(other: Number): MutableVektor{
+        divAssign(other)
+        return this
+    }
 
     override fun __repr__() = "de.wvsberlin.vektor.MutableVektor[${x}, ${y}]@${hashCode()}"
 
@@ -244,7 +261,12 @@ class Gerade(val p: Vektor, val v: Vektor) {
 
     companion object {
         @JvmStatic
-        fun dist(a: Gerade, b: Vektor): Double = abs((b - a.p) * a.v.getUnitNormal())
+        fun dist(a: Gerade, b: Vektor): Double {
+            val APvek = b - a.p
+            val hessian = a.v.getUnitNormal()
+            val scalarproduct = APvek * hessian
+            return abs(scalarproduct)
+        }
         // Bei der Abstandmessung zu einer Gerade brauchen wir komischerweise keine Sqrt-Option,
         // da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können nicht an der Stelle weitere Performance rausholen.
     }
