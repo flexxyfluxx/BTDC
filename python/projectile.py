@@ -15,7 +15,8 @@ class Projectile(Actor):
     Wenn diese Lifetime endet, verschwindet das Projektil sofort.
     """
 
-    def __init__(self, richtungsvektor, sprite, lifetime, pierce, size, initpos=Vektor.NullVektor):
+    def __init__(self, game, richtungsvektor, sprite, lifetime, pierce, size, pos):
+        self.game = game
         if not (isinstance(richtungsvektor, Vektor) or isinstance(richtungsvektor, MutableVektor)):
             raise TypeError("First (non-self) argument must be of type Vektor; %s given."
                             % type(richtungsvektor))
@@ -46,13 +47,13 @@ class Projectile(Actor):
             raise TypeError("Fourth (non-self) argument must be coercible to int; %s given."
                             % type(size))
 
-        if not isinstance(initpos, Vektor):
-            raise TypeError("Fifth (non-self) argument must be of type Vektor; %s given."
-                            % type(initpos))
+        if isinstance(pos, MutableVektor):
+            self.pos = pos
+        else:
+            self.pos = MutableVektor.fromImmutable(pos)
 
         Actor.__init__(self, True, sprite)
         self.richtungsvektor = richtungsvektor
-        self.pos = initpos
         self.setDirection(self.richtungsvektor.getAngle())
 
         self.enemiesHit = []
@@ -86,19 +87,15 @@ class Projectile(Actor):
 
     def isTouchingEnemy(self, enemy):  # stub
         # FIXME based on assumption that we handle enemy pos via enemy.pos
-        if Vektor.dist2(self.pos, enemy.pos) < (self.size + enemy.size) ** 2:
+        if Vektor.dist2(self.pos, enemy.pos) < (self.size + enemy.size) ** 2 and enemy not in self.enemiesHit:
             return True
         return False
-
-    def getTouchedEnemies(self):  # stub
-        # TODO implement this
-        raise NotImplementedError("This function has not been implemented yet!")
 
     def onEnemyTouched(self, enemy):  # stub
         # TODO implement this
         raise NotImplementedError("This function has not been implemented yet!")
 
-    def getAngle(self):
+    def getDirection(self):
         return self.richtungsvektor.getAngle()
 
     def setMoveDirection(self, angle):
