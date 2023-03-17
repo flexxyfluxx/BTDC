@@ -23,7 +23,7 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
 
     def setBgImg(self, img):
         if isinstance(img, str):  # falls Filepath zu Bild gegeben...
-            self.bgImg = GGBitmap(abspath(img))  # ...erstelle neues BufferedImage
+            self.bgImg = GGBitmap.getImage(abspath(img))  # ...erstelle neues BufferedImage
         elif isinstance(img, BufferedImage):  # Falls schon BufferedImage:
             self.bgImg = img  # ...setze Attribut.
         elif img is None:
