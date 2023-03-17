@@ -69,8 +69,8 @@ open class Vektor(x: Number, y: Number) {
             // mal die Länge des anderen. Teilt man durch die Länge des anderen (hier AB), erhält man die Länge der Projektion.
 
             when {
-                distanceAF < 0     -> return dist(b, p)
-                distanceAF > absAB -> return dist(a, p)
+                distanceAF < 0     -> return dist(a, p)
+                distanceAF > absAB -> return dist(b, p)
                 else               -> return Gerade.dist(Gerade(a, ABvek), p)
             }
         }
