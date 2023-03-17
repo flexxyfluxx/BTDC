@@ -23,7 +23,8 @@ class Enemy(Actor):
 
         self.currentSegmentProgress = segmentProgress
 
-        self.setLocation((self.pathNodes[0] + self.currentSegmentUnitVektor * self.currentSegmentProgress).toLocation())
+        self.pos = MutableVektor.fromImmutable(self.pathNodes[0]
+                                               + self.currentSegmentUnitVektor * self.currentSegmentProgress)
 
         self.childSupplier = childSupplier
         self.childCount = childCount
@@ -49,15 +50,17 @@ class Enemy(Actor):
         self.game.activeEnemies.pop(self.key)
 
     def die(self, overshoot):
-        if self.childSupplier is not None:
-            if overshoot > 0:
-                child = self.game.spawnEnemy(self.childSupplier, self.currentSegmentIdx, self.currentSegmentProgress)
-                if overshoot < child.health:
-                    child.health -= overshoot
-                else:
-                    child.die(overshoot - child.health)
-
         self.despawn()
+
+        if self.childSupplier is None or overshoot <= 0:
+            return
+
+        child = self.game.spawnEnemy(self.childSupplier, self.currentSegmentIdx, self.currentSegmentProgress)
+        if overshoot < child.health:
+            child.health -= overshoot
+            return
+
+        child.die(overshoot - child.health)
 
     def nextSegment(self):
         self.currentSegmentIdx += 1
