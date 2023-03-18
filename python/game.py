@@ -53,8 +53,12 @@ class Game:
         else:
             raise ValueError("Illegal difficulty")
 
+        self.menu.tMoney.setText(str(self.money))
+        self.menu.tHealth.setText(str(self.health))
+
         self.tickActor = TickActor(self)
         self.grid.addActor(self.tickActor, Location())
+
 
     def startNextRound(self):
         if DEBUG:
@@ -187,6 +191,9 @@ class Game:
         self.grid.removeActor(self.tickActor)
         self.grid.getBg().clear()
 
+    def updateMoney(self, difference):
+        self.money += difference
+        self.menu.tMoney.setText(str(self.money))
 
 class TickActor(Actor):
     def __init__(self, game):

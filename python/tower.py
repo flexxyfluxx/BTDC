@@ -5,11 +5,10 @@ from de.wvsberlin.vektor import Vektor
 
 
 class Tower(Actor):
-    def __init__(self, attackSpeed, attackDamage, attackRange, cost, pos, attackSpeedIncrement, attackDamageIncrement, projectile, sprite, key, game):
+    def __init__(self, attackSpeed, attackDamage, attackRange, pos, attackSpeedIncrement, attackDamageIncrement, projectile, sprite, key, game):
         Actor.__init__(self, abspath(sprite))
         self.attackSpeed = attackSpeed
         self.attackDamage = attackDamage
-        self.cost = cost
         self.pos = pos
         self.attackSpeedIncrement = attackSpeedIncrement
         self.attackDamageIncrement = attackDamageIncrement

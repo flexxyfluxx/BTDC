@@ -4,8 +4,9 @@ from os.path import abspath
 
 
 class Tower1(Tower):
+    cost = 250
     def __init__(self, pos, key, game):
-        Tower.__init__(self, attackSpeed=5, attackDamage=6, attackRange=40, cost=250, pos=pos,
+        Tower.__init__(self, attackSpeed=5, attackDamage=6, attackRange=40, pos=pos,
                        attackSpeedIncrement=1.05, attackDamageIncrement=1.15, projectile=TOWER1_PROJ,
                        sprite=abspath('../assets/sprites/sprite.png'), key=key, game=game)
 
