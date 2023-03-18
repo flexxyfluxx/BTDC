@@ -43,7 +43,7 @@ class Enemy(Actor):
         if self.currentSegmentProgress >= self.currentSegmentLength:
             self.nextSegment()  # this will hopefully not fail to nuke everything if we exit the map...
             overshoot = self.currentSegmentProgress - self.currentSegmentLength
-            self.pos = self.pathNodes[self.currentSegmentIdx] + self.currentSegmentUnitVektor * overshoot
+            self.pos = self.pathNodes[self.currentSegmentIdx] # + self.currentSegmentUnitVektor * overshoot
             self.setLocation(self.pos.toLocation())
             return
 

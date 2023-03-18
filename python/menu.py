@@ -5,7 +5,7 @@ from de.wvsberlin import JMainFrame
 from de.wvsberlin.vektor import Vektor
 from game import Game, Difficulty
 from maps import theMaps
-from HeldTower import HeldTower
+from heldTower import HeldTower
 from ch.aplu.jgamegrid import Location
 
 DEBUG = True
@@ -38,11 +38,15 @@ class Menu(JMainFrame):
             self.bUpgrade1,
             self.bUpgrade2,
             self.bUpgrade3,
-            self.tRound,
             self.jSeparator1,
             self.bStartRound,
             self.bAutostart,
-            self.tMoney
+            self.tMoney,
+            self.tCurrentRound,
+            self.tHealth,
+            self.lCurrentRound,
+            self.lMoney,
+            self.lHealth
         ]
         self.confirmScreen = [
             self.bConfirm,

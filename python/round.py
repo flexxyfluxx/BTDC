@@ -3,7 +3,8 @@
 """
 Runden OwO
 """
-from java.lang import IllegalStateException
+from enemies import WEAKEST
+from counter import Counter
 
 
 class Round:
@@ -12,42 +13,52 @@ class Round:
         self.waves = []
 
         # volatile: init, then watch it destroy itself, and do it again.
-        self.activeWaves = []
+        self.activeWaves = {}
 
         self.game = game
+        self.waveKeyGen = Counter()
 
     def addWave(self, waveSupplier):
-        self.waves.append(waveSupplier())
+        key = next(self.waveKeyGen)
+        self.waves.append(waveSupplier(key))
         return self
 
     def tick(self):
-        if not self.waves:
+        if not (self.waves or self.activeWaves):
             raise StopIteration
             # Da dies der offizielle, pythonische Weg ist, Iterations zu beenden, tun wir dies auch.
             # try-except wowowowowow
 
-        if self.waves[0].startDelay <= 0:
-            if not self.waves[0].waitsForLastRoundToBeFullySent:
-                newWave = self.waves.pop(0)
-                self.activeWaves.append(newWave)
+        if self.waves:
+            if self.waves[0].startDelay <= 0:
+                if not self.waves[0].waitsForLastRoundToBeFullySent:
+                    newWave = self.waves.pop(0)
+                    self.activeWaves[newWave.key] = newWave
 
-            elif not self.activeWaves:
-                self.activeWaves.append(self.waves.pop(0))
+                elif not self.activeWaves:
+                    newWave = self.waves.pop(0)
+                    self.activeWaves[newWave.key] = newWave
 
-        else:
-            self.waves[0].startDelay -= 1
+            else:
+                self.waves[0].startDelay -= 1
 
-        for wave in self.activeWaves:
-            wave.tick(self.game)
+        for wave in self.activeWaves.values():
+            if wave.count <= 0:
+                self.activeWaves.pop(wave.key)
+                continue
+
+            wave.tick()
 
 
 class Wave:
-    def __init__(self):
+    def __init__(self, game, key):
+        self.game = game
+        self.key = key
         self.startDelay = 0
         self.spacing = 0
         self.sendCooldown = 0
         self.count = 1
-        self.enemyType = None  # todo replace w/ "normie" nme
+        self.enemyType = WEAKEST
         self.waitsForLastRoundToBeFullySent = False
 
     def setStartDelay(self, startDelay):
@@ -105,6 +116,12 @@ class Wave:
         self.waitsForLastRoundToBeFullySent = True
         return self
 
-    def tick(self, game):
-        if self.sendCooldown <= 0:
-            game.spawnEnemy(self.enemyType)
+    def tick(self):
+        print("Wave.tick called")
+        if self.sendCooldown > 0:
+            self.sendCooldown -= 1
+            return
+
+        self.count -= 1
+        self.game.spawnEnemy(self.enemyType)
+        self.sendCooldown = self.spacing

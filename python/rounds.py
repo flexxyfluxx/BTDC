@@ -47,15 +47,15 @@ EXAMPLE_ROUND = lambda game: (Round(game)
 ROUNDS = lambda game: [
     (Round(game)
         .addWave(
-            lambda: Wave()
+            lambda key_: Wave(game, key_)
                 .setEnemyType(WEAKEST)
                 .setCount(20)
-                .setSpacing(40)
+                .setSpacing(100)
         )
     ),
     (Round(game)
         .addWave(
-            lambda: Wave()
+            lambda key_: Wave(game, key_)
                 .setEnemyType(WEAKEST)
                 .setCount(35)
                 .setSpacing(30)

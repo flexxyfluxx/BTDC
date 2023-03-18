@@ -9,6 +9,7 @@ from tower1 import Tower1
 from tower2 import Tower2
 from de.wvsberlin import Difficulty
 from de.wvsberlin.vektor import Vektor
+from counter import Counter
 
 DEBUG = True
 
@@ -68,6 +69,8 @@ class Game:
         try:
             self.rounds[self.currentRound].tick()
         except StopIteration:
+            if DEBUG:
+                print("[INFO] Round exhausted.")
             if not self.activeEnemies:
                 if DEBUG:
                     print("[INFO] Round ended.")
@@ -93,10 +96,13 @@ class Game:
         newEnemy = enemySupplier(self, key, segmentIdx, segmentProgress)
         self.activeEnemies[key] = newEnemy
         self.grid.addActor(newEnemy, self.gameMap.pathNodes[0].toLocation())
-        newEnemy.show()
+        if DEBUG:
+            print("[INFO] Enemy spawned at segment: %s, segment progress: %s" % (segmentIdx, segmentProgress))
         return newEnemy
 
     def spawnProjectile(self, pos, direction, projSupplier):
+        if DEBUG:
+            print("[INFO] Projectile spawned at")
         key = next(self.projectileKeyGen)
         newProjectile = projSupplier(self, direction, pos)
         self.activeProjectiles[key] = newProjectile
@@ -186,18 +192,6 @@ class TickActor(Actor):
 
     def act(self):
         self.game.tick()
-
-
-class Counter:
-    def __init__(self):
-        self.c = -1
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        self.c += 1
-        return self.c
 
 
 if __name__ == "__main__":
