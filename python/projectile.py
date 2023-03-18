@@ -15,8 +15,9 @@ class Projectile(Actor):
     Wenn diese Lifetime endet, verschwindet das Projektil sofort.
     """
 
-    def __init__(self, game, richtungsvektor, sprite, lifetime, pierce, size, pos):
+    def __init__(self, game, key, richtungsvektor, sprite, lifetime, pierce, size, pos):
         self.game = game
+        self.key = key
         if not (isinstance(richtungsvektor, Vektor) or isinstance(richtungsvektor, MutableVektor)):
             raise TypeError("First (non-self) argument must be of type Vektor; %s given."
                             % type(richtungsvektor))
@@ -58,10 +59,11 @@ class Projectile(Actor):
 
         self.enemiesHit = []
 
-    def act(self):
+    def tick(self):
         # Falls Tick Counter leer, despawnen.
-        if self.lifetime <= 0 and self.pierce <= 0:
+        if self.lifetime <= 0 or self.pierce <= 0:
             self.despawn()
+            return
 
         self.lifetime -= 1
         # (yearns for `--` operator)
@@ -83,11 +85,10 @@ class Projectile(Actor):
         if self.gameGrid is not None:
             self.gameGrid.removeActor(self)
 
-        del self
+        self.game.activeProjectiles.pop(self.key)
 
     def isTouchingEnemy(self, enemy):  # stub
-        # FIXME based on assumption that we handle enemy pos via enemy.pos
-        if Vektor.dist2(self.pos, enemy.pos) < (self.size + enemy.size) ** 2 and enemy not in self.enemiesHit:
+        if Vektor.dist(self.pos, enemy.pos, False) < (self.size + enemy.size) ** 2 and enemy not in self.enemiesHit:
             return True
         return False
 
@@ -97,18 +98,6 @@ class Projectile(Actor):
 
     def getDirection(self):
         return self.richtungsvektor.getAngle()
-
-    def setMoveDirection(self, angle):
-        if not isinstance(self.richtungsvektor, MutableVektor):
-            raise IllegalStateException("Cannot mutate Richtungsvektor if it isn't initialized as MutableVektor.")
-
-        self.richtungsvektor.setAngle(angle)
-
-    def setMoveSpeed(self, speed):
-        if not isinstance(self.richtungsvektor, MutableVektor):
-            raise IllegalStateException("Cannot mutate Richtungsvektor if it isn't initialized as MutableVektor.")
-
-        self.richtungsvektor.setLength(speed)
 
 
 if __name__ == "__main__":

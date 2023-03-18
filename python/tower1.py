@@ -1,4 +1,5 @@
-from TowerBaseClass import *
+from tower import Tower
+from os.path import abspath
 
 
 class Tower1(Tower):
