@@ -28,7 +28,6 @@ class Game:
         self.heldTower = None
         self.selectedTower = None
 
-        self.doAutostart = False
         self.paused = True
 
         self.rounds = ROUNDS(self)
@@ -64,7 +63,6 @@ class Game:
         self.tickActor = TickActor(self)
         self.grid.addActor(self.tickActor, Location())
 
-
     def startNextRound(self):
         if DEBUG:
             print("[INFO] Round started.")
@@ -85,7 +83,7 @@ class Game:
                     print("[INFO] Round ended.")
                 for projectile in self.activeProjectiles.values():
                     projectile.despawn()  # clear projectiles to start next round w/ clean slate
-                if not self.doAutostart:
+                if not self.menu.bAutostart.isSelected():
                     self.paused = True
                     return
 
@@ -172,15 +170,24 @@ class Game:
 
     def changeTowerTarget(self, pos):
         if DEBUG:
-            print(self.selectedTower.targetPos.x, self.selectedTower.targetPos.y, sep=", ")
+            previousDirection = self.selectedTower.targetDirection
+        targetVektor = pos - self.selectedTower.pos
+        if targetVektor == Vektor.NullVektor:
+            if DEBUG:
+                print("[INFO] Could not change target direction of tower %s because something something NullVektor."
+                      % self.selectedTower.key)
 
-        self.selectedTower.targetPos = pos
+            self.selectedTower = None
+            return
+
+        self.selectedTower.targetDirection = targetVektor.getAngle()
+
         if DEBUG:
-            print(self.selectedTower.targetPos.x, self.selectedTower.targetPos.y, sep=", ")
+            print("[INFO] Updated target direction of tower %s from %s to %s."
+                  % (self.selectedTower.key, previousDirection, self.selectedTower.targetDirection))
 
         self.selectedTower = None
         self.updateCost()
-        
 
     def mousePressed(self, event):
         if event.button == 1:

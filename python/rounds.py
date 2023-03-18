@@ -68,5 +68,12 @@ ROUNDS = lambda game: [
                 .setCount(25)
                 .setSpacing(80)
         )
+        .addWave(
+            lambda key_: Wave(game, key_)
+                .setEnemyType(BLUE_EQ)
+                .setCount(5)
+                .setSpacing(80)
+                .setStartDelay(200)
+        )
     )
 ]
