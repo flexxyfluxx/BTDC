@@ -93,7 +93,7 @@ open class Vektor(x: Number, y: Number) {
 
         return (360 +
             if (unitized.x < 0) {
-                toDegrees(asin(unitized.y))
+                180 + toDegrees(asin(-unitized.y))
             } else toDegrees(asin(unitized.y))
         ) % 360
     }
