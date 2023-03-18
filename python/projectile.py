@@ -60,23 +60,18 @@ class Projectile(Actor):
 
     def act(self):
         # Falls Tick Counter leer, despawnen.
-        if self.lifetime <= 0 and self.pierce <= 0:
+        if self.lifetime <= 0 or self.pierce <= 0:
             self.despawn()
 
         self.lifetime -= 1
-        # (yearns for `--` operator)
-        # (wow)
-        # (so concise)
-        # (much readable)
-        # (very decrement)
 
         self.pos += self.richtungsvektor
         self.setLocation(self.pos.toLocation())
 
-        for enemy in self.getTouchedEnemies():
-            if enemy not in self.enemiesHit:
-                self.enemiesHit.append(enemy)
-                self.onEnemyTouched(enemy)
+        #for enemy in self.getTouchedEnemies():
+        #    if enemy not in self.enemiesHit:
+        #        self.enemiesHit.append(enemy)
+        #        self.onEnemyTouched(enemy)
 
     def despawn(self):
         # falls in einem Gamegrid vorhanden: entfernen.

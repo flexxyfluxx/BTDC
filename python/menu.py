@@ -150,28 +150,27 @@ class Menu(JMainFrame):
         # raise NotImplementedError("This tower has not been implemented so far.")
         for x in range(0, 96):
             for y in range(0, 54):
-                self.game.heldTower = HeldTower(1) 
+                self.game.heldTower = HeldTower(2) 
                 self.game.placeTower(Vektor(x*10, y*10))
 
     def bTower4_ActionPerformed(self, _):
         # self.game.heldTower = 3
         raise NotImplementedError("This tower has not been implemented so far.")
 
-    def bUpgrade1_ActionPeformed(self, _):
+    def bUpgrade1_ActionPerformed(self, _):
         if self.game.selectedTower is None:
             return
         self.game.selectedTower.upgradeAttackSpeed()
 
-    def bUpgrade2_ActionPeformed(self, _):
-        if self.selectedTower is None:
+    def bUpgrade2_ActionPerformed(self, _):
+        if self.game.selectedTower is None:
             return
-        self.selectedTower.upgradeAttackDamage()
+        self.game.selectedTower.upgradeAttackDamage()
 
-    def bUpgrade3_ActionPeformed(self, _):
-        if self.selectedTower is None:
+    def bUpgrade3_ActionPerformed(self, _):
+        if self.game.selectedTower is None:
             return
-        # self.heldTower.upgrade...()
-        raise NotImplementedError("This upgrade has not been implemented so far.")
+        self.game.selectedTower.upgradePath3()
 
 
 if __name__ == "__main__":

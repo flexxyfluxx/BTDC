@@ -5,8 +5,9 @@ import syspaths
 import maputil as mu
 from rounds import ROUNDS
 from ch.aplu.jgamegrid import Location, GGMouse
-from Tower1 import *
-from Tower2 import *
+from Tower1 import Tower1
+from Tower2 import Tower2
+from TowerDebug import TowerDebug
 from de.wvsberlin import Difficulty
 from de.wvsberlin.vektor import Vektor
 
@@ -59,15 +60,16 @@ class Game:
         self.grid.addActor(newEnemy, self.gameMap.nodes[0].toLocation())
         return newEnemy
 
-    def spawnProjectile(self, location, direction, projSupplier):
+    def spawnProjectile(self, location, direction, projSupplier, lifetime):
         key = next(self.projectileKeyGen)
-        newProjectile = projSupplier(self, direction, location)
+        newProjectile = projSupplier(self, direction, location, lifetime)
         self.activeProjectiles[key] = newProjectile
-        self.grid.addActor(newProjectile)
+        self.grid.addActor(newProjectile, location.toLocation())
         return newProjectile
 
     def selectTower(self, actor, mouse, location):
         self.selectedTower = actor
+        print("tower selected")
 
     def placeTower(self, pos):
         # implement check for illegal positions
@@ -87,9 +89,11 @@ class Game:
             self.grid.removeActor(self.heldTower)
             key = next(self.towerKeyGen)
             if self.heldTower.towerID == 0:
-                tower = Tower1(pos, key)
+                tower = Tower1(pos, key, self)
             elif self.heldTower.towerID == 1:
-                tower = Tower2(pos, key)
+                tower = Tower2(pos, key, self)
+            elif self.heldTower.towerID == 2:
+                tower = TowerDebug(pos, key, self)
             else:
                 raise ValueError("Illegal tower ID")
 
@@ -97,6 +101,8 @@ class Game:
             self.grid.addActor(tower, pos.toLocation())
             tower.addMouseTouchListener(self.selectTower, GGMouse.lPress)
             self.heldTower = None
+        else:
+            self.heldTower.show(3)
 
     def changeTowerTarget(self, pos):
         if DEBUG:
@@ -130,18 +136,6 @@ class Game:
         for projectile in self.activeProjectiles.values():
             self.grid.removeActor(projectile)
         self.grid.getBg().clear()
-
-    def upgradeSelectedTower(self, path):
-        if self.selectedTower is None:
-            return
-
-        if path == Upgrade.ATK_SPEED:
-            self.selectedTower.upgradeAttackSpeed()
-        elif path == Upgrade.ATK_DMG:
-            self.selectedTower.upgradeAttackDamage()
-        else:
-            raise ValueError("Illegal upgrade path")
-
 
 class Counter:
     def __init__(self):
