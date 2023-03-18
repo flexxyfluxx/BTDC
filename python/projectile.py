@@ -94,7 +94,7 @@ class Projectile(Actor):
         return False
 
     def onEnemyTouched(self, enemy):  # stub
-        enemy.hp -= self.damage
+        enemy.health -= self.damage
         self.pierce -= 1
 
     def getDirection(self):
