@@ -21,9 +21,6 @@ class Tower(Actor):
         self.key = key
         self.game = game
 
-    def tick(self):
-        pass
-
     def upgradeAttackSpeed(self):
         # Attack speed increment as a factor, eg. every level, attack speed is multiplied by 1.15
         self.attackSpeed = self.attackSpeed * self.attackSpeedIncrement
@@ -37,8 +34,8 @@ class Tower(Actor):
         direction = (self.targetPos - self.pos).getAngle()
         self.game.spawnProjectile(self.pos, direction, self.projectile, self.attackRange)
 
-    def act(self):
-            self.attackCooldown -= 1
-            if self.attackCooldown <= 0:
-                 self.attack()
-                 self.attackCooldown = 100/self.attackSpeed
+    def tick(self):
+        self.attackCooldown -= 1
+        if self.attackCooldown <= 0:
+            self.attack()
+            self.attackCooldown = 100 / self.attackSpeed

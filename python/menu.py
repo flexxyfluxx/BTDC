@@ -5,7 +5,7 @@ from de.wvsberlin import JMainFrame
 from de.wvsberlin.vektor import Vektor
 from game import Game, Difficulty
 from maps import theMaps
-from HeldTower import HeldTower
+from heldTower import HeldTower
 from ch.aplu.jgamegrid import Location
 from tower1 import Tower1
 from tower2 import Tower2
@@ -40,11 +40,12 @@ class Menu(JMainFrame):
             self.bUpgrade1,
             self.bUpgrade2,
             self.bUpgrade3,
-            self.tRound,
             self.jSeparator1,
             self.bStartRound,
             self.bAutostart,
-            self.tMoney
+            self.tCurrentRound,
+            self.tMoney,
+            self.tHealth,
         ]
         self.confirmScreen = [
             self.bConfirm,
@@ -152,7 +153,6 @@ class Menu(JMainFrame):
             self.game.updateMoney(-Tower2.cost)
 
     def bTower3_ActionPerformed(self, _):
-        # self.game.heldTower = HeldTower(2)
         # raise NotImplementedError("This tower has not been implemented so far.")
         for x in range(0, 96):
             for y in range(0, 54):

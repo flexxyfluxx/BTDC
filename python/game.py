@@ -104,11 +104,11 @@ class Game:
             print("[INFO] Enemy spawned at segment: %s, segment progress: %s" % (segmentIdx, segmentProgress))
         return newEnemy
 
-    def spawnProjectile(self, pos, direction, projSupplier):
+    def spawnProjectile(self, pos, direction, projSupplier, lifetime):
         if DEBUG:
             print("[INFO] Projectile spawned at")
         key = next(self.projectileKeyGen)
-        newProjectile = projSupplier(self, direction, pos)
+        newProjectile = projSupplier(self, key, direction, pos, lifetime)
         self.activeProjectiles[key] = newProjectile
         self.grid.addActor(newProjectile, pos.toLocation())
         newProjectile.show()
@@ -143,9 +143,9 @@ class Game:
             self.grid.removeActor(self.heldTower)
             key = next(self.towerKeyGen)
             if self.heldTower.towerID == 0:
-                tower = Tower1(pos, key)
+                tower = Tower1(pos, key, self)
             elif self.heldTower.towerID == 1:
-                tower = Tower2(pos, key)
+                tower = Tower2(pos, key, self)
             else:
                 raise ValueError("Illegal tower ID")
 
@@ -153,6 +153,8 @@ class Game:
             self.grid.addActor(tower, pos.toLocation())
             tower.addMouseTouchListener(self.selectTower, GGMouse.lPress)
             self.heldTower = None
+        else:
+            self.heldTower.show(3)
 
     def changeTowerTarget(self, pos):
         if DEBUG:
