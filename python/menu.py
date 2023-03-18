@@ -56,7 +56,10 @@ class Menu(JMainFrame):
             self.lUpgrade3,
             self.tUpgrade1,
             self.tUpgrade2,
-            self.tUpgrade3
+            self.tUpgrade3,
+            self.lCurrentRound,
+            self.lMoney,
+            self.lHealth
         ]
         self.confirmScreen = [
             self.bConfirm,
