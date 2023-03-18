@@ -59,6 +59,7 @@ class Game:
 
         self.menu.tMoney.setText(str(self.money))
         self.menu.tHealth.setText(str(self.health))
+        self.menu.tCurrentRound.setText(str(self.currentRound + 1))
 
         self.tickActor = TickActor(self)
         self.grid.addActor(self.tickActor, Location())
@@ -67,6 +68,7 @@ class Game:
         if DEBUG:
             print("[INFO] Round started.")
         self.currentRound += 1
+        self.menu.tCurrentRound.setText(str(self.currentRound + 1))
         self.paused = False
 
     def tick(self):
@@ -209,6 +211,14 @@ class Game:
                         self.updateMoney(-(self.selectedTower.cost // 2))
                         self.selectedTower = None
                         self.updateCost()
+
+    def sellTower(self):
+        if self.selectedTower is not None:
+            self.updateMoney(self.selectedTower.cost // 2)
+            self.grid.removeActor(self.selectedTower)
+            self.towers.pop(self.selectedTower.key)
+            self.selectedTower = None
+            self.updateCost()
 
     def removeAllActors(self):
         # deinitialize the game

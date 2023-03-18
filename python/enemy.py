@@ -10,7 +10,7 @@ DEBUG = True
 
 class Enemy(Actor):
     def __init__(self, game, key, dmg, health, speed, sprite, segmentIdx=0, segmentProgress=0,
-                 childSupplier=None, childCount=1, childSpacing=10, sizeRadius=16):
+                 childSupplier=None, childCount=1, childSpacing=10, sizeRadius=16, reward=1):
         Actor.__init__(self, sprite)
         self.game = game
         self.key = key
@@ -20,6 +20,8 @@ class Enemy(Actor):
         self.pathNodes = self.game.gameMap.pathNodes
         self.currentSegmentIdx = segmentIdx
         self.size = sizeRadius
+        self.reward = reward
+
 
         prevNodeToNextNodeVektor = self.pathNodes[1] - self.pathNodes[0]
         self.currentSegmentLength = abs(prevNodeToNextNodeVektor)
@@ -59,6 +61,7 @@ class Enemy(Actor):
         if DEBUG:
             print("Enemy", self.key, "died.")
         self.despawn()
+        self.game.updateMoney(self.reward) 
 
         if self.childSupplier is None or overshoot <= 0:
             return
