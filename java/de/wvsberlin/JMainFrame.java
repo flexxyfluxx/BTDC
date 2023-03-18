@@ -14,7 +14,7 @@ import de.wvsberlin.Difficulty;
  * Description
  *
  * @version 1.0 from 04/03/2023
- * @author till
+ * @author 
  */
 
 public class JMainFrame extends JFrame {
@@ -50,9 +50,20 @@ public class JMainFrame extends JFrame {
   public JButton bTower2 = new JButton();
   public JButton bTower3 = new JButton();
   public JButton bTower4 = new JButton();
+  public JLabel lTower1 = new JLabel();
+  public JLabel lTower2 = new JLabel();
+  public JLabel lTower3 = new JLabel();
+  public JLabel lTower4 = new JLabel();
   public JButton bUpgrade1 = new JButton();
   public JButton bUpgrade2 = new JButton();
   public JButton bUpgrade3 = new JButton();
+  public JButton bSell = new JButton();
+  public JTextField tUpgrade1 = new JTextField();
+  public JTextField tUpgrade2 = new JTextField();
+  public JTextField tUpgrade3 = new JTextField();
+  public JLabel lUpgrade1 = new JLabel("Attackspeed:");
+  public JLabel lUpgrade2 = new JLabel("Attackdamage:");
+  public JLabel lUpgrade3 = new JLabel("Towerspecific:");
   public JLabel lCurrentRound = new JLabel("Round:");
   public JLabel lMoney = new JLabel("Money:");
   public JLabel lHealth = new JLabel("Health:");
@@ -212,24 +223,63 @@ public class JMainFrame extends JFrame {
     bTower4.addActionListener(this::bTower4_ActionPerformed);
     bTower4.setVisible(false);
     cp.add(bTower4);
+    lTower1.setBounds(1050, 210, 80, 24);
+    lTower1.setVisible(false);
+    cp.add(lTower1);
+    lTower2.setBounds(1155, 210, 80, 24);
+    lTower2.setVisible(false);
+    cp.add(lTower2);
+    lTower3.setBounds(1050, 330, 80, 24);
+    lTower3.setVisible(false);
+    cp.add(lTower3);
+    lTower4.setBounds(1155, 330, 80, 24);
+    lTower4.setVisible(false);
+    cp.add(lTower4);
     bUpgrade1.setBounds(150, 50, 80, 24);
-    bUpgrade1.setText("Upgrade1");
+    bUpgrade1.setText("Upgrade");
     bUpgrade1.setMargin(new Insets(2, 2, 2, 2));
     bUpgrade1.addActionListener(this::bUpgrade1_ActionPerformed);
     bUpgrade1.setVisible(false);
     cp.add(bUpgrade1);
     bUpgrade2.setBounds(300, 50, 80, 24);
-    bUpgrade2.setText("Upgrade2");
+    bUpgrade2.setText("Upgrade");
     bUpgrade2.setMargin(new Insets(2, 2, 2, 2));
     bUpgrade2.addActionListener(this::bUpgrade2_ActionPerformed);
     bUpgrade2.setVisible(false);
     cp.add(bUpgrade2);
     bUpgrade3.setBounds(450, 50, 80, 24);
-    bUpgrade3.setText("Upgrade3");
+    bUpgrade3.setText("Upgrade");
     bUpgrade3.setMargin(new Insets(2, 2, 2, 2));
     bUpgrade3.addActionListener(this::bUpgrade3_ActionPerformed);
     bUpgrade3.setVisible(false);
     cp.add(bUpgrade3);
+    bSell.setBounds(600, 50, 80, 24);
+    bSell.setText("Sell");
+    bSell.setMargin(new Insets(2, 2, 2, 2));
+    bSell.addActionListener(this::bSell_ActionPerformed);
+    bSell.setVisible(false);
+    cp.add(bSell);
+    lUpgrade1.setBounds(150, 20, 80, 24);
+    lUpgrade1.setVisible(false);
+    cp.add(lUpgrade1);
+    lUpgrade2.setBounds(300, 20, 80, 24);
+    lUpgrade2.setVisible(false);
+    cp.add(lUpgrade2);
+    lUpgrade3.setBounds(450, 20, 80, 24);
+    lUpgrade3.setVisible(false);
+    cp.add(lUpgrade3);
+    tUpgrade1.setBounds(150, 80, 80, 24);
+    tUpgrade1.setEditable(false);
+    tUpgrade1.setVisible(false);
+    cp.add(tUpgrade1);
+    tUpgrade2.setBounds(300, 80, 80, 24);
+    tUpgrade2.setEditable(false);
+    tUpgrade2.setVisible(false);
+    cp.add(tUpgrade2);
+    tUpgrade3.setBounds(450, 80, 80, 24);
+    tUpgrade3.setEditable(false);
+    tUpgrade3.setVisible(false);
+    cp.add(tUpgrade3);
     tCurrentRound.setBounds(950, 20, 80, 24);
     tCurrentRound.setEditable(false);
     tCurrentRound.setVisible(false);
@@ -380,6 +430,11 @@ public class JMainFrame extends JFrame {
     // TODO add your code here
     
   } // end of bUpgrade3_ActionPerformed
+
+  public void bSell_ActionPerformed(ActionEvent evt) {
+    // TODO add your code here
+    
+  } // end of bSell_ActionPerformed
 
   // end methods
   
