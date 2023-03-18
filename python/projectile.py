@@ -66,19 +66,14 @@ class Projectile(Actor):
             return
 
         self.lifetime -= 1
-        # (yearns for `--` operator)
-        # (wow)
-        # (so concise)
-        # (much readable)
-        # (very decrement)
 
         self.pos += self.richtungsvektor
         self.setLocation(self.pos.toLocation())
 
-        for enemy in self.getTouchedEnemies():
-            if enemy not in self.enemiesHit:
-                self.enemiesHit.append(enemy)
-                self.onEnemyTouched(enemy)
+        #for enemy in self.getTouchedEnemies():
+        #    if enemy not in self.enemiesHit:
+        #        self.enemiesHit.append(enemy)
+        #        self.onEnemyTouched(enemy)
 
     def despawn(self):
         # falls in einem Gamegrid vorhanden: entfernen.
