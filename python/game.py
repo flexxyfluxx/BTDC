@@ -7,6 +7,7 @@ from rounds import ROUNDS
 from ch.aplu.jgamegrid import Location, GGMouse, Actor
 from tower1 import Tower1
 from tower2 import Tower2
+from towerDebug import TowerDebug
 from de.wvsberlin import Difficulty
 from de.wvsberlin.vektor import Vektor
 from counter import Counter
@@ -53,8 +54,12 @@ class Game:
         else:
             raise ValueError("Illegal difficulty")
 
+        self.menu.tMoney.setText(str(self.money))
+        self.menu.tHealth.setText(str(self.health))
+
         self.tickActor = TickActor(self)
         self.grid.addActor(self.tickActor, Location())
+
 
     def startNextRound(self):
         if DEBUG:
@@ -142,6 +147,8 @@ class Game:
                 tower = Tower1(pos, key, self)
             elif self.heldTower.towerID == 1:
                 tower = Tower2(pos, key, self)
+            elif self.heldTower.towerID == 2:
+                tower = TowerDebug(pos, key, self)
             else:
                 raise ValueError("Illegal tower ID")
 
@@ -163,13 +170,22 @@ class Game:
         self.selectedTower = None
 
     def mousePressed(self, event):
-        clickPos = Vektor(event.getX(), event.getY())
-        if DEBUG:
-            print("[INFO] Mouse click at (%s, %s)" % (clickPos.x, clickPos.y))
-        if self.heldTower is not None:
-            self.placeHeldTower(clickPos)
-        elif self.selectedTower is not None:
-            self.changeTowerTarget(clickPos)
+        if event.button == 1:
+            clickPos = Vektor(event.getX(), event.getY())
+            if DEBUG:
+                print("[INFO] Mouse click at (%s, %s)" % (clickPos.x, clickPos.y))
+            if self.heldTower is not None:
+                self.placeHeldTower(clickPos)
+            elif self.selectedTower is not None:
+                self.changeTowerTarget(clickPos)
+        elif event.button == 3:
+            if self.selectedTower is not None:
+                if self.money >= self.selectedTower.cost:
+                    clickPos = Vektor(event.getX(), event.getY())
+                    self.selectedTower.pos = clickPos
+                    self.selectedTower.setLocation(clickPos.toLocation())
+                    self.updateMoney(-(self.selectedTower.cost // 2))
+                    self.selectedTower = None
 
     def removeAllActors(self):
         # deinitialize the game
@@ -187,6 +203,9 @@ class Game:
         self.grid.removeActor(self.tickActor)
         self.grid.getBg().clear()
 
+    def updateMoney(self, difference):
+        self.money += difference
+        self.menu.tMoney.setText(str(self.money))
 
 class TickActor(Actor):
     def __init__(self, game):
