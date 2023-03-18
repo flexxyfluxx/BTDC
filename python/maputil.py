@@ -23,9 +23,9 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
 
     def setBgImg(self, img):
         if isinstance(img, str):  # falls Filepath zu Bild gegeben...
-            self._bgImg = GGBitmap(abspath(img))  # ...erstelle neues BufferedImage
+            self.bgImg = GGBitmap.getImage(abspath(img))  # ...erstelle neues BufferedImage
         elif isinstance(img, BufferedImage):  # Falls schon BufferedImage:
-            self._bgImg = img  # ...setze Attribut.
+            self.bgImg = img  # ...setze Attribut.
         elif img is None:
             pass
         else:
@@ -38,16 +38,7 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
         if not isinstance(node, Vektor):
             raise TypeError("Vektor required; %s given."
                             % type(node))
-        return self
-
-    def setRelUpper(self, num):
-        try:
-            float(num)
-        except TypeError:
-            raise TypeError("Number required; %s given."
-                            % type(num))
-
-        self._relUpper = num
+        self.pathNodes.append(node)
         return self
 
     def setBgOfGrid(self, grid, debug=False):
@@ -59,20 +50,13 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
             bg.drawImage(self.bgImg)
 
         if debug:
-            cellSize = grid.getCellSize()
-            bgWidth = grid.getNbHorzCells() * cellSize
-            bgHeight = grid.getNbVertCells() * cellSize
-
             bg.setPaintColor(Color.RED)
             bg.setLineWidth(3)
 
-            xFactor = bgWidth / self.relUpper
-            yFactor = bgHeight / self.relUpper
-
-            for c in range(len(self._pathNodes) - 1):
-                node0 = self._pathNodes[c]
-                node1 = self._pathNodes[c + 1]
-                bg.drawLine(node0.toPoint(xFactor, yFactor), node1.toPoint(xFactor, yFactor))
+            for c in range(len(self.pathNodes) - 1):
+                node0 = self.pathNodes[c]
+                node1 = self.pathNodes[c + 1]
+                bg.drawLine(node0.toPoint(), node1.toPoint())
 
     def getDistToPath(self, pos):
         pass

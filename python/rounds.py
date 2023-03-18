@@ -5,15 +5,8 @@ Hier werden die Runden instantiiert und initialisiert.
 """
 
 from round import Round, Wave
+from enemies import *
 
-def getAllRounds(game):
-    return [supplier(game) for supplier in ROUND_SUPPLIERS]
-
-def getRound(id):
-    return ROUND_SUPPLIERS[id]()
-
-ROUND_SUPPLIERS = [
-]
 
 # Falls kein EXAMPLE_TYPE existiert: definieren als 0. Verwenden wir in dem Fall offensichtlich eh nicht.
 # einfach nur, damit die IDE nicht allzu viele Fehler schmeißt lulw.
@@ -25,7 +18,7 @@ except NameError:
     EXAMPLE_TYPE = 0
 
 # Orientierungsbeispiel für die Erstellung einer Runde.
-EXAMPLE_ROUND = (Round()
+EXAMPLE_ROUND = lambda game: (Round(game)
     .addWave(
         lambda: Wave()
             .setEnemyType(EXAMPLE_TYPE)
@@ -49,3 +42,23 @@ EXAMPLE_ROUND = (Round()
             .setStartDelay(100)
     )
 )
+
+
+ROUNDS = lambda game: [
+    (Round(game)
+        .addWave(
+            lambda key_: Wave(game, key_)
+                .setEnemyType(WEAKEST)
+                .setCount(20)
+                .setSpacing(100)
+        )
+    ),
+    (Round(game)
+        .addWave(
+            lambda key_: Wave(game, key_)
+                .setEnemyType(WEAKEST)
+                .setCount(35)
+                .setSpacing(75)
+        )
+    )
+]
