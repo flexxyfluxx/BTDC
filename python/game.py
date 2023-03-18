@@ -180,7 +180,6 @@ class Game:
 
         self.selectedTower = None
         self.updateCost()
-        
 
     def mousePressed(self, event):
         if event.button == 1:
@@ -202,6 +201,14 @@ class Game:
                         self.updateMoney(-(self.selectedTower.cost // 2))
                         self.selectedTower = None
                         self.updateCost()
+
+    def sellTower(self):
+        if self.selectedTower is not None:
+            self.updateMoney(self.selectedTower.cost // 2)
+            self.grid.removeActor(self.selectedTower)
+            self.towers.pop(self.selectedTower.key)
+            self.selectedTower = None
+            self.updateCost()
 
     def removeAllActors(self):
         # deinitialize the game
