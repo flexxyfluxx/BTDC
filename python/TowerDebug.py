@@ -12,5 +12,5 @@ class TowerDebug(Tower):
                        costUpgrade3=0, projectile=EXAMPLE_PROJ,
                        sprite=abspath('../assets/sprites/spriteDebug.png'), key=key, game=game)
         
-    def act(self):
+    def tick(self):
         pass
