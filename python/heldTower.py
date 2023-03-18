@@ -9,6 +9,7 @@ class HeldTower(Actor):
         self.sprites = [
             abspath('../assets/sprites/sprite.png'),
             abspath('../assets/sprites/sprite2.png'),
+            abspath('../assets/sprites/spriteDebug.png'),
             abspath('../assets/sprites/denied.png')
         ]
         Actor.__init__(self, self.sprites)
