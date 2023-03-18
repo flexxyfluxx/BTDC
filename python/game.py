@@ -18,7 +18,7 @@ class Game:
     def __init__(self, menu, difficulty, gameMap):  # gameMap, bc map is taken by python and map_ is ugly
         self.menu = menu
         self.grid = self.menu.gamegrid
-        self.grid.setSimulationPeriod(10)
+        self.grid.setSimulationPeriod(20)
         self.currentRound = -1
         self.roundActive = False
         self.gameMap = gameMap

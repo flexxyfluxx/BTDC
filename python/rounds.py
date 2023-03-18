@@ -58,7 +58,7 @@ ROUNDS = lambda game: [
             lambda key_: Wave(game, key_)
                 .setEnemyType(WEAKEST)
                 .setCount(35)
-                .setSpacing(30)
+                .setSpacing(75)
         )
     )
 ]

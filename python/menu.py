@@ -134,6 +134,9 @@ class Menu(JMainFrame):
     def bStartRound_ActionPerformed(self, _):
         self.game.startNextRound()
 
+    def bAutostart_ActionPerformed(self, _):
+        self.game.doAutostart = True
+
     def bStartGame_ActionPerformed(self, _):
         if DEBUG:
             print("bStartGame_ActionPerformed called")
