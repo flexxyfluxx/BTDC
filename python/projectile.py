@@ -15,7 +15,7 @@ class Projectile(Actor):
     Wenn diese Lifetime endet, verschwindet das Projektil sofort.
     """
 
-    def __init__(self, game, key, richtungsvektor, sprite, lifetime, pierce, size, pos):
+    def __init__(self, game, key, richtungsvektor, sprite, lifetime, pos, pierce=1, size=16, damage=1):
         self.game = game
         self.key = key
         if not (isinstance(richtungsvektor, Vektor) or isinstance(richtungsvektor, MutableVektor)):
@@ -58,6 +58,7 @@ class Projectile(Actor):
         self.setDirection(self.richtungsvektor.getAngle())
 
         self.enemiesHit = []
+        self.damage = damage
 
     def tick(self):
         # Falls Tick Counter leer, despawnen.
@@ -70,10 +71,15 @@ class Projectile(Actor):
         self.pos += self.richtungsvektor
         self.setLocation(self.pos.toLocation())
 
-        #for enemy in self.getTouchedEnemies():
-        #    if enemy not in self.enemiesHit:
-        #        self.enemiesHit.append(enemy)
-        #        self.onEnemyTouched(enemy)
+        for enemy in self.game.activeEnemies.values():
+            if not self.isTouchingEnemy(enemy):
+                continue
+
+            if self.pierce <= 0:
+                self.despawn()
+                return
+
+            self.onEnemyTouched(enemy)
 
     def despawn(self):
         # falls in einem Gamegrid vorhanden: entfernen.
@@ -88,23 +94,8 @@ class Projectile(Actor):
         return False
 
     def onEnemyTouched(self, enemy):  # stub
-        # TODO implement this
-        raise NotImplementedError("This function has not been implemented yet!")
+        enemy.hp -= self.damage
+        self.pierce -= 1
 
     def getDirection(self):
         return self.richtungsvektor.getAngle()
-
-
-if __name__ == "__main__":
-    import syspaths
-    from ch.aplu.jgamegrid import GameGrid, GGBitmap, Location
-    from os.path import abspath
-
-    grid = GameGrid(600, 600)
-    proj = Projectile(Vektor(1, 1), GGBitmap.getScaledImage(abspath("../assets/sprites/sprite.png"), 0.1, 0), 500)
-
-    grid.addActor(proj, Location())
-    grid.show()
-    grid.setSimulationPeriod(10)
-
-    grid.doRun()

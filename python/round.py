@@ -117,7 +117,6 @@ class Wave:
         return self
 
     def tick(self):
-        print("Wave.tick called")
         if self.sendCooldown > 0:
             self.sendCooldown -= 1
             return

@@ -33,7 +33,7 @@ open class Vektor(x: Number, y: Number) {
 
         @JvmStatic
         // um einen Vektor auch mit Richtung und Länge initialisieren zu können
-        fun fromAngleAndMagnitude(angle: Double, magnitude: Double) = Vektor(cos(toRadians(angle)), sin(angle)) * magnitude
+        fun fromAngleAndMagnitude(angle: Double, magnitude: Double) = Vektor(cos(toRadians(angle)), sin(toRadians(angle))) * magnitude
 
 
         /**
@@ -91,9 +91,9 @@ open class Vektor(x: Number, y: Number) {
     fun getAngle(): Double {
         val unitized = getUnitized()
 
-        return (
+        return (360 +
             if (unitized.x < 0) {
-                180 + toDegrees(asin(unitized.y))
+                toDegrees(asin(unitized.y))
             } else toDegrees(asin(unitized.y))
         ) % 360
     }
@@ -190,7 +190,7 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
     companion object {
         @JvmStatic
         fun fromAngleAndMagnitude(angle: Number, magnitude: Number = 1) =
-            MutableVektor(cos(toRadians(angle.toDouble())), sin(angle.toDouble())) * magnitude
+            MutableVektor(cos(toRadians(angle.toDouble())), sin(toRadians(angle.toDouble()))) * magnitude
 
         @JvmStatic
         fun fromImmutable(ivektor: Vektor) = MutableVektor(ivektor.x, ivektor.y)
