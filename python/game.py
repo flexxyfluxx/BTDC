@@ -177,7 +177,8 @@ class Game:
                 self.changeTowerTarget(clickPos)
         elif event.button == 3:
             pass
-            # TODO implement stuff
+            # TODO implement stuff  
+            
 
     def removeAllActors(self):
         # deinitialize the game

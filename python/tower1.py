@@ -13,6 +13,8 @@ class Tower1(Tower):
                        sprite=abspath('../assets/sprites/sprite.png'), key=key, game=game)
 
     def upgradePath3(self):
-        self.attackRange += 5
-        self.costUpgrade3 *= 1.1
-        print(self.attackRange)
+        if self.costUpgrade3 >= self.game.money:
+            self.game.updateMoney(-self.costUpgrade3)
+            self.attackRange += 5
+            self.costUpgrade3 *= 1.1
+            print(self.attackRange)
