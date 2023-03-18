@@ -5,7 +5,7 @@ from de.wvsberlin import JMainFrame
 from de.wvsberlin.vektor import Vektor
 from game import Game, Difficulty
 from maps import theMaps
-from HeldTower import HeldTower
+from heldTower import HeldTower
 from ch.aplu.jgamegrid import Location
 
 DEBUG = True
@@ -146,7 +146,6 @@ class Menu(JMainFrame):
         self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
     
     def bTower3_ActionPerformed(self, _):
-        # self.game.heldTower = HeldTower(2)
         # raise NotImplementedError("This tower has not been implemented so far.")
         for x in range(0, 96):
             for y in range(0, 54):

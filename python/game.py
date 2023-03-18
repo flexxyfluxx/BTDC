@@ -149,6 +149,8 @@ class Game:
             self.grid.addActor(tower, pos.toLocation())
             tower.addMouseTouchListener(self.selectTower, GGMouse.lPress)
             self.heldTower = None
+        else:
+            self.heldTower.show(3)
 
     def changeTowerTarget(self, pos):
         if DEBUG:
