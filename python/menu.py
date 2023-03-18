@@ -7,6 +7,8 @@ from game import Game, Difficulty
 from maps import theMaps
 from HeldTower import HeldTower
 from ch.aplu.jgamegrid import Location
+from tower1 import Tower1
+from tower2 import Tower2
 
 DEBUG = True
 
@@ -138,13 +140,17 @@ class Menu(JMainFrame):
         self.startGame()
 
     def bTower1_ActionPerformed(self, _):
-        self.game.heldTower = newHeldTower = HeldTower(0)
-        self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
+        if self.game.money >= Tower1.cost:
+            self.game.heldTower = newHeldTower = HeldTower(0)
+            self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
+            self.game.updateMoney(-Tower1.cost)
 
     def bTower2_ActionPerformed(self, _):
-        self.game.heldTower = newHeldTower = HeldTower(1)
-        self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
-    
+        if self.game.money >= Tower2.cost:
+            self.game.heldTower = newHeldTower = HeldTower(1)
+            self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
+            self.game.updateMoney(-Tower2.cost)
+
     def bTower3_ActionPerformed(self, _):
         # self.game.heldTower = HeldTower(2)
         # raise NotImplementedError("This tower has not been implemented so far.")
