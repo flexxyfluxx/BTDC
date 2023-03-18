@@ -89,9 +89,7 @@ class Projectile(Actor):
         self.game.activeProjectiles.pop(self.key)
 
     def isTouchingEnemy(self, enemy):  # stub
-        if Vektor.dist(self.pos, enemy.pos, False) < (self.size + enemy.size) ** 2 and enemy not in self.enemiesHit:
-            return True
-        return False
+        return Vektor.dist(self.pos, enemy.pos, False) < (self.size + enemy.size) ** 2 and enemy not in self.enemiesHit
 
     def onEnemyTouched(self, enemy):  # stub
         enemy.health -= self.damage
