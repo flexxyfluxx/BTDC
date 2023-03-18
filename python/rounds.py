@@ -20,14 +20,14 @@ except NameError:
 # Orientierungsbeispiel für die Erstellung einer Runde.
 EXAMPLE_ROUND = lambda game: (Round(game)
     .addWave(
-        lambda: Wave()
+        lambda key: Wave(game, key)
             .setEnemyType(EXAMPLE_TYPE)
             .setCount(10)
             .setSpacing(20)
             .setStartDelay(100)
     )
     .addWave(
-        lambda: Wave()
+        lambda key: Wave(game, key)
             .setEnemyType(EXAMPLE_TYPE)
             .setCount(15)
             .setSpacing(10)
