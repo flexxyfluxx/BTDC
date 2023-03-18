@@ -157,7 +157,7 @@ class Menu(JMainFrame):
         for x in range(0, 96):
             for y in range(0, 54):
                 self.game.heldTower = HeldTower(2) 
-                self.game.placeTower(Vektor(x*10, y*10))
+                self.game.placeHeldTower(Vektor(x*10, y*10))
 
     def bTower4_ActionPerformed(self, _):
         # self.game.heldTower = 3

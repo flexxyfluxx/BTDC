@@ -7,6 +7,7 @@ from rounds import ROUNDS
 from ch.aplu.jgamegrid import Location, GGMouse, Actor
 from tower1 import Tower1
 from tower2 import Tower2
+from towerDebug import TowerDebug
 from de.wvsberlin import Difficulty
 from de.wvsberlin.vektor import Vektor
 from counter import Counter
@@ -146,6 +147,8 @@ class Game:
                 tower = Tower1(pos, key, self)
             elif self.heldTower.towerID == 1:
                 tower = Tower2(pos, key, self)
+            elif self.heldTower.towerID == 2:
+                tower = TowerDebug(pos, key, self)
             else:
                 raise ValueError("Illegal tower ID")
 
