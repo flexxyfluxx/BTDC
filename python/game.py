@@ -167,13 +167,18 @@ class Game:
         self.selectedTower = None
 
     def mousePressed(self, event):
-        clickPos = Vektor(event.getX(), event.getY())
-        if DEBUG:
-            print("[INFO] Mouse click at (%s, %s)" % (clickPos.x, clickPos.y))
-        if self.heldTower is not None:
-            self.placeHeldTower(clickPos)
-        elif self.selectedTower is not None:
-            self.changeTowerTarget(clickPos)
+        if event.button == 1:
+            clickPos = Vektor(event.getX(), event.getY())
+            if DEBUG:
+                print("[INFO] Mouse click at (%s, %s)" % (clickPos.x, clickPos.y))
+            if self.heldTower is not None:
+                self.placeHeldTower(clickPos)
+            elif self.selectedTower is not None:
+                self.changeTowerTarget(clickPos)
+        elif event.button == 3:
+            pass
+            # TODO implement stuff  
+            
 
     def removeAllActors(self):
         # deinitialize the game
