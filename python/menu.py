@@ -175,6 +175,9 @@ class Menu(JMainFrame):
 
     def bTower4_ActionPerformed(self, _):
         # self.game.heldTower = 3
+
+        self.game.currentRound += 1
+        return
         raise NotImplementedError("This tower has not been implemented so far.")
 
     def bUpgrade1_ActionPerformed(self, _):
