@@ -189,6 +189,8 @@ class Menu(JMainFrame):
             return
         self.game.selectedTower.upgradePath3()
 
+    def bSell_ActionPerformed(self, _):
+        self.game.sellTower()
 
 if __name__ == "__main__":
     menu = Menu()
