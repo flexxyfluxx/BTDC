@@ -5,7 +5,7 @@ from de.wvsberlin import JMainFrame
 from de.wvsberlin.vektor import Vektor
 from game import Game, Difficulty
 from maps import theMaps
-from HeldTower import HeldTower
+from heldTower import HeldTower
 from ch.aplu.jgamegrid import Location
 
 DEBUG = True
@@ -38,11 +38,15 @@ class Menu(JMainFrame):
             self.bUpgrade1,
             self.bUpgrade2,
             self.bUpgrade3,
-            self.tRound,
             self.jSeparator1,
             self.bStartRound,
             self.bAutostart,
-            self.tMoney
+            self.tMoney,
+            self.tCurrentRound,
+            self.tHealth,
+            self.lCurrentRound,
+            self.lMoney,
+            self.lHealth
         ]
         self.confirmScreen = [
             self.bConfirm,
@@ -130,6 +134,9 @@ class Menu(JMainFrame):
     def bStartRound_ActionPerformed(self, _):
         self.game.startNextRound()
 
+    def bAutostart_ActionPerformed(self, _):
+        self.game.doAutostart = True
+
     def bStartGame_ActionPerformed(self, _):
         if DEBUG:
             print("bStartGame_ActionPerformed called")
@@ -154,7 +161,7 @@ class Menu(JMainFrame):
                 self.game.placeTower(Vektor(x*10, y*10))
 
     def bTower4_ActionPerformed(self, _):
-        # self.game.heldTower = 3
+        # self.game.heldTower = HeldTower(3)
         raise NotImplementedError("This tower has not been implemented so far.")
 
     def bUpgrade1_ActionPeformed(self, _):
@@ -163,14 +170,14 @@ class Menu(JMainFrame):
         self.game.selectedTower.upgradeAttackSpeed()
 
     def bUpgrade2_ActionPeformed(self, _):
-        if self.selectedTower is None:
+        if self.game.selectedTower is None:
             return
-        self.selectedTower.upgradeAttackDamage()
+        self.game.selectedTower.upgradeAttackDamage()
 
     def bUpgrade3_ActionPeformed(self, _):
-        if self.selectedTower is None:
+        if self.game.selectedTower is None:
             return
-        # self.heldTower.upgrade...()
+        # self.game.heldTower.upgrade...()
         raise NotImplementedError("This upgrade has not been implemented so far.")
 
 
