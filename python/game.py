@@ -60,6 +60,7 @@ class Game:
 
         self.menu.tMoney.setText(str(self.money))
         self.menu.tHealth.setText(str(self.health))
+        self.menu.tCurrentRound.setText(str(self.currentRound + 1))
 
         self.tickActor = TickActor(self)
         self.grid.addActor(self.tickActor, Location())
@@ -69,6 +70,7 @@ class Game:
         if DEBUG:
             print("[INFO] Round started.")
         self.currentRound += 1
+        self.menu.tCurrentRound.setText(str(self.currentRound + 1))
         self.paused = False
 
     def tick(self):
