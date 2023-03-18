@@ -18,6 +18,9 @@ class Tower(Actor):
         self.targetPos = Vektor(480, 270)
         self.key = key
 
+    def tick(self):
+        pass
+
     def upgradeAttackSpeed(self):
         # Attack speed increment as a factor, eg. every level, attack speed is multiplied by 1.15
         self.atkSpeed = self.atkSpeed * self.atkSpeedIncrement

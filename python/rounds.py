@@ -18,7 +18,7 @@ except NameError:
     EXAMPLE_TYPE = 0
 
 # Orientierungsbeispiel für die Erstellung einer Runde.
-EXAMPLE_ROUND = (Round()
+EXAMPLE_ROUND = lambda game: (Round(game)
     .addWave(
         lambda: Wave()
             .setEnemyType(EXAMPLE_TYPE)
@@ -44,8 +44,8 @@ EXAMPLE_ROUND = (Round()
 )
 
 
-ROUNDS = [
-    (Round()
+ROUNDS = lambda game: [
+    (Round(game)
         .addWave(
             lambda: Wave()
                 .setEnemyType(WEAKEST)
@@ -53,7 +53,7 @@ ROUNDS = [
                 .setSpacing(40)
         )
     ),
-    (Round()
+    (Round(game)
         .addWave(
             lambda: Wave()
                 .setEnemyType(WEAKEST)

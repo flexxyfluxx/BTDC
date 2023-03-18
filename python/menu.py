@@ -154,7 +154,7 @@ class Menu(JMainFrame):
                 self.game.placeTower(Vektor(x*10, y*10))
 
     def bTower4_ActionPerformed(self, _):
-        # self.game.heldTower = 3
+        # self.game.heldTower = HeldTower(3)
         raise NotImplementedError("This tower has not been implemented so far.")
 
     def bUpgrade1_ActionPeformed(self, _):
@@ -163,14 +163,14 @@ class Menu(JMainFrame):
         self.game.selectedTower.upgradeAttackSpeed()
 
     def bUpgrade2_ActionPeformed(self, _):
-        if self.selectedTower is None:
+        if self.game.selectedTower is None:
             return
-        self.selectedTower.upgradeAttackDamage()
+        self.game.selectedTower.upgradeAttackDamage()
 
     def bUpgrade3_ActionPeformed(self, _):
-        if self.selectedTower is None:
+        if self.game.selectedTower is None:
             return
-        # self.heldTower.upgrade...()
+        # self.game.heldTower.upgrade...()
         raise NotImplementedError("This upgrade has not been implemented so far.")
 
 
