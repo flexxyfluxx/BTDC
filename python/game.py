@@ -41,6 +41,10 @@ class Game:
 
         self.towerKeyGen = Counter()
         self.towers = {}
+        self.menu.lTower1.setText(str(Tower1.cost))
+        self.menu.lTower2.setText(str(Tower2.cost))
+        self.menu.lTower3.setText(str(TowerDebug.cost))
+        self.menu.lTower4.setText(str(0))
 
         if difficulty == Difficulty.EASY:
             self.health = 100
@@ -117,6 +121,21 @@ class Game:
 
     def selectTower(self, actor, mouse, location):
         self.selectedTower = actor
+        self.updateCost()
+
+    def checkPlacementPos(self, pos):
+        dist = 2048  # unreasonably large distance to start off with
+        for e in range(len(self.gameMap.pathNodes) - 1):
+            node1 = self.gameMap.pathNodes[e]
+            node2 = self.gameMap.pathNodes[e + 1]
+            clampedDist = Vektor.clampedDist(node1, node2, pos)
+            if DEBUG:
+                print("clampedDist =", clampedDist)
+            if clampedDist < dist:
+                dist = clampedDist
+        if DEBUG:
+            print("final dist to path:", dist)
+        return dist
 
     def placeHeldTower(self, pos):
         if DEBUG:
@@ -129,17 +148,7 @@ class Game:
         # implement check for illegal positions
         if DEBUG:
             print("Start finding distance to path...")
-        dist = 2048  # unreasonably large distance to start off with
-        for e in range(len(self.gameMap.pathNodes) - 1):
-            node1 = self.gameMap.pathNodes[e]
-            node2 = self.gameMap.pathNodes[e + 1]
-            clampedDist = Vektor.clampedDist(node1, node2, pos)
-            if DEBUG:
-                print("clampedDist =", clampedDist)
-            if clampedDist < dist:
-                dist = clampedDist
-        if DEBUG:
-            print("final dist to path:", dist)
+        dist = self.checkPlacementPos(pos)
         if dist >= 40:
             self.grid.removeActor(self.heldTower)
             key = next(self.towerKeyGen)
@@ -157,6 +166,8 @@ class Game:
             tower.addMouseTouchListener(self.selectTower, GGMouse.lPress)
             self.heldTower = None
         else:
+            self.heldTower.pos = pos
+            self.heldTower.setLocation(pos.toLocation())
             self.heldTower.show(3)
 
     def changeTowerTarget(self, pos):
@@ -168,6 +179,8 @@ class Game:
             print(self.selectedTower.targetPos.x, self.selectedTower.targetPos.y, sep=", ")
 
         self.selectedTower = None
+        self.updateCost()
+        
 
     def mousePressed(self, event):
         if event.button == 1:
@@ -180,12 +193,15 @@ class Game:
                 self.changeTowerTarget(clickPos)
         elif event.button == 3:
             if self.selectedTower is not None:
-                if self.money >= self.selectedTower.cost:
-                    clickPos = Vektor(event.getX(), event.getY())
-                    self.selectedTower.pos = clickPos
-                    self.selectedTower.setLocation(clickPos.toLocation())
-                    self.updateMoney(-(self.selectedTower.cost // 2))
-                    self.selectedTower = None
+                clickPos = Vektor(event.getX(), event.getY())
+                dist = self.checkPlacementPos(clickPos)
+                if (self.money >= self.selectedTower.cost):
+                    if (dist >= 40):
+                        self.selectedTower.pos = clickPos
+                        self.selectedTower.setLocation(clickPos.toLocation())
+                        self.updateMoney(-(self.selectedTower.cost // 2))
+                        self.selectedTower = None
+                        self.updateCost()
 
     def removeAllActors(self):
         # deinitialize the game
@@ -194,6 +210,7 @@ class Game:
             self.heldTower = None
         if self.selectedTower is not None:
             self.selectedTower = None
+            self.updateCost()
         for tower in self.towers.values():
             self.grid.removeActor(tower)
         for enemy in self.activeEnemies.values():
@@ -206,6 +223,16 @@ class Game:
     def updateMoney(self, difference):
         self.money += difference
         self.menu.tMoney.setText(str(self.money))
+
+    def updateCost(self):
+        if self.selectedTower is None:
+            self.menu.tUpgrade1.setText(str())
+            self.menu.tUpgrade2.setText(str())
+            self.menu.tUpgrade3.setText(str())
+        else:
+            self.menu.tUpgrade1.setText(str(self.selectedTower.costUpgradeAttackSpeed))
+            self.menu.tUpgrade2.setText(str(self.selectedTower.costUpgradeAttackDamage))
+            self.menu.tUpgrade3.setText(str(self.selectedTower.costUpgrade3))
 
 class TickActor(Actor):
     def __init__(self, game):
