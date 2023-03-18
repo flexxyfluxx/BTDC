@@ -1,4 +1,4 @@
-from TowerBaseClass import Tower
+from tower import Tower
 from os.path import abspath
 from projectiles import TOWER2_PROJ
 

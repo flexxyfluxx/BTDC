@@ -3,6 +3,7 @@ from ch.aplu.jgamegrid import Actor
 from os.path import abspath
 from de.wvsberlin.vektor import Vektor
 
+
 class HeldTower(Actor):
     def __init__(self, towerID):
         self.sprites = [
