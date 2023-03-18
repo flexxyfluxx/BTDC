@@ -5,7 +5,7 @@ from de.wvsberlin.vektor import Vektor
 
 
 class Tower(Actor):
-    def __init__(self, attackSpeed, attackDamage, attackRange, pos, attackSpeedIncrement, attackDamageIncrement, projectile, sprite, key, game):
+    def __init__(self, attackSpeed, attackDamage, attackRange, pos, attackSpeedIncrement, attackDamageIncrement, costUpgradeAttackSpeed, costUpgradeAttackDamage, costUpgrade3, projectile, sprite, key, game):
         Actor.__init__(self, abspath(sprite))
         self.attackSpeed = attackSpeed
         self.attackDamage = attackDamage
@@ -15,19 +15,22 @@ class Tower(Actor):
         self.attackCooldown = 100/attackSpeed
         self.attackRange = attackRange
         self.targetPos = Vektor(480, 270)
-
+        self.costUpgradeAttackSpeed = costUpgradeAttackSpeed
+        self.costUpgradeAttackDamage = costUpgradeAttackDamage
+        self.costUpgrade3 = costUpgrade3
         self.projectile = projectile
-
         self.key = key
         self.game = game
 
     def upgradeAttackSpeed(self):
         # Attack speed increment as a factor, eg. every level, attack speed is multiplied by 1.15
         self.attackSpeed = self.attackSpeed * self.attackSpeedIncrement
+        self.costUpgradeAttackSpeed *= 1.1
         print(self.attackSpeed)
 
     def upgradeAttackDamage(self):
         self.attackDamage = self.attackDamage * self.attackDamageIncrement
+        self.costUpgradeAttackDamage *= 1.1
         print(self.attackDamage)
 
     def attack(self):
