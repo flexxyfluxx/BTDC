@@ -4,6 +4,7 @@
 .vscode/*
 .idea
 .idea/*
+.idea/**/*
 **/.jython_cache/*
 .jython_cache/*
 python/*.class
