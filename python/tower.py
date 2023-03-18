@@ -24,14 +24,18 @@ class Tower(Actor):
 
     def upgradeAttackSpeed(self):
         # Attack speed increment as a factor, eg. every level, attack speed is multiplied by 1.15
-        self.attackSpeed = self.attackSpeed * self.attackSpeedIncrement
-        self.costUpgradeAttackSpeed *= 1.1
-        print(self.attackSpeed)
+        if self.costUpgradeAttackSpeed >= self.game.money:
+            self.game.updateMoney(-self.costUpgradeAttackSpeed)
+            self.attackSpeed = self.attackSpeed * self.attackSpeedIncrement
+            self.costUpgradeAttackSpeed *= 1.1
+            print(self.attackSpeed)
 
     def upgradeAttackDamage(self):
-        self.attackDamage = self.attackDamage * self.attackDamageIncrement
-        self.costUpgradeAttackDamage *= 1.1
-        print(self.attackDamage)
+        if self.costUpgradeAttackDamage >= self.game.money:
+            self.game.updateMoney(-self.costUpgradeAttackDamage)
+            self.attackDamage = self.attackDamage * self.attackDamageIncrement
+            self.costUpgradeAttackDamage *= 1.1
+            print(self.attackDamage)
 
     def attack(self):
         direction = (self.targetPos - self.pos).getAngle()
