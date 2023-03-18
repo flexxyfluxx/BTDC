@@ -176,9 +176,13 @@ class Game:
             elif self.selectedTower is not None:
                 self.changeTowerTarget(clickPos)
         elif event.button == 3:
-            pass
             # TODO implement stuff  
-            
+            if self.selectedTower is not None:
+                if self.money >= self.selectedTower.cost:
+                    clickPos = Vektor(event.getX(), event.getY())
+                    self.selectedTower.pos = clickPos
+                    self.selectedTower.setLocation(clickPos.toLocation())
+                    self.updateMoney(-(self.selectedTower.cost // 2))
 
     def removeAllActors(self):
         # deinitialize the game
