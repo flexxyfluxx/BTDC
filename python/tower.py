@@ -14,7 +14,7 @@ class Tower(Actor):
         self.attackDamageIncrement = attackDamageIncrement
         self.attackCooldown = 100/attackSpeed
         self.attackRange = attackRange
-        self.targetPos = Vektor(480, 270)
+        self.targetDirection = 0
         self.costUpgradeAttackSpeed = costUpgradeAttackSpeed
         self.costUpgradeAttackDamage = costUpgradeAttackDamage
         self.costUpgrade3 = costUpgrade3
@@ -38,8 +38,7 @@ class Tower(Actor):
             print(self.attackDamage)
 
     def attack(self):
-        direction = (self.targetPos - self.pos).getAngle()
-        self.game.spawnProjectile(self.pos, direction, self.projectile, self.attackRange)
+        self.game.spawnProjectile(self.pos, self.targetDirection, self.projectile, self.attackRange)
 
     def tick(self):
         self.attackCooldown -= 1

@@ -129,8 +129,8 @@ class Menu(JMainFrame):
     def startGame(self):
         if DEBUG:
             print("startGame called")
-            print("map = ", self.getSelectedMap())
-            print("difficulty = ", self.getSelectedDifficulty())
+            print("map =", self.getSelectedMap())
+            print("difficulty =", self.getSelectedDifficulty())
 
         try:
             self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()])
