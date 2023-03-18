@@ -38,5 +38,5 @@ class Tower(Actor):
     def tick(self):
         self.attackCooldown -= 1
         if self.attackCooldown <= 0:
-                self.attack()
-                self.attackCooldown = 100/self.attackSpeed
+            self.attack()
+            self.attackCooldown = 100 / self.attackSpeed

@@ -38,11 +38,12 @@ class Menu(JMainFrame):
             self.bUpgrade1,
             self.bUpgrade2,
             self.bUpgrade3,
-            self.tCurrentRound,
             self.jSeparator1,
             self.bStartRound,
             self.bAutostart,
-            self.tMoney
+            self.tCurrentRound,
+            self.tMoney,
+            self.tHealth,
         ]
         self.confirmScreen = [
             self.bConfirm,
