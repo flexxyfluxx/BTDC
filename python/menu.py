@@ -141,13 +141,13 @@ class Menu(JMainFrame):
         self.startGame()
 
     def bTower1_ActionPerformed(self, _):
-        if self.game.money >= Tower1.cost:
+        if (self.game.money >= Tower1.cost) and (self.game.heldTower is None):
             self.game.heldTower = newHeldTower = HeldTower(0)
             self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
             self.game.updateMoney(-Tower1.cost)
 
     def bTower2_ActionPerformed(self, _):
-        if self.game.money >= Tower2.cost:
+        if (self.game.money >= Tower2.cost) and (self.game.heldTower is None):
             self.game.heldTower = newHeldTower = HeldTower(1)
             self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
             self.game.updateMoney(-Tower2.cost)
