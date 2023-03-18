@@ -38,7 +38,7 @@ class Menu(JMainFrame):
             self.bUpgrade1,
             self.bUpgrade2,
             self.bUpgrade3,
-            self.tRound,
+            self.tCurrentRound,
             self.jSeparator1,
             self.bStartRound,
             self.bAutostart,
