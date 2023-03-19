@@ -6,7 +6,7 @@ from os.path import abspath
 from de.wvsberlin.vektor import Vektor
 
 
-class HeldTower(Actor):
+class HeldTower(Actor): # hilfsklasse zum anzeigen des zu plazierenden Towers
     def __init__(self, towerID):
         self.sprites = [
             abspath('../assets/sprites/crTower.png'),

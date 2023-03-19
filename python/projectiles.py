@@ -27,6 +27,12 @@ TOWER2_PROJ = lambda game, key, direction, pos, lifetime, pierce: Projectile(
     lifetime=lifetime, pierce=pierce, size=6, pos=pos
 )
 
+TOWER3_PROJ = lambda game, key, direction, pos, lifetime, pierce: Projectile(
+    game=game, key=key,
+    richtungsvektor=Vektor.fromAngleAndMagnitude(direction, 5),
+    sprite=GGBitmap.getScaledImage(abspath("../assets/sprites/spritesprite.png"), 0.1, 0),
+    lifetime=lifetime, pierce=pierce, size=6, pos=pos
+)
 
 if __name__ == "__main__":
     pass

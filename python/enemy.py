@@ -58,10 +58,11 @@ class Enemy(Actor):
         self.despawn()
         self.game.updateMoney(self.reward)
 
-        if self.childSupplier is None:
+        if self.childSupplier is None: # wenn aus dem gegner kein neuer gegner entsteht ist die funktion heir zuende
             return
 
-        child = self.game.spawnEnemy(self.childSupplier, self.currentSegmentIdx, self.currentSegmentProgress)
+        # neuer gegner wird an der gleichen stelle gespawnt
+        child = self.game.spawnEnemy(self.childSupplier, self.currentSegmentIdx, self.currentSegmentProgress) 
         if overshoot < child.health:
             child.health -= overshoot
             return

@@ -35,6 +35,7 @@ class Tower(Actor):
             print(self.attackSpeed)
 
     def upgradeAttackDamage(self):
+        # Attack damage increment as a factor, eg. every level, attack damage is multiplied by 1.15
         if self.costUpgradeAttackDamage <= self.game.money:
             self.game.updateMoney(-self.costUpgradeAttackDamage)
             self.attackDamage = self.attackDamage * self.attackDamageIncrement

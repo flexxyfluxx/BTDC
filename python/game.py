@@ -36,7 +36,9 @@ class Game:
         self.activeProjectiles = {} # Ein Dict löst auch viele Probleme, was Löschen Projektilen angeht
 
         self.towerKeyGen = Counter()
-        self.towers = {} # Guess what
+        self.towers = {} # guess what
+        
+        # Anzeigen werden geladen
         self.menu.lTower1.setText(str(Tower1.cost))
         self.menu.lTower2.setText(str(Tower2.cost))
         if self.debug:
@@ -85,6 +87,7 @@ class Game:
             if not self.activeEnemies:
                 if self.debug:
                     print("[INFO] Round ended.")
+                self.updateMoney(self.rounds[self.currentRound].reward)
                 for projectile in self.activeProjectiles.values():
                     projectile.despawn()  # clear projectiles to start next round w/ clean slate
                 if not self.menu.bAutostart.isSelected():
@@ -125,7 +128,7 @@ class Game:
         self.selectedTower = actor
         self.updateCost()
 
-    def checkPlacementPos(self, pos):
+    def checkPlacementPos(self, pos): # überprüft ob der Tower, der plaziert werden soll weit genug vom Path entfernt ist
         dist = 2048  # unreasonably large distance to start off with
         for e in range(len(self.gameMap.pathNodes) - 1):
             node1 = self.gameMap.pathNodes[e]
@@ -196,7 +199,7 @@ class Game:
         self.updateCost()
 
     def mousePressed(self, event):
-        if event.button == 1:
+        if event.button == 1: # ändert das Ziel des ausgewählten Towers
             clickPos = Vektor(event.getX(), event.getY())
             if self.debug:
                 print("[INFO] Mouse click at (%s, %s)" % (clickPos.x, clickPos.y))
@@ -204,7 +207,7 @@ class Game:
                 self.placeHeldTower(clickPos)
             elif self.selectedTower is not None:
                 self.changeTowerTarget(clickPos)
-        elif event.button == 3:
+        elif event.button == 3: # setzt den Tower um, falls man genug Geld hat
             if self.selectedTower is not None:
                 clickPos = Vektor(event.getX(), event.getY())
                 if self.money >= (self.selectedTower.cost // 2):
@@ -241,11 +244,11 @@ class Game:
         self.grid.removeActor(self.tickActor)
         self.grid.getBg().clear()
 
-    def updateMoney(self, difference):
+    def updateMoney(self, difference): # zum updaten der Geldanzeige
         self.money += difference
         self.menu.tMoney.setText(str(self.money))
 
-    def updateCost(self):
+    def updateCost(self): # zum updaten der Kostenanzeige
         if self.selectedTower is None:
             self.menu.tUpgrade1.setText(str())
             self.menu.tUpgrade2.setText(str())
@@ -255,7 +258,7 @@ class Game:
             self.menu.tUpgrade1.setText(str(self.selectedTower.costUpgradeAttackSpeed))
             self.menu.tUpgrade2.setText(str(self.selectedTower.costUpgradeAttackDamage))
             self.menu.tUpgrade3.setText(str(self.selectedTower.costUpgrade3))
-            self.menu.lUpgrade3.setText(self.selectedTower.upgrade3Text)
+            self.menu.lUpgrade3.setText(self.selectedTower.upgrade3Text) # zeigt an was das Towerspezifische upgrade upgradet
 
     def gameOver(self):
         self.grid.doPause()
@@ -265,7 +268,7 @@ class Game:
         self.grid.doPause()
         self.menu.setCurrentScreen(5)
 
-class TickActor(Actor):
+class TickActor(Actor): # hilfsactor für die eigene tick funktion
     def __init__(self, game):
         self.game = game
 

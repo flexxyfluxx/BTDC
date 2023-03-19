@@ -1,4 +1,4 @@
-from projectiles import TOWER1_PROJ, TOWER2_PROJ
+from projectiles import TOWER1_PROJ, TOWER2_PROJ, TOWER3_PROJ
 from tower import Tower
 from os.path import abspath
 
@@ -8,8 +8,8 @@ class Tower1(Tower):
     def __init__(self, pos, key, game):
         Tower.__init__(self, attackSpeed=5, attackDamage=2, attackRange=40, pierce=1, pos=pos,
                        attackSpeedIncrement=1.05, attackDamageIncrement=1.15, 
-                       costUpgradeAttackSpeed=400, costUpgradeAttackDamage=275, 
-                       costUpgrade3=420, upgrade3Text="Attackrange:", projectile=TOWER1_PROJ,
+                       costUpgradeAttackSpeed=200, costUpgradeAttackDamage=75, 
+                       costUpgrade3=220, upgrade3Text="Attackrange:", projectile=TOWER1_PROJ,
                        sprite=abspath('../assets/sprites/crTower.png'), key=key, game=game)
 
     def upgradePath3(self):
@@ -21,11 +21,12 @@ class Tower1(Tower):
 
 class Tower2(Tower):
     cost = 300
+    
     def __init__(self, pos, key, game):
         Tower.__init__(self, attackSpeed=10, attackDamage=1, attackRange=20, pierce=1, pos=pos,
                        attackSpeedIncrement=1.01, attackDamageIncrement=1.3, 
-                       costUpgradeAttackSpeed=350, costUpgradeAttackDamage=520, 
-                       costUpgrade3=400, upgrade3Text="Piercing", projectile=TOWER2_PROJ,
+                       costUpgradeAttackSpeed=150, costUpgradeAttackDamage=320, 
+                       costUpgrade3=200, upgrade3Text="Piercing", projectile=TOWER2_PROJ,
                        sprite=abspath('../assets/sprites/egirlsheesh.png'), key=key, game=game)
         
     def upgradePath3(self):
@@ -36,13 +37,14 @@ class Tower2(Tower):
             self.game.updateCost()
 
 class Tower3(Tower):
-    cost = 500
+    cost = 425
+
     def __init__(self, pos, key, game):
-        Tower.__init__(self, attackSpeed=15, attackDamage=3, attackRange=30, pierce=1, pos=pos,
+        Tower.__init__(self, attackSpeed=7, attackDamage=3, attackRange=25, pierce=1, pos=pos,
                        attackSpeedIncrement=1.02, attackDamageIncrement=1.4, 
-                       costUpgradeAttackSpeed=250, costUpgradeAttackDamage=300, 
-                       costUpgrade3=0, upgrade3Text="None", projectile=TOWER2_PROJ,
-                       sprite=abspath('../assets/sprites/sprite2.png'), key=key, game=game)
+                       costUpgradeAttackSpeed=50, costUpgradeAttackDamage=100, 
+                       costUpgrade3=0, upgrade3Text="None", projectile=TOWER3_PROJ,
+                       sprite=abspath('../assets/sprites/picasso.png'), key=key, game=game)
         
     def upgradePath3(self):
         pass

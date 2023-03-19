@@ -28,7 +28,7 @@ public class JMainFrame extends JFrame {
     public TitledBorder jButtonGroupMapsTB = new TitledBorder("Maps");
     public JRadioButton jButtonGroupMapsRB0 = new JRadioButton("Raum 208");
     public JRadioButton jButtonGroupMapsRB1 = new JRadioButton("Raum 208 Legacy");
-    public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Example Map");
+    public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Jungel");
     public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("Map not implemented");
   public JPanel jButtonGroupDifficulty = new JPanel();
     public ButtonGroup jButtonGroupDifficultyBG = new ButtonGroup();
@@ -140,6 +140,7 @@ public class JMainFrame extends JFrame {
     jButtonGroupMapsBG.add(jButtonGroupMapsRB2);
     jButtonGroupMaps.add(jButtonGroupMapsRB2);
     jButtonGroupMapsRB3.setBounds(400, 257, 393, 239);
+    jButtonGroupMapsRB3.setEnabled(false);
     jButtonGroupMapsBG.add(jButtonGroupMapsRB3);
     jButtonGroupMaps.add(jButtonGroupMapsRB3);
     jButtonGroupMaps.setBorder(jButtonGroupMapsTB);
@@ -345,7 +346,7 @@ public class JMainFrame extends JFrame {
     //map namen -> map ids
     mapIDs.put("Raum 208", 0);
     mapIDs.put("Raum 208 Legacy", 1);
-    mapIDs.put("Map not implemented", 2);
+    mapIDs.put("Jungel", 2);
     mapIDs.put("Map not implemented", 3);
   } // end of public JMainFrame
 

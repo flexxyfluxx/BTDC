@@ -49,6 +49,10 @@ class Round:
 
             wave.tick()
 
+    def addReward(self, reward): # Geld, das beim Abschluss der Runde gutgeschrieben wird
+        self.reward = reward
+        return self
+
 
 class Wave:
     def __init__(self, game, key):

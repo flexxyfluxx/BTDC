@@ -16,6 +16,7 @@ class Menu(JMainFrame):
         JMainFrame.__init__(self)
         self.game = None
 
+        # listen mit objekten der jeweiligen screens um diese ein- und auszublenden
         self.mainMenu = [
             self.bSelectMap,
             self.bUpgrades,
@@ -83,8 +84,12 @@ class Menu(JMainFrame):
             self.bBack
         ]
 
+        # läd das Bild der Goose condition
+        # in python, da es in Java keinen Weg gab den relativen path zu verwenden
+        # du goose condition kommt daher das Florian sich beim schreiben der Task für die loose conditon vertippt hatte
         self.lgooseCondition.setIcon(ImageIcon(abspath('../assets/sprites/gooseCondition.png')))
 
+    # ein- und ausblenden der einzelnen Screens
     def toggleMainMenu(self, toggle):
         for e in self.mainMenu:
             e.setVisible(toggle)
@@ -96,6 +101,8 @@ class Menu(JMainFrame):
     def toggleGameScreen(self, toggle):
         for e in self.gameScreen:
             e.setVisible(toggle)
+        # da es keinen 4. Tower gibt ist der Button nur verfügbar, wenn er durch debug eine Funktion bekommt
+        self.bTower4.setEnabled(self.bDebug.isSelected())
 
     def toggleConfirmScreen(self, toggle):
         for e in self.confirmScreen:
@@ -150,28 +157,33 @@ class Menu(JMainFrame):
         else:
             raise ValueError("illegal screen id")
 
+    # öffnen des Map Selectors
     def bSelectMap_ActionPerformed(self, _):
         self.setCurrentScreen(1)
 
+    # Verlassen des Map Selectors
     def bBack_ActionPerformed(self, _):
         self.setCurrentScreen(0)
 
+    # Verlassen des Spiels
     def bQuitGame_ActionPerformed(self, _):
         self.dispose()
 
+    # öffnen des screens zum Verlassen der Map
     def bQuit_ActionPerformed(self, _):
-        self.gamegrid.doPause()   # TODO
+        self.gamegrid.doPause()
         self.setCurrentScreen(3)
 
+    # Abbrechen des Verlassens der Map
     def bAbort_ActionPerformed(self, _):
-        self.gamegrid.doRun()     # TODO
+        self.gamegrid.doRun()
         self.setCurrentScreen(2)
 
+    # Verlassen der map
     def bConfirm_ActionPerformed(self, _):
         self.game.removeAllActors()
         self.game = None
         self.setCurrentScreen(0)
-        # implement stop game
 
     def startGame(self):
         if self.bDebug.isSelected():
@@ -188,9 +200,6 @@ class Menu(JMainFrame):
             return
         self.game.grid.doRun()
 
-    def bStartRound_ActionPerformed(self, _):
-        self.game.startNextRound()
-
     def bStartGame_ActionPerformed(self, _):
         if self.bDebug.isSelected():
             print("bStartGame_ActionPerformed called")
@@ -198,6 +207,11 @@ class Menu(JMainFrame):
         self.setCurrentScreen(2)
         self.startGame()
 
+    # startet die nächste Runde
+    def bStartRound_ActionPerformed(self, _):
+        self.game.startNextRound()
+
+    # Auswählen der Tower zum Platzieren
     def bTower1_ActionPerformed(self, _):
         if (self.game.money >= Tower1.cost) and (self.game.heldTower is None):
             self.game.heldTower = newHeldTower = HeldTower(0)
@@ -211,6 +225,8 @@ class Menu(JMainFrame):
             self.game.updateMoney(-Tower2.cost)
 
     def bTower3_ActionPerformed(self, _):
+        # wenn debug in den Einstellungen angeschaltet wurde kann man durch den Tower 3 button
+        # jede Stelle anzeigen lassen, an der man Tower platzieren kann
         if self.game.debug:
             for x in range(0, 96):
                 for y in range(0, 54):
@@ -223,12 +239,15 @@ class Menu(JMainFrame):
                 self.game.updateMoney(-Tower3.cost)
 
     def bTower4_ActionPerformed(self, _):
+        # wenn debug in den Einstellungen angeschaltet wurde kann man durch den Tower 4 button
+        # Runden überspringen
         if self.game.debug:
             self.game.currentRound += 1
             self.tCurrentRound.setText(str(self.game.currentRound+1))
         else:
             raise NotImplementedError("This tower has not been implemented so far.")
-
+        
+    # Upgraden des ausgewählten Towers
     def bUpgrade1_ActionPerformed(self, _):
         if self.game.selectedTower is None:
             return
@@ -244,9 +263,12 @@ class Menu(JMainFrame):
             return
         self.game.selectedTower.upgradePath3()
 
+    # Verkaufen des ausgewählten Towers
     def bSell_ActionPerformed(self, _):
         self.game.sellTower()
 
+    # Abwählen des ausgewählten Towers 
+    # sowohl zum Platzieren ausgwählte als auch normal ausgewählte Tower werden abgewählt
     def bDeselect_ActionPerformed(self, _):
         if self.game.selectedTower is not None:
             self.game.selectedTower = None
@@ -261,6 +283,7 @@ class Menu(JMainFrame):
             self.game.grid.removeActor(self.game.heldTower)
             self.game.heldTower = None
 
+    # öffnet die Einstellungen, die den Debug Toggle enthalten
     def bSettings_ActionPerformed(self, _):
         self.setCurrentScreen(6)
 
