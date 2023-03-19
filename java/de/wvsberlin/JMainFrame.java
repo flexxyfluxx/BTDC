@@ -26,10 +26,10 @@ public class JMainFrame extends JFrame {
   public JPanel jButtonGroupMaps = new JPanel();
     public ButtonGroup jButtonGroupMapsBG = new ButtonGroup();
     public TitledBorder jButtonGroupMapsTB = new TitledBorder("Maps");
-    public JRadioButton jButtonGroupMapsRB0 = new JRadioButton("Map 1");
-    public JRadioButton jButtonGroupMapsRB1 = new JRadioButton("Map 2");
-    public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Map 3");
-    public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("Map 4");
+    public JRadioButton jButtonGroupMapsRB0 = new JRadioButton("Raum 208");
+    public JRadioButton jButtonGroupMapsRB1 = new JRadioButton("Raum 208 Legacy");
+    public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Example Map");
+    public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("Map not implemented");
   public JPanel jButtonGroupDifficulty = new JPanel();
     public ButtonGroup jButtonGroupDifficultyBG = new ButtonGroup();
     public TitledBorder jButtonGroupDifficultyTB = new TitledBorder("Difficulty");
@@ -58,6 +58,7 @@ public class JMainFrame extends JFrame {
   public JButton bUpgrade2 = new JButton();
   public JButton bUpgrade3 = new JButton();
   public JButton bSell = new JButton();
+  public JButton bDeselect = new JButton();
   public JTextField tUpgrade1 = new JTextField();
   public JTextField tUpgrade2 = new JTextField();
   public JTextField tUpgrade3 = new JTextField();
@@ -70,6 +71,9 @@ public class JMainFrame extends JFrame {
   public JTextField tCurrentRound = new JTextField();
   public JTextField tMoney = new JTextField();
   public JTextField tHealth = new JTextField();
+  public JLabel gooseCondition = new JLabel();
+  public JLabel gameOver = new JLabel("Game Over!");
+  public JLabel won = new JLabel("You Won!");
 
   private final HashMap<String, Integer> mapIDs = new HashMap<>();
   // end attributes
@@ -259,6 +263,12 @@ public class JMainFrame extends JFrame {
     bSell.addActionListener(this::bSell_ActionPerformed);
     bSell.setVisible(false);
     cp.add(bSell);
+    bDeselect.setBounds(600, 80, 80, 24);
+    bDeselect.setText("Deselect");
+    bDeselect.setMargin(new Insets(2, 2, 2, 2));
+    bDeselect.addActionListener(this::bDeselect_ActionPerformed);
+    bDeselect.setVisible(false);
+    cp.add(bDeselect);
     lUpgrade1.setBounds(150, 20, 80, 24);
     lUpgrade1.setVisible(false);
     cp.add(lUpgrade1);
@@ -301,12 +311,24 @@ public class JMainFrame extends JFrame {
     lHealth.setBounds(900, 80, 80, 24);
     lHealth.setVisible(false);
     cp.add(lHealth);
+
+    gooseCondition.setBounds(240, 60, 800, 600);
+    gooseCondition.setVisible(false);
+    cp.add(gooseCondition);
+    gameOver.setBounds(610, 10, 120, 34);
+    gameOver.setFont(new Font("Dialog", Font.BOLD, 18));
+    gameOver.setVisible(false);
+    cp.add(gameOver);
+    won.setBounds(590, 150, 120, 34);
+    won.setFont(new Font("Dialog", Font.BOLD, 14));
+    won.setVisible(false);
+    cp.add(won);
     // end components
 
-    mapIDs.put("Map 1", 0);
-    mapIDs.put("Map 2", 1);
-    mapIDs.put("Map 3", 2);
-    mapIDs.put("Map 4", 3);
+    mapIDs.put("Raum 208", 0);
+    mapIDs.put("Raum 208 Legacy", 1);
+    mapIDs.put("Example Map", 2);
+    mapIDs.put("Map not implemented", 3);
   } // end of public JMainFrame
 
 
@@ -432,6 +454,11 @@ public class JMainFrame extends JFrame {
   } // end of bUpgrade3_ActionPerformed
 
   public void bSell_ActionPerformed(ActionEvent evt) {
+    // TODO add your code here
+    
+  } // end of bSell_ActionPerformed
+
+  public void bDeselect_ActionPerformed(ActionEvent evt) {
     // TODO add your code here
     
   } // end of bSell_ActionPerformed

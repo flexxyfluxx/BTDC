@@ -76,6 +76,9 @@ class Enemy(Actor):
 
         if self.currentSegmentIdx > len(self.pathNodes) - 2:
             self.game.health -= self.dmg
+            if self.game.health <= 0:
+                self.game.health = 0
+                self.game.gameOver()
             self.game.menu.tHealth.setText(str(self.game.health))
             self.despawn()
             return

@@ -67,6 +67,8 @@ class Game:
     def startNextRound(self):
         if DEBUG:
             print("[INFO] Round started.")
+        if (self.currentRound+1) == len(self.rounds):
+            self.win()
         self.currentRound += 1
         self.menu.tCurrentRound.setText(str(self.currentRound + 1))
         self.paused = False
@@ -203,9 +205,9 @@ class Game:
         elif event.button == 3:
             if self.selectedTower is not None:
                 clickPos = Vektor(event.getX(), event.getY())
-                dist = self.checkPlacementPos(clickPos)
-                if (self.money >= self.selectedTower.cost):
-                    if (dist >= 40):
+                if self.money >= (self.selectedTower.cost // 2):
+                    dist = self.checkPlacementPos(clickPos)
+                    if dist >= 40:
                         self.selectedTower.pos = clickPos
                         self.selectedTower.setLocation(clickPos.toLocation())
                         self.updateMoney(-(self.selectedTower.cost // 2))
@@ -246,10 +248,20 @@ class Game:
             self.menu.tUpgrade1.setText(str())
             self.menu.tUpgrade2.setText(str())
             self.menu.tUpgrade3.setText(str())
+            self.menu.lUpgrade3.setText("Towerspecific:")
         else:
             self.menu.tUpgrade1.setText(str(self.selectedTower.costUpgradeAttackSpeed))
             self.menu.tUpgrade2.setText(str(self.selectedTower.costUpgradeAttackDamage))
             self.menu.tUpgrade3.setText(str(self.selectedTower.costUpgrade3))
+            self.menu.lUpgrade3.setText(self.selectedTower.upgrade3Text)
+
+    def gameOver(self):
+        self.grid.doPause()
+        self.menu.setCurrentScreen(4)
+
+    def win(self):
+        self.grid.doPause()
+        self.menu.setCurrentScreen(5)
 
 class TickActor(Actor):
     def __init__(self, game):
