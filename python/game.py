@@ -154,28 +154,31 @@ class Game:
         if self.debug:
             print("Start finding distance to path...")
         dist = self.checkPlacementPos(pos)
-        if dist >= 40:
-            self.grid.removeActor(self.heldTower)
-            key = next(self.towerKeyGen)
-            if self.heldTower.towerID == 0:
-                tower = Tower1(pos, key, self)
-            elif self.heldTower.towerID == 1:
-                tower = Tower2(pos, key, self)
-            elif self.heldTower.towerID == 2:
-                tower = Tower3(pos, key, self)
-            elif self.heldTower.towerID == 3:
-                tower = TowerDebug(pos, key, self)
-            else:
-                raise ValueError("Illegal tower ID")
-
-            self.towers[key] = tower
-            self.grid.addActor(tower, pos.toLocation())
-            tower.addMouseTouchListener(self.selectTower, GGMouse.lPress)
-            self.heldTower = None
-        else:
+        
+        if dist < 40:  # if dist too small: indicate invalid location
             self.heldTower.pos = pos
             self.heldTower.setLocation(pos.toLocation())
             self.heldTower.show(4)
+            return
+            
+        self.grid.removeActor(self.heldTower)
+        key = next(self.towerKeyGen)
+        if self.heldTower.towerID == 0:
+            tower = Tower1(pos, key, self)
+        elif self.heldTower.towerID == 1:
+            tower = Tower2(pos, key, self)
+        elif self.heldTower.towerID == 2:
+            tower = Tower3(pos, key, self)
+        elif self.heldTower.towerID == 3:
+            tower = TowerDebug(pos, key, self)
+        else:
+            raise ValueError("Illegal tower ID")
+
+        self.towers[key] = tower
+        self.grid.addActor(tower, pos.toLocation())
+        tower.addMouseTouchListener(self.selectTower, GGMouse.lPress)
+        self.heldTower = None
+            
 
     def changeTowerTarget(self, pos):
         if self.debug:
@@ -210,37 +213,47 @@ class Game:
         elif event.button == 3: # setzt den Tower um, falls man genug Geld hat
             if self.selectedTower is not None:
                 clickPos = Vektor(event.getX(), event.getY())
-                if self.money >= (self.selectedTower.cost // 2):
-                    dist = self.checkPlacementPos(clickPos)
-                    if dist >= 40:
-                        self.selectedTower.pos = clickPos
-                        self.selectedTower.setLocation(clickPos.toLocation())
-                        self.updateMoney(-(self.selectedTower.cost // 2))
-                        self.selectedTower = None
-                        self.updateCost()
+                
+                if self.money < (self.selectedTower.cost // 2):  # if not enough money: cancel
+                    return
+                
+                dist = self.checkPlacementPos(clickPos)
+                
+                if dist < 40:  # if invalid location: cancel
+                    return
+                
+                self.selectedTower.pos = clickPos
+                self.selectedTower.setLocation(clickPos.toLocation())
+                self.updateMoney(-(self.selectedTower.cost // 2))
+                self.selectedTower = None
+                self.updateCost()
 
     def sellTower(self):
-        if self.selectedTower is not None:
-            self.updateMoney(self.selectedTower.cost // 2)
-            self.grid.removeActor(self.selectedTower)
-            self.towers.pop(self.selectedTower.key)
-            self.selectedTower = None
-            self.updateCost()
+        if self.selectedTower is None:  # if no tower selected: exit fn
+            return
+        
+        self.updateMoney(self.selectedTower.cost // 2)
+        self.grid.removeActor(self.selectedTower)
+        self.towers.pop(self.selectedTower.key)
+        self.selectedTower = None
+        self.updateCost()
 
     def removeAllActors(self):
         # deinitialize the game
         if self.heldTower is not None:
             self.grid.removeActor(self.heldTower)
             self.heldTower = None
-        if self.selectedTower is not None:
-            self.selectedTower = None
-            self.updateCost()
+            
+        self.selectedTower = None
+        self.updateCost()
+        
         for tower in self.towers.values():
             self.grid.removeActor(tower)
         for enemy in self.activeEnemies.values():
             self.grid.removeActor(enemy)
         for projectile in self.activeProjectiles.values():
             self.grid.removeActor(projectile)
+            
         self.grid.removeActor(self.tickActor)
         self.grid.getBg().clear()
 
@@ -249,16 +262,17 @@ class Game:
         self.menu.tMoney.setText(str(self.money))
 
     def updateCost(self): # zum updaten der Kostenanzeige
-        if self.selectedTower is None:
+        if self.selectedTower is None:  # if no tower selected: reset tower-specific panels.
             self.menu.tUpgrade1.setText(str())
             self.menu.tUpgrade2.setText(str())
             self.menu.tUpgrade3.setText(str())
             self.menu.lUpgrade3.setText("Towerspecific:")
-        else:
-            self.menu.tUpgrade1.setText(str(self.selectedTower.costUpgradeAttackSpeed))
-            self.menu.tUpgrade2.setText(str(self.selectedTower.costUpgradeAttackDamage))
-            self.menu.tUpgrade3.setText(str(self.selectedTower.costUpgrade3))
-            self.menu.lUpgrade3.setText(self.selectedTower.upgrade3Text) # zeigt an was das Towerspezifische upgrade upgradet
+            return
+        
+        self.menu.tUpgrade1.setText(str(self.selectedTower.costUpgradeAttackSpeed))
+        self.menu.tUpgrade2.setText(str(self.selectedTower.costUpgradeAttackDamage))
+        self.menu.tUpgrade3.setText(str(self.selectedTower.costUpgrade3))
+        self.menu.lUpgrade3.setText(self.selectedTower.upgrade3Text) # zeigt an was das Towerspezifische upgrade upgradet
 
     def gameOver(self):
         self.grid.doPause()
