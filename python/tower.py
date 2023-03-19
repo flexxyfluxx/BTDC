@@ -27,27 +27,31 @@ class Tower(Actor):
 
     def upgradeAttackSpeed(self):
         # Attack speed increment as a factor, eg. every level, attack speed is multiplied by 1.15
-        if self.costUpgradeAttackSpeed <= self.game.money:
-            self.game.updateMoney(-self.costUpgradeAttackSpeed)
-            self.attackSpeed = self.attackSpeed * self.attackSpeedIncrement
-            self.costUpgradeAttackSpeed *= 1.1
-            self.game.updateCost()
-            print(self.attackSpeed)
+        if self.costUpgradeAttackSpeed > self.game.money:
+            return  # not enough money => cancel
+        
+        self.game.updateMoney(-self.costUpgradeAttackSpeed)
+        self.attackSpeed = self.attackSpeed * self.attackSpeedIncrement
+        self.costUpgradeAttackSpeed *= 1.1
+        self.game.updateCost()
 
     def upgradeAttackDamage(self):
         # Attack damage increment as a factor, eg. every level, attack damage is multiplied by 1.15
-        if self.costUpgradeAttackDamage <= self.game.money:
-            self.game.updateMoney(-self.costUpgradeAttackDamage)
-            self.attackDamage = self.attackDamage * self.attackDamageIncrement
-            self.costUpgradeAttackDamage *= 1.1
-            self.game.updateCost()
-            print(self.attackDamage)
+        if self.costUpgradeAttackDamage > self.game.money:
+            return
+        
+        self.game.updateMoney(-self.costUpgradeAttackDamage)
+        self.attackDamage = self.attackDamage * self.attackDamageIncrement
+        self.costUpgradeAttackDamage *= 1.1
+        self.game.updateCost()
 
     def attack(self):
         self.game.spawnProjectile(self.pos, self.targetDirection, self.projectile, self.attackRange, self.pierce)
 
     def tick(self): # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
         self.attackCooldown -= 1
-        if self.attackCooldown <= 0:
-            self.attack()
-            self.attackCooldown = 100 / self.attackSpeed
+        if self.attackCooldown > 0:  # no attack ready yet
+            return
+        
+        self.attack()
+        self.attackCooldown = 100 / self.attackSpeed
