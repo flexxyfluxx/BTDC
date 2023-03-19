@@ -10,7 +10,7 @@ class Tower2(Tower):
                        attackSpeedIncrement=1.01, attackDamageIncrement=1.3, 
                        costUpgradeAttackSpeed=350, costUpgradeAttackDamage=520, 
                        costUpgrade3=0, upgrade3Text="None", projectile=TOWER2_PROJ,
-                       sprite=abspath('../assets/sprites/sprite2.png'), key=key, game=game)
+                       sprite=abspath('../assets/sprites/spriteegirl.png'), key=key, game=game)
         
     def upgradePath3(self):
         pass

@@ -8,7 +8,7 @@ class HeldTower(Actor):
     def __init__(self, towerID):
         self.sprites = [
             abspath('../assets/sprites/crTower.png'),
-            abspath('../assets/sprites/sprite2.png'),
+            abspath('../assets/sprites/spriteegirl.png'),
             abspath('../assets/sprites/spriteDebug.png'),
             abspath('../assets/sprites/denied.png')
         ]
