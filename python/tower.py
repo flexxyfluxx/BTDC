@@ -5,7 +5,7 @@ from os.path import abspath
 
 class Tower(Actor):
     def __init__(self, attackSpeed, attackDamage, attackRange, pos, attackSpeedIncrement, attackDamageIncrement,
-                 costUpgradeAttackSpeed, costUpgradeAttackDamage, costUpgrade3, projectile, sprite, key, game):
+                 costUpgradeAttackSpeed, costUpgradeAttackDamage, costUpgrade3, upgrade3Text, projectile, sprite, key, game):
         Actor.__init__(self, True, abspath(sprite))
         self.attackSpeed = attackSpeed
         self.attackDamage = attackDamage
@@ -21,6 +21,7 @@ class Tower(Actor):
         self.projectile = projectile
         self.key = key
         self.game = game
+        self.upgrade3Text = upgrade3Text
 
     def upgradeAttackSpeed(self):
         # Attack speed increment as a factor, eg. every level, attack speed is multiplied by 1.15
@@ -28,6 +29,7 @@ class Tower(Actor):
             self.game.updateMoney(-self.costUpgradeAttackSpeed)
             self.attackSpeed = self.attackSpeed * self.attackSpeedIncrement
             self.costUpgradeAttackSpeed *= 1.1
+            self.game.updateCost()
             print(self.attackSpeed)
 
     def upgradeAttackDamage(self):
@@ -35,6 +37,7 @@ class Tower(Actor):
             self.game.updateMoney(-self.costUpgradeAttackDamage)
             self.attackDamage = self.attackDamage * self.attackDamageIncrement
             self.costUpgradeAttackDamage *= 1.1
+            self.game.updateCost()
             print(self.attackDamage)
 
     def attack(self):

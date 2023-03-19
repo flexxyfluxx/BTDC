@@ -7,7 +7,7 @@ from de.wvsberlin.vektor import Vektor
 class HeldTower(Actor):
     def __init__(self, towerID):
         self.sprites = [
-            abspath('../assets/sprites/sprite.png'),
+            abspath('../assets/sprites/crTower.png'),
             abspath('../assets/sprites/sprite2.png'),
             abspath('../assets/sprites/spriteDebug.png'),
             abspath('../assets/sprites/denied.png')

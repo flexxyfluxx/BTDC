@@ -9,6 +9,8 @@ from heldTower import HeldTower
 from ch.aplu.jgamegrid import Location
 from tower1 import Tower1
 from tower2 import Tower2
+from javax.swing import ImageIcon
+from os.path import abspath
 
 DEBUG = True
 
@@ -24,12 +26,14 @@ class Menu(JMainFrame):
             self.bSettings,
             self.bQuitGame
         ]
+
         self.mapSelector = [
             self.jButtonGroupMaps,
             self.jButtonGroupDifficulty,
             self.bStartGame,
             self.bBack
         ]
+
         self.gameScreen = [
             self.jGridPanel,
             self.bQuit,
@@ -45,6 +49,7 @@ class Menu(JMainFrame):
             self.bUpgrade2,
             self.bUpgrade3,
             self.bSell,
+            self.bDeselect,
             self.jSeparator1,
             self.bStartRound,
             self.bAutostart,
@@ -66,6 +71,19 @@ class Menu(JMainFrame):
             self.bAbort
         ]
 
+        self.gameOverScreen = [
+            self.gooseCondition,
+            self.bConfirm,
+            self.gameOver
+        ]
+
+        self.winScreen = [
+            self.bConfirm,
+            self.won
+        ]
+
+        self.gooseCondition.setIcon(ImageIcon(abspath('../assets/sprites/gooseCondition.png')))
+
     def toggleMainMenu(self, yesno):
         for e in self.mainMenu:
             e.setVisible(yesno)
@@ -82,27 +100,65 @@ class Menu(JMainFrame):
         for e in self.confirmScreen:
             e.setVisible(toggle)
 
+    def toggleGameOverScreen(self, toggle):
+        for e in self.gameOverScreen:
+            e.setVisible(toggle)
+        if toggle:
+            self.bConfirm.setBounds(620, 200, 80, 24)
+        elif not toggle:
+            self.bConfirm.setBounds(320, 330, 80, 24)
+
+    def toggleWinScreen(self, toggle):
+        for e in self.winScreen:
+            e.setVisible(toggle)
+        if toggle:
+            self.bConfirm.setBounds(590, 180, 80, 24)
+        elif not toggle:
+            self.bConfirm.setBounds(320, 330, 80, 24)
+
     def setCurrentScreen(self, screen):
         if screen == 0:
+            self.toggleMainMenu(True)
             self.toggleMapSelector(False)
             self.toggleGameScreen(False)
             self.toggleConfirmScreen(False)
-            self.toggleMainMenu(True)
+            self.toggleGameOverScreen(False)
+            self.toggleWinScreen(False)
         elif screen == 1:
             self.toggleMainMenu(False)
+            self.toggleMapSelector(True)
             self.toggleGameScreen(False)
             self.toggleConfirmScreen(False)
-            self.toggleMapSelector(True)
+            self.toggleGameOverScreen(False)
+            self.toggleWinScreen(False)
         elif screen == 2:
             self.toggleMainMenu(False)
             self.toggleMapSelector(False)
-            self.toggleConfirmScreen(False)
             self.toggleGameScreen(True)
+            self.toggleConfirmScreen(False)
+            self.toggleGameOverScreen(False)
+            self.toggleWinScreen(False)
         elif screen == 3:
             self.toggleMainMenu(False)
             self.toggleMapSelector(False)
             self.toggleGameScreen(False)
-            self.toggleConfirmScreen(True)
+            self.toggleGameOverScreen(False)
+            self.toggleWinScreen(False)
+            self.toggleConfirmScreen(True) #toggleWinScreen und toggleGameOverScreen müssen vertauscht werden, damit der confrim button sichtbar bleibt
+        elif screen == 4:
+            self.toggleMainMenu(False)
+            self.toggleMapSelector(False)
+            self.toggleGameScreen(False)
+            self.toggleConfirmScreen(False)
+            self.toggleWinScreen(False) #toggleWinScreen und toggleGameOverScreen müssen vertauscht werden, damit der confrim button sichtbar bleibt
+            self.toggleGameOverScreen(True)
+        elif screen ==5:
+            self.toggleMainMenu(False)
+            self.toggleMapSelector(False)
+            self.toggleGameScreen(False)
+            self.toggleConfirmScreen(False)
+            self.toggleGameOverScreen(False)
+            self.toggleWinScreen(True)
         else:
             raise ValueError("illegal screen id")
 
@@ -197,6 +253,21 @@ class Menu(JMainFrame):
 
     def bSell_ActionPerformed(self, _):
         self.game.sellTower()
+
+    def bDeselect_ActionPerformed(self, _):
+        if self.game.selectedTower is not None:
+            self.game.selectedTower = None
+            self.game.updateCost()
+        if self.game.heldTower is not None:
+            if self.game.heldTower.towerID == 0:
+                self.game.updateMoney(Tower1.cost)
+            elif self.game.heldTower.towerID == 1:
+                self.game.updateMoney(Tower2.cost)
+            else:
+                raise ValueError("Illegal tower ID")
+            self.game.grid.removeActor(self.game.heldTower)
+            self.game.heldTower = None
+
 
 if __name__ == "__main__":
     menu = Menu()
