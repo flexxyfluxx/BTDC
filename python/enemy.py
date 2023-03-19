@@ -4,7 +4,6 @@ from __future__ import print_function
 from ch.aplu.jgamegrid import Actor
 from de.wvsberlin.vektor import Vektor, MutableVektor, Gerade
 
-
 DEBUG = True
 
 
@@ -22,15 +21,14 @@ class Enemy(Actor):
         self.size = sizeRadius
         self.reward = reward
 
-
-        prevNodeToNextNodeVektor = self.pathNodes[1] - self.pathNodes[0]
+        prevNodeToNextNodeVektor = self.pathNodes[self.currentSegmentIdx+1] - self.pathNodes[self.currentSegmentIdx]
         self.currentSegmentLength = abs(prevNodeToNextNodeVektor)
         self.currentSegmentUnitVektor = prevNodeToNextNodeVektor.getUnitized()
         self.currentSegmentRichtungsvektor = self.currentSegmentUnitVektor * self.speed
 
         self.currentSegmentProgress = segmentProgress
 
-        self.pos = MutableVektor.fromImmutable(self.pathNodes[0]
+        self.pos = MutableVektor.fromImmutable(self.pathNodes[self.currentSegmentIdx]
                                                + self.currentSegmentUnitVektor * self.currentSegmentProgress)
 
         self.childSupplier = childSupplier
@@ -44,9 +42,9 @@ class Enemy(Actor):
         self.currentSegmentProgress += self.speed
 
         if self.currentSegmentProgress >= self.currentSegmentLength:
-            self.nextSegment()  # this will hopefully not fail to nuke everything if we exit the map...
             overshoot = self.currentSegmentProgress - self.currentSegmentLength
-            self.pos = self.pathNodes[self.currentSegmentIdx] # + self.currentSegmentUnitVektor * overshoot
+            self.nextSegment()  # this will hopefully not fail to nuke everything if we exit the map...
+            self.pos = self.pathNodes[self.currentSegmentIdx] + self.currentSegmentUnitVektor * overshoot
             self.setLocation(self.pos.toLocation())
             return
 
@@ -61,9 +59,9 @@ class Enemy(Actor):
         if DEBUG:
             print("Enemy", self.key, "died.")
         self.despawn()
-        self.game.updateMoney(self.reward) 
+        self.game.updateMoney(self.reward)
 
-        if self.childSupplier is None or overshoot <= 0:
+        if self.childSupplier is None:
             return
 
         child = self.game.spawnEnemy(self.childSupplier, self.currentSegmentIdx, self.currentSegmentProgress)
@@ -76,15 +74,14 @@ class Enemy(Actor):
     def nextSegment(self):
         self.currentSegmentIdx += 1
 
-        if self.currentSegmentIdx > len(self.pathNodes)-2:
+        if self.currentSegmentIdx > len(self.pathNodes) - 2:
             self.game.health -= self.dmg
             self.game.menu.tHealth.setText(str(self.game.health))
             self.despawn()
             return
 
-        prevNodeToNextNodeVektor = self.pathNodes[self.currentSegmentIdx+1] - self.pathNodes[self.currentSegmentIdx]
+        prevNodeToNextNodeVektor = self.pathNodes[self.currentSegmentIdx + 1] - self.pathNodes[self.currentSegmentIdx]
         self.currentSegmentLength = abs(prevNodeToNextNodeVektor)
         self.currentSegmentUnitVektor = prevNodeToNextNodeVektor.getUnitized()
         self.currentSegmentRichtungsvektor = self.currentSegmentUnitVektor * self.speed
         self.currentSegmentProgress = 0
-

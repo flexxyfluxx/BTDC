@@ -1,12 +1,12 @@
 import syspaths
 from ch.aplu.jgamegrid import Actor
 from os.path import abspath
-from de.wvsberlin.vektor import Vektor
 
 
 class Tower(Actor):
-    def __init__(self, attackSpeed, attackDamage, attackRange, pos, attackSpeedIncrement, attackDamageIncrement, costUpgradeAttackSpeed, costUpgradeAttackDamage, costUpgrade3, projectile, sprite, key, game):
-        Actor.__init__(self, abspath(sprite))
+    def __init__(self, attackSpeed, attackDamage, attackRange, pos, attackSpeedIncrement, attackDamageIncrement,
+                 costUpgradeAttackSpeed, costUpgradeAttackDamage, costUpgrade3, projectile, sprite, key, game):
+        Actor.__init__(self, True, abspath(sprite))
         self.attackSpeed = attackSpeed
         self.attackDamage = attackDamage
         self.pos = pos
