@@ -28,7 +28,7 @@ public class JMainFrame extends JFrame {
     public TitledBorder jButtonGroupMapsTB = new TitledBorder("Maps");
     public JRadioButton jButtonGroupMapsRB0 = new JRadioButton("Raum 208");
     public JRadioButton jButtonGroupMapsRB1 = new JRadioButton("Raum 208 Legacy");
-    public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Example Map");
+    public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Jungel");
     public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("Map not implemented");
   public JPanel jButtonGroupDifficulty = new JPanel();
     public ButtonGroup jButtonGroupDifficultyBG = new ButtonGroup();
@@ -71,9 +71,10 @@ public class JMainFrame extends JFrame {
   public JTextField tCurrentRound = new JTextField();
   public JTextField tMoney = new JTextField();
   public JTextField tHealth = new JTextField();
-  public JLabel gooseCondition = new JLabel();
-  public JLabel gameOver = new JLabel("Game Over!");
-  public JLabel won = new JLabel("You Won!");
+  public JLabel lgooseCondition = new JLabel();
+  public JLabel lgameOver = new JLabel("You Goose!");
+  public JLabel lwon = new JLabel("You Won!");
+  public JToggleButton bDebug = new JToggleButton("Debug");
 
   private final HashMap<String, Integer> mapIDs = new HashMap<>();
   // end attributes
@@ -95,6 +96,7 @@ public class JMainFrame extends JFrame {
     cp.setLayout(null);
     // start components
     
+    //Main Menu components
     bSelectMap.setBounds(560, 200, 80, 24);
     bSelectMap.setText("Select Map");
     bSelectMap.setMargin(new Insets(2, 2, 2, 2));
@@ -115,6 +117,15 @@ public class JMainFrame extends JFrame {
     bQuitGame.setMargin(new Insets(2, 2, 2, 2));
     bQuitGame.addActionListener(this::bQuitGame_ActionPerformed);
     cp.add(bQuitGame);
+
+    //Settings components
+    bDebug.setBounds(560, 258, 80, 24);
+    bDebug.setMargin(new Insets(2, 2, 2, 2));
+    bDebug.setVisible(false);
+    bDebug.addActionListener(this::bDebug_ActionPerformed);
+    cp.add(bDebug);
+
+    //Maps Selector Components
     jButtonGroupMaps.setLayout(null);
     jButtonGroupMaps.setBounds(40, 120, 800, 500);
     jButtonGroupMaps.setVisible(false);
@@ -129,6 +140,7 @@ public class JMainFrame extends JFrame {
     jButtonGroupMapsBG.add(jButtonGroupMapsRB2);
     jButtonGroupMaps.add(jButtonGroupMapsRB2);
     jButtonGroupMapsRB3.setBounds(400, 257, 393, 239);
+    jButtonGroupMapsRB3.setEnabled(false);
     jButtonGroupMapsBG.add(jButtonGroupMapsRB3);
     jButtonGroupMaps.add(jButtonGroupMapsRB3);
     jButtonGroupMaps.setBorder(jButtonGroupMapsTB);
@@ -154,13 +166,22 @@ public class JMainFrame extends JFrame {
     bStartGame.addActionListener(this::bStartGame_ActionPerformed);
     bStartGame.setVisible(false);
     cp.add(bStartGame);
+
+    //used for multiple screens
     bBack.setBounds(895, 420, 80, 24);
     bBack.setText("Back");
     bBack.setMargin(new Insets(2, 2, 2, 2));
     bBack.addActionListener(this::bBack_ActionPerformed);
     bBack.setVisible(false);
     cp.add(bBack);
+    bConfirm.setBounds(320, 330, 80, 24);
+    bConfirm.setText("Confirm");
+    bConfirm.setMargin(new Insets(2, 2, 2, 2));
+    bConfirm.addActionListener(this::bConfirm_ActionPerformed);
+    bConfirm.setVisible(false);
+    cp.add(bConfirm);
     
+    //Game components
     jGridPanel.setBounds(40, 120, 960, 540);
     jGridPanel.setVisible(false);
     cp.add(jGridPanel);
@@ -176,18 +197,6 @@ public class JMainFrame extends JFrame {
     bQuit.addActionListener(this::bQuit_ActionPerformed);
     bQuit.setVisible(false);
     cp.add(bQuit);
-    bConfirm.setBounds(320, 330, 80, 24);
-    bConfirm.setText("Confirm");
-    bConfirm.setMargin(new Insets(2, 2, 2, 2));
-    bConfirm.addActionListener(this::bConfirm_ActionPerformed);
-    bConfirm.setVisible(false);
-    cp.add(bConfirm);
-    bAbort.setBounds(460, 330, 80, 24);
-    bAbort.setText("Abort");
-    bAbort.setMargin(new Insets(2, 2, 2, 2));
-    bAbort.addActionListener(this::bAbort_ActionPerformed);
-    bAbort.setVisible(false);
-    cp.add(bAbort);
     bStartRound.setBounds(1100, 580, 24, 24);
     bStartRound.setText(">");
     bStartRound.setMargin(new Insets(2, 2, 2, 2));
@@ -312,22 +321,32 @@ public class JMainFrame extends JFrame {
     lHealth.setVisible(false);
     cp.add(lHealth);
 
-    gooseCondition.setBounds(240, 60, 800, 600);
-    gooseCondition.setVisible(false);
-    cp.add(gooseCondition);
-    gameOver.setBounds(610, 10, 120, 34);
-    gameOver.setFont(new Font("Dialog", Font.BOLD, 18));
-    gameOver.setVisible(false);
-    cp.add(gameOver);
-    won.setBounds(590, 150, 120, 34);
-    won.setFont(new Font("Dialog", Font.BOLD, 14));
-    won.setVisible(false);
-    cp.add(won);
+    //Quit Screen components
+    bAbort.setBounds(460, 330, 80, 24);
+    bAbort.setText("Abort");
+    bAbort.setMargin(new Insets(2, 2, 2, 2));
+    bAbort.addActionListener(this::bAbort_ActionPerformed);
+    bAbort.setVisible(false);
+    cp.add(bAbort);
+
+    //Win and Goose Screens
+    lgooseCondition.setBounds(240, 60, 800, 600);
+    lgooseCondition.setVisible(false);
+    cp.add(lgooseCondition);
+    lgameOver.setBounds(610, 10, 120, 34);
+    lgameOver.setFont(new Font("Dialog", Font.BOLD, 18));
+    lgameOver.setVisible(false);
+    cp.add(lgameOver);
+    lwon.setBounds(590, 150, 120, 34);
+    lwon.setFont(new Font("Dialog", Font.BOLD, 18));
+    lwon.setVisible(false);
+    cp.add(lwon);
     // end components
 
+    //map namen -> map ids
     mapIDs.put("Raum 208", 0);
     mapIDs.put("Raum 208 Legacy", 1);
-    mapIDs.put("Example Map", 2);
+    mapIDs.put("Jungel", 2);
     mapIDs.put("Map not implemented", 3);
   } // end of public JMainFrame
 
@@ -338,6 +357,7 @@ public class JMainFrame extends JFrame {
   
   // start methods
   
+  //Main Menu
   public void bSelectMap_ActionPerformed(ActionEvent evt) {
     // TODO add your code here
     
@@ -357,7 +377,14 @@ public class JMainFrame extends JFrame {
     // TODO add your code here
     
   } // end of bQuitGame_ActionPerformed
+  
+  //Settings
+  public void bDebug_ActionPerformed(ActionEvent evt) {
+    // TODO add your code here
+    
+  } // end of bDebug_ActionPerformed
 
+  //Maps Selector
   public int getSelectedMap() {
     for (java.util.Enumeration<AbstractButton> e = jButtonGroupMapsBG.getElements(); e.hasMoreElements();) {
       AbstractButton b = e.nextElement();
@@ -388,25 +415,28 @@ public class JMainFrame extends JFrame {
     System.out.println("Java bStartGame_actionPerformed called");
   } // end of bStartGame_ActionPerformed
 
+  //Multiple Screens
   public void bBack_ActionPerformed(ActionEvent evt) {
     // TODO add your code here
     
   } // end of bBack_ActionPerformed
-
-  public void bQuit_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
-  } // end of bQuit_ActionPerformed
 
   public void bConfirm_ActionPerformed(ActionEvent evt) {
     // TODO add your code here
     
   } // end of bConfirm_ActionPerformed
 
+  //Quit
   public void bAbort_ActionPerformed(ActionEvent evt) {
     // TODO add your code here
     
   } // end of bAbort_ActionPerformed
+  
+  //Game Screen
+  public void bQuit_ActionPerformed(ActionEvent evt) {
+    // TODO add your code here
+    
+  } // end of bQuit_ActionPerformed
 
   public void bStartRound_ActionPerformed(ActionEvent evt) {
     // TODO add your code here

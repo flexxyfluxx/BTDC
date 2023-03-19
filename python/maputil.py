@@ -49,6 +49,8 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
         if self.bgImg is not None:
             bg.drawImage(self.bgImg)
 
+        # wenn die Debug Funktionen in den Einstellungen aktiviert wurden wird
+        # der Path der Gegner durch eine Rote Lienie auf der Map eingezeichnet
         if debug:
             bg.setPaintColor(Color.RED)
             bg.setLineWidth(3)
@@ -57,6 +59,3 @@ class Map:  # ACHTUNG bei Instantiierung von Map-Objekten :: `map` wird schon vo
                 node0 = self.pathNodes[c]
                 node1 = self.pathNodes[c + 1]
                 bg.drawLine(node0.toPoint(), node1.toPoint())
-
-    def getDistToPath(self, pos):
-        pass

@@ -23,7 +23,7 @@ class Round:
         self.waves.append(waveSupplier(key))
         return self
 
-    def tick(self):
+    def tick(self): # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
         if not (self.waves or self.activeWaves):
             raise StopIteration
             # Da dies der offizielle, pythonische Weg ist, Iterations zu beenden, tun wir dies auch.
@@ -48,6 +48,10 @@ class Round:
                 continue
 
             wave.tick()
+
+    def addReward(self, reward): # Geld, das beim Abschluss der Runde gutgeschrieben wird
+        self.reward = reward
+        return self
 
 
 class Wave:
@@ -116,7 +120,7 @@ class Wave:
         self.waitsForLastRoundToBeFullySent = True
         return self
 
-    def tick(self):
+    def tick(self): # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
         if self.sendCooldown > 0:
             self.sendCooldown -= 1
             return

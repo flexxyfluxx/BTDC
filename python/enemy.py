@@ -4,9 +4,6 @@ from __future__ import print_function
 from ch.aplu.jgamegrid import Actor
 from de.wvsberlin.vektor import Vektor, MutableVektor, Gerade
 
-DEBUG = True
-
-
 class Enemy(Actor):
     def __init__(self, game, key, dmg, health, speed, sprite, segmentIdx=0, segmentProgress=0,
                  childSupplier=None, childCount=1, childSpacing=10, sizeRadius=16, reward=1):
@@ -35,7 +32,7 @@ class Enemy(Actor):
         self.childCount = childCount
         self.childSpacing = childSpacing
 
-    def tick(self):
+    def tick(self): # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
         if self.health <= 0:
             self.die(-self.health)
 
@@ -56,15 +53,16 @@ class Enemy(Actor):
         self.game.activeEnemies.pop(self.key)
 
     def die(self, overshoot):
-        if DEBUG:
+        if self.game.debug:
             print("Enemy", self.key, "died.")
         self.despawn()
         self.game.updateMoney(self.reward)
 
-        if self.childSupplier is None:
+        if self.childSupplier is None: # wenn aus dem gegner kein neuer gegner entsteht ist die funktion heir zuende
             return
 
-        child = self.game.spawnEnemy(self.childSupplier, self.currentSegmentIdx, self.currentSegmentProgress)
+        # neuer gegner wird an der gleichen stelle gespawnt
+        child = self.game.spawnEnemy(self.childSupplier, self.currentSegmentIdx, self.currentSegmentProgress) 
         if overshoot < child.health:
             child.health -= overshoot
             return

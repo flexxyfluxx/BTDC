@@ -48,6 +48,7 @@ ROUNDS = lambda game: [
                  .setCount(20)
                  .setSpacing(100)
         )
+        .addReward(101)
     ),
     (Round(game)  # 2
         .addWave(lambda key_: Wave(game, key_)
@@ -55,6 +56,7 @@ ROUNDS = lambda game: [
                  .setCount(35)
                  .setSpacing(75)
         )
+        .addReward(102)
     ),
     (Round(game)  # 3
         .addWave(lambda key_: Wave(game, key_)
@@ -73,6 +75,7 @@ ROUNDS = lambda game: [
                  .setSpacing(80)
                  .setWaitsForLastRoundToBeFullySent()
         )
+        .addReward(103)
     ),
     (Round(game)  # 4
         .addWave(lambda key_: Wave(game, key_)
@@ -90,6 +93,7 @@ ROUNDS = lambda game: [
                  .setSpacing(15)
                  .setWaitsForLastRoundToBeFullySent()
         )
+        .addReward(104)
     ),
     (Round(game)  # 5
         .addWave(lambda key_: Wave(game, key_)
@@ -103,5 +107,6 @@ ROUNDS = lambda game: [
                  .setSpacing(150)
                  .setStartDelay(500)
         )
+        .addReward(105)
     )
 ]
