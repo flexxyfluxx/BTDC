@@ -1,3 +1,4 @@
+# -*- coding=utf-8 -*-
 import syspaths
 from ch.aplu.jgamegrid import Actor
 from os.path import abspath

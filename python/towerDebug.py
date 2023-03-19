@@ -1,3 +1,4 @@
+# -*- coding=utf-8 -*-
 from tower import Tower
 from os.path import abspath
 from projectiles import EXAMPLE_PROJ
