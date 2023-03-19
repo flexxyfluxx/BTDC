@@ -4,11 +4,12 @@ from os.path import abspath
 
 
 class Tower(Actor):
-    def __init__(self, attackSpeed, attackDamage, attackRange, pos, attackSpeedIncrement, attackDamageIncrement,
+    def __init__(self, attackSpeed, attackDamage, attackRange, pierce, pos, attackSpeedIncrement, attackDamageIncrement,
                  costUpgradeAttackSpeed, costUpgradeAttackDamage, costUpgrade3, upgrade3Text, projectile, sprite, key, game):
         Actor.__init__(self, True, abspath(sprite))
         self.attackSpeed = attackSpeed
         self.attackDamage = attackDamage
+        self.pierce = pierce
         self.pos = pos
         self.attackSpeedIncrement = attackSpeedIncrement
         self.attackDamageIncrement = attackDamageIncrement
@@ -41,9 +42,9 @@ class Tower(Actor):
             print(self.attackDamage)
 
     def attack(self):
-        self.game.spawnProjectile(self.pos, self.targetDirection, self.projectile, self.attackRange)
+        self.game.spawnProjectile(self.pos, self.targetDirection, self.projectile, self.attackRange, self.pierce)
 
-    def tick(self):
+    def tick(self): # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
         self.attackCooldown -= 1
         if self.attackCooldown <= 0:
             self.attack()

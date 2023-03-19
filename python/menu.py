@@ -7,13 +7,9 @@ from game import Game, Difficulty
 from maps import theMaps
 from heldTower import HeldTower
 from ch.aplu.jgamegrid import Location
-from tower1 import Tower1
-from tower2 import Tower2
+from towers import Tower1, Tower2, Tower3
 from javax.swing import ImageIcon
 from os.path import abspath
-
-DEBUG = True
-
 
 class Menu(JMainFrame):
     def __init__(self):
@@ -72,21 +68,26 @@ class Menu(JMainFrame):
         ]
 
         self.gameOverScreen = [
-            self.gooseCondition,
+            self.lgooseCondition,
             self.bConfirm,
-            self.gameOver
+            self.lgameOver
         ]
 
         self.winScreen = [
             self.bConfirm,
-            self.won
+            self.lwon
         ]
 
-        self.gooseCondition.setIcon(ImageIcon(abspath('../assets/sprites/gooseCondition.png')))
+        self.settingsScreen = [
+            self.bDebug,
+            self.bBack
+        ]
 
-    def toggleMainMenu(self, yesno):
+        self.lgooseCondition.setIcon(ImageIcon(abspath('../assets/sprites/gooseCondition.png')))
+
+    def toggleMainMenu(self, toggle):
         for e in self.mainMenu:
-            e.setVisible(yesno)
+            e.setVisible(toggle)
 
     def toggleMapSelector(self, toggle):
         for e in self.mapSelector:
@@ -116,49 +117,36 @@ class Menu(JMainFrame):
         elif not toggle:
             self.bConfirm.setBounds(320, 330, 80, 24)
 
+    def toggleSettingsScreen(self, toggle):
+        for e in self.settingsScreen:
+            e.setVisible(toggle)
+        if toggle:
+            self.bBack.setBounds(560, 300, 80, 24)
+        elif not toggle:
+            self.bBack.setBounds(895, 420, 80, 24)
+
     def setCurrentScreen(self, screen):
+        self.toggleMainMenu(False)
+        self.toggleMapSelector(False)
+        self.toggleGameScreen(False)
+        self.toggleConfirmScreen(False)
+        self.toggleGameOverScreen(False)
+        self.toggleWinScreen(False)
+        self.toggleSettingsScreen(False)
         if screen == 0:
             self.toggleMainMenu(True)
-            self.toggleMapSelector(False)
-            self.toggleGameScreen(False)
-            self.toggleConfirmScreen(False)
-            self.toggleGameOverScreen(False)
-            self.toggleWinScreen(False)
         elif screen == 1:
-            self.toggleMainMenu(False)
             self.toggleMapSelector(True)
-            self.toggleGameScreen(False)
-            self.toggleConfirmScreen(False)
-            self.toggleGameOverScreen(False)
-            self.toggleWinScreen(False)
         elif screen == 2:
-            self.toggleMainMenu(False)
-            self.toggleMapSelector(False)
             self.toggleGameScreen(True)
-            self.toggleConfirmScreen(False)
-            self.toggleGameOverScreen(False)
-            self.toggleWinScreen(False)
         elif screen == 3:
-            self.toggleMainMenu(False)
-            self.toggleMapSelector(False)
-            self.toggleGameScreen(False)
-            self.toggleGameOverScreen(False)
-            self.toggleWinScreen(False)
-            self.toggleConfirmScreen(True) #toggleWinScreen und toggleGameOverScreen müssen vertauscht werden, damit der confrim button sichtbar bleibt
+            self.toggleConfirmScreen(True)
         elif screen == 4:
-            self.toggleMainMenu(False)
-            self.toggleMapSelector(False)
-            self.toggleGameScreen(False)
-            self.toggleConfirmScreen(False)
-            self.toggleWinScreen(False) #toggleWinScreen und toggleGameOverScreen müssen vertauscht werden, damit der confrim button sichtbar bleibt
             self.toggleGameOverScreen(True)
         elif screen ==5:
-            self.toggleMainMenu(False)
-            self.toggleMapSelector(False)
-            self.toggleGameScreen(False)
-            self.toggleConfirmScreen(False)
-            self.toggleGameOverScreen(False)
             self.toggleWinScreen(True)
+        elif screen == 6:
+            self.toggleSettingsScreen(True)
         else:
             raise ValueError("illegal screen id")
 
@@ -186,7 +174,7 @@ class Menu(JMainFrame):
         # implement stop game
 
     def startGame(self):
-        if DEBUG:
+        if self.bDebug.isSelected():
             print("startGame called")
             print("map =", self.getSelectedMap())
             print("difficulty =", self.getSelectedDifficulty())
@@ -195,7 +183,7 @@ class Menu(JMainFrame):
             self.game = Game(self, self.getSelectedDifficulty(), theMaps[self.getSelectedMap()])
         except IndexError:
             self.setCurrentScreen(1)
-            if DEBUG:
+            if self.bDebug.isSelected():
                 print("Illegal map ID; returning to map select.")
             return
         self.game.grid.doRun()
@@ -204,7 +192,7 @@ class Menu(JMainFrame):
         self.game.startNextRound()
 
     def bStartGame_ActionPerformed(self, _):
-        if DEBUG:
+        if self.bDebug.isSelected():
             print("bStartGame_ActionPerformed called")
 
         self.setCurrentScreen(2)
@@ -223,18 +211,23 @@ class Menu(JMainFrame):
             self.game.updateMoney(-Tower2.cost)
 
     def bTower3_ActionPerformed(self, _):
-        # raise NotImplementedError("This tower has not been implemented so far.")
-        for x in range(0, 96):
-            for y in range(0, 54):
-                self.game.heldTower = HeldTower(2) 
-                self.game.placeHeldTower(Vektor(x*10, y*10))
+        if self.game.debug:
+            for x in range(0, 96):
+                for y in range(0, 54):
+                    self.game.heldTower = HeldTower(3) 
+                    self.game.placeHeldTower(Vektor(x*10, y*10))
+        else:
+            if (self.game.money >= Tower3.cost) and (self.game.heldTower is None):
+                self.game.heldTower = newHeldTower = HeldTower(2)
+                self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
+                self.game.updateMoney(-Tower3.cost)
 
     def bTower4_ActionPerformed(self, _):
-        # self.game.heldTower = 3
-
-        self.game.currentRound += 1
-        return
-        raise NotImplementedError("This tower has not been implemented so far.")
+        if self.game.debug:
+            self.game.currentRound += 1
+            self.tCurrentRound.setText(str(self.game.currentRound+1))
+        else:
+            raise NotImplementedError("This tower has not been implemented so far.")
 
     def bUpgrade1_ActionPerformed(self, _):
         if self.game.selectedTower is None:
@@ -268,6 +261,8 @@ class Menu(JMainFrame):
             self.game.grid.removeActor(self.game.heldTower)
             self.game.heldTower = None
 
+    def bSettings_ActionPerformed(self, _):
+        self.setCurrentScreen(6)
 
 if __name__ == "__main__":
     menu = Menu()

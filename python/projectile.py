@@ -60,7 +60,7 @@ class Projectile(Actor):
         self.enemiesHit = []
         self.damage = damage
 
-    def tick(self):
+    def tick(self): # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
         # Falls Tick Counter leer, despawnen.
         if self.lifetime <= 0 or self.pierce <= 0:
             self.despawn()

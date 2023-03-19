@@ -1,4 +1,4 @@
-class Counter:
+class Counter: # Hilfsklasse für die Enemy, Tower und Projectile Dictionaries
     def __init__(self):
         self.c = -1
 

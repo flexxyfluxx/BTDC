@@ -50,19 +50,7 @@ RAUM208_V1 = (Map()
     .addNode(Vektor(959,135))
 )
 
-MAP_Example = (Map()
-    .setBgImg(None)
-    .addNode(Vektor( 0 , 2 ))
-    .addNode(Vektor( 4 , 2 ))
-    .addNode(Vektor( 4 , 8 ))
-    .addNode(Vektor( 6 , 8 ))
-    .addNode(Vektor( 6 , 4 ))
-    .addNode(Vektor( 10, 4 ))
-)
-
-
 theMaps = [
     RAUM208_V2,
     RAUM208_V1,
-    MAP_Example
 ]
