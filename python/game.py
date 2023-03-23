@@ -75,7 +75,7 @@ class Game:
         self.menu.tCurrentRound.setText(str(self.currentRound + 1))
         self.paused = False
 
-    def tick(self): # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
+    def tick(self):  # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
         if self.paused:  # don't take action if paused
             return
 
@@ -128,7 +128,7 @@ class Game:
         self.selectedTower = actor
         self.updateCost()
 
-    def checkPlacementPos(self, pos): # überprüft ob der Tower, der plaziert werden soll weit genug vom Path entfernt ist
+    def checkPlacementPos(self, pos):  # überprüft ob der Tower, der plaziert werden soll weit genug vom Path entfernt ist
         dist = 2048  # unreasonably large distance to start off with
         for e in range(len(self.gameMap.pathNodes) - 1):
             node1 = self.gameMap.pathNodes[e]
