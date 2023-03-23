@@ -53,7 +53,7 @@ class Projectile(Actor):
         else:
             self.pos = MutableVektor.fromImmutable(pos)
 
-        Actor.__init__(self, True, sprite)
+        Actor.__init__(self, False, sprite)
         self.richtungsvektor = richtungsvektor
         self.setDirection(self.richtungsvektor.getAngle())
 
