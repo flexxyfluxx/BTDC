@@ -48,3 +48,18 @@ class Tower3(Tower):
         
     def upgradePath3(self):
         pass
+
+class Tower4(Tower):
+    cost = 100
+    def __init__(self, pos, key, game):
+        Tower.__init__(self, attackSpeed=2, attackDamage=10, attackRange=1, pierce=1, pos=pos,
+                       attackSpeedIncrement=1.02, attackDamageIncrement=1.4, 
+                       costUpgradeAttackSpeed=50, costUpgradeAttackDamage=100, 
+                       costUpgrade3=0, upgrade3Text="None", projectile = None,
+                       sprite=abspath('../assets/sprites/tower4.png'), key=key, game=game)
+                       
+    def attack(self):
+        self.game.updateMoney(self.attackDamage)
+    
+    def upgradePath4(self):
+        pass

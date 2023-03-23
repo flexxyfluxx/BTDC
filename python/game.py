@@ -5,7 +5,7 @@ import syspaths
 import maputil as mu
 from rounds import ROUNDS
 from ch.aplu.jgamegrid import Location, GGMouse, Actor
-from towers import Tower1, Tower2, Tower3
+from towers import Tower1, Tower2, Tower3, Tower4
 from towerDebug import TowerDebug
 from de.wvsberlin import Difficulty
 from de.wvsberlin.vektor import Vektor
@@ -45,7 +45,7 @@ class Game:
             self.menu.lTower3.setText(str(TowerDebug.cost))
         else:
             self.menu.lTower3.setText(str(Tower3.cost))
-        self.menu.lTower4.setText(str(0))
+        self.menu.lTower4.setText(str(Tower4.cost))
 
         if difficulty == Difficulty.EASY:
             self.health = 100
@@ -75,7 +75,7 @@ class Game:
         self.menu.tCurrentRound.setText(str(self.currentRound + 1))
         self.paused = False
 
-    def tick(self):  # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
+    def tick(self): # eigene tick funktion, damit auch außerhalb der runden noch mit dem gamegrid interagiert werden kann
         if self.paused:  # don't take action if paused
             return
 
@@ -128,7 +128,7 @@ class Game:
         self.selectedTower = actor
         self.updateCost()
 
-    def checkPlacementPos(self, pos):  # überprüft ob der Tower, der plaziert werden soll weit genug vom Path entfernt ist
+    def checkPlacementPos(self, pos): # überprüft ob der Tower, der plaziert werden soll weit genug vom Path entfernt ist
         dist = 2048  # unreasonably large distance to start off with
         for e in range(len(self.gameMap.pathNodes) - 1):
             node1 = self.gameMap.pathNodes[e]
@@ -158,7 +158,7 @@ class Game:
         if dist < 40:  # if dist too small: indicate invalid location
             self.heldTower.pos = pos
             self.heldTower.setLocation(pos.toLocation())
-            self.heldTower.show(4)
+            self.heldTower.show(5)
             return
             
         self.grid.removeActor(self.heldTower)
@@ -170,6 +170,8 @@ class Game:
         elif self.heldTower.towerID == 2:
             tower = Tower3(pos, key, self)
         elif self.heldTower.towerID == 3:
+            tower = Tower4(pos, key, self)
+        elif self.heldTower.towerID == 4:
             tower = TowerDebug(pos, key, self)
         else:
             raise ValueError("Illegal tower ID")

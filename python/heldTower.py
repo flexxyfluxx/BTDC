@@ -12,6 +12,7 @@ class HeldTower(Actor): # hilfsklasse zum anzeigen des zu plazierenden Towers
             abspath('../assets/sprites/crTower.png'),
             abspath('../assets/sprites/egirlsheesh.png'),
             abspath('../assets/sprites/picasso.png'),
+            abspath('../assets/sprites/tower4.png'),
             abspath('../assets/sprites/spriteDebug.png'),
             abspath('../assets/sprites/denied.png')
         ]

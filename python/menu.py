@@ -7,7 +7,7 @@ from game import Game, Difficulty
 from maps import theMaps
 from heldTower import HeldTower
 from ch.aplu.jgamegrid import Location
-from towers import Tower1, Tower2, Tower3
+from towers import Tower1, Tower2, Tower3, Tower4
 from javax.swing import ImageIcon
 from os.path import abspath
 
@@ -101,9 +101,7 @@ class Menu(JMainFrame):
     def toggleGameScreen(self, toggle):
         for e in self.gameScreen:
             e.setVisible(toggle)
-        # da es keinen 4. Tower gibt ist der Button nur verfügbar, wenn er durch debug eine Funktion bekommt
-        self.bTower4.setEnabled(self.bDebug.isSelected())
-
+            
     def toggleConfirmScreen(self, toggle):
         for e in self.confirmScreen:
             e.setVisible(toggle)
@@ -230,7 +228,7 @@ class Menu(JMainFrame):
         if self.game.debug:
             for x in range(0, 96):
                 for y in range(0, 54):
-                    self.game.heldTower = HeldTower(3) 
+                    self.game.heldTower = HeldTower(4) 
                     self.game.placeHeldTower(Vektor(x*10, y*10))
         else:
             if (self.game.money >= Tower3.cost) and (self.game.heldTower is None):
@@ -245,7 +243,10 @@ class Menu(JMainFrame):
             self.game.currentRound += 1
             self.tCurrentRound.setText(str(self.game.currentRound+1))
         else:
-            raise NotImplementedError("This tower has not been implemented so far.")
+            if (self.game.money >= Tower4.cost) and (self.game.heldTower is None):
+                self.game.heldTower = newHeldTower = HeldTower(3)
+                self.gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
+                self.game.updateMoney(-Tower4.cost)
         
     # Upgraden des ausgewählten Towers
     def bUpgrade1_ActionPerformed(self, _):
