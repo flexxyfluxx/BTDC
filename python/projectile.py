@@ -92,7 +92,10 @@ class Projectile(Actor):
         return Vektor.dist(self.pos, enemy.pos, False) < (self.size + enemy.size) ** 2 and enemy not in self.enemiesHit
 
     def onEnemyTouched(self, enemy):  # stub
-        enemy.health -= self.damage
+        if self.damage < enemy.health:
+            enemy.health -= self.damage
+        else:
+            enemy.die(self.damage - enemy.health)
         self.pierce -= 1
 
     def getDirection(self):
