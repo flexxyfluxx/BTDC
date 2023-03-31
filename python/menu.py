@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import syspaths
-from de.wvsberlin import JMainFrame
+from de.wvsberlin import JMainFrame, HeldTower
 from de.wvsberlin.vektor import Vektor
 from game import Game, Difficulty
 from maps import theMaps
-from heldTower import HeldTower
 from towers import Tower1, Tower2, Tower3
 from javax.swing import ImageIcon
 from os.path import abspath
