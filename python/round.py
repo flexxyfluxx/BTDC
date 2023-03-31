@@ -4,7 +4,7 @@
 Runden OwO
 """
 from enemies import WEAKEST
-from counter import Counter
+from de.wvsberlin import Counter
 
 
 class Round:
