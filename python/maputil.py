@@ -6,7 +6,6 @@ Map-Modul: Enthält alles Notwendige, um Maps zu laden und zu verarbeiten.
 from __future__ import print_function
 
 import syspaths
-from de.wvsberlin import factory as fac
 from ch.aplu.jgamegrid import GGBitmap
 from os.path import abspath
 from java.awt import Color

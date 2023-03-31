@@ -1,3 +1,5 @@
+package de.wvsberlin
+
 class Counter {
     private var c = -1
     fun iterator(): Int {

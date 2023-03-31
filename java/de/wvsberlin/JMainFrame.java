@@ -29,7 +29,7 @@ public class JMainFrame extends JFrame {
     public JRadioButton jButtonGroupMapsRB0 = new JRadioButton("Raum 208");
     public JRadioButton jButtonGroupMapsRB1 = new JRadioButton("Raum 208 Legacy");
     public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Jungel");
-    public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("Map not implemented");
+    public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("de.wvsberlin.Map not implemented");
   public JPanel jButtonGroupDifficulty = new JPanel();
     public ButtonGroup jButtonGroupDifficultyBG = new ButtonGroup();
     public TitledBorder jButtonGroupDifficultyTB = new TitledBorder("Difficulty");
@@ -98,7 +98,7 @@ public class JMainFrame extends JFrame {
     
     //Main Menu components
     bSelectMap.setBounds(560, 200, 80, 24);
-    bSelectMap.setText("Select Map");
+    bSelectMap.setText("Select de.wvsberlin.Map");
     bSelectMap.setMargin(new Insets(2, 2, 2, 2));
     bSelectMap.addActionListener(this::bSelectMap_ActionPerformed);
     cp.add(bSelectMap);
@@ -347,7 +347,7 @@ public class JMainFrame extends JFrame {
     mapIDs.put("Raum 208", 0);
     mapIDs.put("Raum 208 Legacy", 1);
     mapIDs.put("Jungel", 2);
-    mapIDs.put("Map not implemented", 3);
+    mapIDs.put("de.wvsberlin.Map not implemented", 3);
   } // end of public JMainFrame
 
 
