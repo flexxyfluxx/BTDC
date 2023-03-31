@@ -6,7 +6,6 @@ from de.wvsberlin.vektor import Vektor
 from game import Game, Difficulty
 from maps import theMaps
 from heldTower import HeldTower
-from ch.aplu.jgamegrid import Location
 from towers import Tower1, Tower2, Tower3
 from javax.swing import ImageIcon
 from os.path import abspath

@@ -4,12 +4,15 @@
 Hier werden alle Maps instantiiert.
 """
 
-from maputil import Map
+import syspaths
+from os.path import abspath
+from ch.aplu.jgamegrid import GGBitmap
+from de.wvsberlin import Map
 from de.wvsberlin.vektor import Vektor
 
 
 RAUM208_V2 = (Map()
-    .setBgImg('../assets/maps/raum208v2.png')
+    .setBgImg(GGBitmap.getScaledImage(abspath('../assets/maps/raum208v2.png')))
     .addNode(Vektor( 862, 540 ))
     .addNode(Vektor( 862, 455 ))
     .addNode(Vektor( 655, 455 ))

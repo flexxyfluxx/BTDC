@@ -2,13 +2,13 @@
 
 from __future__ import print_function
 import syspaths
-import maputil as mu
 from rounds import ROUNDS
 from ch.aplu.jgamegrid import Location, GGMouse, Actor
 from towers import Tower1, Tower2, Tower3
 from towerDebug import TowerDebug
 from de.wvsberlin import Difficulty, Counter
 from de.wvsberlin.vektor import Vektor
+
 
 class Game:
     def __init__(self, menu, difficulty, gameMap):  # gameMap, bc map is taken by python and map_ is ugly
