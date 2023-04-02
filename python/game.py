@@ -8,9 +8,10 @@ from towers import Tower1, Tower2, Tower3
 from towerDebug import TowerDebug
 from de.wvsberlin import Difficulty, Counter
 from de.wvsberlin.vektor import Vektor
+from de.wvsberlin.factory.interfaces import GameType
 
 
-class Game:
+class Game(GameType):
     def __init__(self, menu, difficulty, gameMap):  # gameMap, bc map is taken by python and map_ is ugly
         self.menu = menu
         self.grid = self.menu.gamegrid
@@ -19,7 +20,7 @@ class Game:
         self.roundActive = False
         self.gameMap = gameMap
         self.debug = self.menu.bDebug.isSelected()
-        self.gameMap.setBgOfGrid(self.grid, debug=self.debug)
+        self.gameMap.setBgOfGrid(self.grid, self.debug)
         self.grid.mousePressed = self.mousePressed
         self.heldTower = None
         self.selectedTower = None

@@ -11,6 +11,7 @@ class Counter {
     fun next(): Int {
         return iterator()
     }
+
     fun __iter__(): Counter {
         return this
     }

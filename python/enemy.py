@@ -2,9 +2,11 @@
 
 from __future__ import print_function
 from ch.aplu.jgamegrid import Actor
+from de.wvsberlin.factory.interfaces import EnemyType
 from de.wvsberlin.vektor import Vektor, MutableVektor, Gerade
 
-class Enemy(Actor):
+
+class Enemy(Actor, EnemyType):
     def __init__(self, game, key, dmg, health, speed, sprite, segmentIdx=0, segmentProgress=0,
                  childSupplier=None, childCount=1, childSpacing=10, sizeRadius=16, reward=1):
         Actor.__init__(self, sprite)

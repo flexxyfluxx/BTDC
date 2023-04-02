@@ -12,7 +12,7 @@ from de.wvsberlin.vektor import Vektor
 
 
 RAUM208_V2 = (Map()
-    .setBgImg(GGBitmap.getScaledImage(abspath('../assets/maps/raum208v2.png')))
+    .setBgImg(GGBitmap.getImage(abspath('../assets/maps/raum208v2.png')))
     .addNode(Vektor( 862, 540 ))
     .addNode(Vektor( 862, 455 ))
     .addNode(Vektor( 655, 455 ))
@@ -33,7 +33,7 @@ RAUM208_V2 = (Map()
 )
 
 RAUM208_LEGACY = (Map()
-    .setBgImg('../assets/maps/raum208v1.png')
+    .setBgImg(GGBitmap.getImage(abspath('../assets/maps/raum208v1.png')))
     .addNode(Vektor(840,539))
     .addNode(Vektor(840,453))
     .addNode(Vektor(577,453))
@@ -54,7 +54,7 @@ RAUM208_LEGACY = (Map()
 )
 
 JUNGLE = (Map()
-    .setBgImg('../assets/maps/jungle.png')
+    .setBgImg(GGBitmap.getImage(abspath('../assets/maps/jungle.png')))
     .addNode(Vektor(351, 520))
     .addNode(Vektor(406, 483))
     .addNode(Vektor(201, 407))
