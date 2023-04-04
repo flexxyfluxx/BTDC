@@ -6,9 +6,16 @@ import java.awt.Color
 import java.awt.Point
 import java.awt.image.BufferedImage
 
+/**
+ * Dataclass für eine Map im Spiel.
+ *
+ * Hat ein (oder kein) Hintergrundbild und einen Pfad, der sich aus mehreren Knotenpunkten zusammensetzt.
+ *
+ * Enthält mehrere vordefinierte Maps.
+ */
 class GameMap {
     var bgImg: BufferedImage? = null  // allow null incase there just is no img
-    var pathNodes = MutableList(0) { Vektor.NullVektor }  // I think MutableList is the correct choice..?
+    var pathNodes = mutableListOf<Vektor>( /* this bitch empty. yeet? */ )
 
     companion object {
         @JvmStatic
@@ -80,27 +87,40 @@ class GameMap {
         )
     }
 
+    /**
+     * Bei der Erstellung der Map zu verwenden.
+     *
+     * Füge weitere Node hinzu.
+     */
     fun addNode(node: Vektor): GameMap {
         pathNodes.add(node)
         return this
     }
 
+    /**
+     * Bei der Erstellung der Map zu verwenden.
+     *
+     * Gebe der Map ein Hintergrundbild.
+     */
     fun setBgImg(img: BufferedImage): GameMap {
         bgImg = img
         return this
     }
 
+    /**
+     * Übertrage das Hintergrundbild der Map auf ein GameGrid und zeichne optional den Pfad der Map in rot ein.
+     */
     fun setBgOfGrid(grid: GameGrid, debug: Boolean = false) {
-        // this is a reason why java is fucking retarded.
-        // a java dev would do:
-        //
-        //      val bg = grid.getBg()
-        //
-        // and me too, because I didnt fukign know that I could just get the reference directly
-        // why the fukc does such a method even exist.. I do not understand java devs' obsession w/ simple setters/getters.
-        // just directly assign to the fukgign field ffs????
-        // argh.
+        // this is a reason why Kotlin is lovely.
+        // Setters/getters are automatically converted to something that looks like a regular fucking field,
+        // because normal ppl (aka. not Java devs) would rather directly access a field, rather than have to go through
+        // some setter/getter bullshit.
+        // fr, this is so much more concise and readable???
         val bg = grid.bg
+
+        // if we have a bgImg, push it to the gamegrid.
+        // clear first, to make sure we are truly showing what *we* want.
+        bg.clear()
         if (bgImg != null) bg.drawImage(bgImg)
 
         if (!debug) return

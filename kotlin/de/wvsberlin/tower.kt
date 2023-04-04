@@ -4,7 +4,6 @@ import ch.aplu.jgamegrid.Actor
 import de.wvsberlin.vektor.Vektor
 import java.awt.image.BufferedImage
 import java.lang.IllegalArgumentException
-import java.util.function.Supplier
 
 class Tower1(pos: Vektor, key: Int, game: Game) : Tower(
         game = game,
@@ -20,11 +19,13 @@ class Tower1(pos: Vektor, key: Int, game: Game) : Tower(
         attackDamageUpgradeCost = 75,
         upgrade3Cost = 220,
         upgrade3Text = "Attack range",
-        projectileSupplier = TODO(),
+        projectileSupplier = Projectile::TOWER1_PROJ,
         sprite = Sprite.CR_TOWER
 ) {
+    override val cost: Int = Companion.cost
+
     companion object {
-        val cost: Int = 250
+        const val cost = 250
     }
 
     override fun upgradePath3() {
@@ -32,7 +33,7 @@ class Tower1(pos: Vektor, key: Int, game: Game) : Tower(
 
         game.updateMoney(-upgrade3Cost)
         attackRange += 5
-        upgrade3Cost *= 1.1
+        upgrade3Cost = (upgrade3Cost * 1.1).toInt()  // god I hate this
     }
 }
 
@@ -53,8 +54,10 @@ class Tower2(pos: Vektor, key: Int, game: Game) : Tower(
         projectileSupplier = TODO(),
         sprite = Sprite.EGIRL
 ) {
+    override val cost = Companion.cost
+
     companion object {
-        val cost: Int = 300
+        const val cost = 300
     }
 
     override fun upgradePath3() {
@@ -62,7 +65,7 @@ class Tower2(pos: Vektor, key: Int, game: Game) : Tower(
 
         game.updateMoney(-upgrade3Cost)
         pierce++
-        upgrade3Cost *= 1.2
+        upgrade3Cost = (upgrade3Cost * 1.2).toInt()
         game.updateCost()
     }
 }
@@ -84,8 +87,10 @@ class Tower3(pos: Vektor, key: Int, game: Game) : Tower(
         projectileSupplier = TODO(),
         sprite = Sprite.PICASSO
 ) {
+    override val cost: Int = Companion.cost
+
     companion object {
-        val cost: Int = 0
+        const val cost = 425
     }
 
     override fun upgradePath3() {}
@@ -108,8 +113,10 @@ class TowerDebug(pos: Vektor, key: Int, game: Game) : Tower(
         projectileSupplier = TODO(),
         sprite = Sprite.SQUARE_GREEN
 ) {
+    override val cost: Int = Companion.cost
+
     companion object {
-        val cost: Int = 0
+        const val cost = 0
     }
 
     override fun tick() {}
@@ -127,9 +134,9 @@ abstract class Tower(
         var pos: Vektor,
         val attackSpeedIncrement: Double,
         val attackDamageIncrement: Double,
-        attackSpeedUpgradeCost: Number,
-        attackDamageUpgradeCost: Number,
-        upgrade3Cost: Number,
+        var attackSpeedUpgradeCost: Int,
+        var attackDamageUpgradeCost: Int,
+        var upgrade3Cost: Int,
         val upgrade3Text: String,
         val projectileSupplier: ProjectileSupplier,
         sprite: BufferedImage
@@ -140,9 +147,8 @@ abstract class Tower(
     var attackRange: Int
     var pierce: Int
     var targetDirection: Double = 0.0
-    var attackSpeedUpgradeCost = attackSpeedUpgradeCost.toDouble()
-    var attackDamageUpgradeCost = attackDamageUpgradeCost.toDouble()
-    var upgrade3Cost = upgrade3Cost.toDouble()
+
+    abstract val cost: Int
 
     init {
         this.attackSpeed = attackSpeed.toDouble()
@@ -167,7 +173,7 @@ abstract class Tower(
 
         game.updateMoney(-attackDamageUpgradeCost)
         attackDamage *= attackDamageIncrement
-        attackDamageUpgradeCost *= 1.1
+        attackDamageUpgradeCost = (attackDamageUpgradeCost * 1.1).toInt()
         game.updateCost()
     }
 
@@ -179,18 +185,18 @@ abstract class Tower(
     open fun attack() = game.spawnProjectile(pos, targetDirection, projectileSupplier, attackRange, pierce)
 }
 
-class HeldTower(val towerID: Int) : Actor(sprites[towerID]) {
-    val pos = Vektor(480, 270)
+class HeldTower(val towerID: Int) : Actor(sprites[towerID], Sprite.DENIED) {
+    var pos = Vektor(480, 270)
 
     init {
-        show()
+        show(0)
     }
 
     companion object {
         @JvmStatic
         // we should move away from towerIDs to figure out which sprite should be shown..
         val sprites: Array<BufferedImage> = arrayOf(
-                Sprite.CR_TOWER, Sprite.EGIRL, Sprite.PICASSO, Sprite.SQUARE_GREEN, Sprite.DENIED
+                Sprite.CR_TOWER, Sprite.EGIRL, Sprite.PICASSO, Sprite.SQUARE_GREEN
         )
     }
 }

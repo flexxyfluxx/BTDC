@@ -2,41 +2,66 @@ package de.wvsberlin
 
 import ch.aplu.jgamegrid.GGBitmap
 
+/**
+ * Sprites. Images. All of them, here, in one convenient class.
+ */
 abstract class Sprite {
     companion object {
         @JvmStatic
-        val ARROW = GGBitmap.getImage("../assets/sprites/arrows.png")!!
+        val ARROW = GGBitmap.getScaledImage("sprites/arrows.png", 0.1, 0.0)!!
+
         @JvmStatic
-        val BALLOON_WEAKEST = GGBitmap.getScaledImage("../assets/sprites/ballon1.png", 0.8, 0.0)!!
+        val BALLOON_WEAKEST = GGBitmap.getScaledImage("sprites/ballon1.png", 0.8, 0.0)!!
+
         @JvmStatic
-        val BALLOON_BLUE = GGBitmap.getScaledImage("../assets/sprites/ballon2.png", 0.8, 0.0)!!
+        val BALLOON_BLUE = GGBitmap.getScaledImage("sprites/ballon2.png", 0.8, 0.0)!!
+
         @JvmStatic
-        val CR_TOWER = GGBitmap.getImage("../assets/sprites/crTower.png")!!
+        val CR_TOWER = GGBitmap.getImage("sprites/crTower.png")!!
+
         @JvmStatic
-        val DENIED = GGBitmap.getImage("../assets/sprites/denied.png")!!
+        val DENIED = GGBitmap.getImage("sprites/denied.png")!!
+
         @JvmStatic
-        val EGIRL = GGBitmap.getImage("../assets/sprites/egirlsheesh.png")!!
+        val EGIRL = GGBitmap.getImage("sprites/egirlsheesh.png")!!
+
         @JvmStatic
-        val GOOSE = GGBitmap.getImage("../assets/sprites/gooseCondition.png")!!
+        val GOOSE = GGBitmap.getImage("sprites/gooseCondition.png")!!
+
         @JvmStatic
-        val PICASSO = GGBitmap.getImage("../assets/sprites/picasso.png")!!
+        val PICASSO = GGBitmap.getImage("sprites/picasso.png")!!
+
         @JvmStatic
-        val SQUARE_PINK = GGBitmap.getImage("../assets/sprites/sprite.png")!!
+        val SQUARE_PINK = GGBitmap.getImage("sprites/sprite.png")!!
+
         @JvmStatic
-        val SQUARE_BLUE = GGBitmap.getImage("../assets/sprites/sprite2.png")!!
+        val SQUARE_BLUE = GGBitmap.getImage("sprites/sprite2.png")!!
+
         @JvmStatic
-        val SQUARE_GREEN = GGBitmap.getImage("../assets/sprites/spriteDebug.png")!!
+        val SQUARE_GREEN = GGBitmap.getImage("sprites/spriteDebug.png")!!
+
+        // different can of Sprite for enemies/projectiles because the scaling is different.
         @JvmStatic
-        val SPRITE = GGBitmap.getScaledImage("../assets/sprites/spritesprite.png", 0.8, 0.0)!!
+        val ENEMY_SPRITE = GGBitmap.getScaledImage("sprites/spritesprite.png", 0.8, 0.0)!!
         @JvmStatic
-        val UWU = GGBitmap.getImage("../assets/sprites/uwu.png")!!
+        val PROJ_SPRITE = GGBitmap.getScaledImage("sprites/spritesprite.png", 0.1, 0.0)!!
+
+        @JvmStatic
+        val UWU = GGBitmap.getScaledImage("sprites/uwu.png", 0.1, 0.0)!!
     }
+
+    /**
+     * Subset of sprites: Map images. Grouped together, for your coonvenience.
+     */
+    // no, I am not fixing the doc comment typo. It's too funny.
     object Map {
         @JvmStatic
-        val R208 = GGBitmap.getImage("../assets/maps/raum208v2.png")
+        val R208 = GGBitmap.getImage("maps/raum208v2.png")
+
         @JvmStatic
-        val R208_LEGACY = GGBitmap.getImage("../assets/maps/raum208v1.png")
+        val R208_LEGACY = GGBitmap.getImage("maps/raum208v1.png")
+
         @JvmStatic
-        val JUNGLE = GGBitmap.getImage("../assets/maps/jungle.png")
+        val JUNGLE = GGBitmap.getImage("maps/jungle.png")
     }
 }

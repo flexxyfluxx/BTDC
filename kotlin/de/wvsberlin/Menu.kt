@@ -10,10 +10,16 @@ import javax.swing.ImageIcon
 class Menu : JMainFrame() {
     var game: Game? = null
     val mainMenu: Array<out Component> = arrayOf(
-            bSelectMap, bUpgrades, bSettings, bQuitGame
+            bSelectMap,
+            bUpgrades,
+            bSettings,
+            bQuitGame
     )
     val mapSelector: Array<out Component> = arrayOf(
-            jButtonGroupMaps, jButtonGroupDifficulty, bStartGame, bBack
+            jButtonGroupMaps,
+            jButtonGroupDifficulty,
+            bStartGame,
+            bBack
     )
     val gameScreen: Array<out Component> = arrayOf(
             jGridPanel,
@@ -48,16 +54,21 @@ class Menu : JMainFrame() {
             lHealth
     )
     val confirmScreen: Array<out Component> = arrayOf(
-            bConfirm, bAbort
+            bConfirm,
+            bAbort
     )
     val gameOverScreen: Array<out Component> = arrayOf(
-            lgooseCondition, bConfirm, lgameOver
+            lgooseCondition,
+            bConfirm,
+            lgameOver
     )
     val winScreen: Array<out Component> = arrayOf(
-            bConfirm, lwon
+            bConfirm,
+            lwon
     )
     val settingsScreen: Array<out Component> = arrayOf(
-            bDebug, bBack
+            bDebug,
+            bBack
     )
 
     init {
