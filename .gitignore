@@ -14,3 +14,5 @@ python/*.class
 *.~ava
 jar
 jar/*
+out
+out/*
