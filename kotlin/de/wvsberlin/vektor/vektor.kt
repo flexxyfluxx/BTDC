@@ -5,15 +5,13 @@ import java.awt.Point
 import kotlin.math.*
 import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
-import kotlin.random.Random
 
-
+/**
+ * 2d vectors wowowowowowo
+ *
+ * 2-dimensionale Vektoren im mathematischen Sinne.
+ */
 open class Vektor(x: Number, y: Number) {
-    /**
-     * 2d vectors wowowowowowo
-     * Vektoren im mathematischen Sinne.
-     */
-
     open val x: Double
     open val y: Double
 
@@ -28,35 +26,49 @@ open class Vektor(x: Number, y: Number) {
                         // die auf Package-Level geschrieben werden, landen, damit Java damit klarkommt... wtf.
                         // Suboptimal, da ich keinen Bock habe, das erklären zu müssen.
                         // OOP ist ja toll und so, aber ich will Funktionen auf Package-Level :((( ffs
+        /**
+         * Der einzig wahre Nulvektor.
+         *
+         * Äquivalent zum mathematischen σ. (Bitte denk dir den Pfeil darüber selbst dazu.)
+         */
         @JvmField
         val NullVektor = Vektor(0,0)
 
         @JvmStatic
         // um einen Vektor auch mit Richtung und Länge initialisieren zu können
-        fun fromAngleAndMagnitude(angle: Double, magnitude: Double) = Vektor(cos(toRadians(angle)), sin(toRadians(angle))) * magnitude
+        fun fromAngleAndMagnitude(angle: Double, magnitude: Number) = Vektor(cos(toRadians(angle)), sin(toRadians(angle))) * magnitude.toDouble()
 
 
         /**
-         * dist:
-         * auf 2 (Orts-)Vektoren angewandt: Abstand zw. den entsprechenden Punkten
-         * auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade
+         * Auf 2 (Orts-)Vektoren angewandt: Abstand zw. den entsprechenden Punkten
+         *
+         * Auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade.
+         *
+         * Mit Option für quadriert oder normal.
          */
         @JvmStatic
         fun dist(a: Vektor, b: Vektor, doSqrt: Boolean): Double = (a - b).abs(doSqrt)
 
+        /**
+         * Auf 2 (Orts-)Vektoren angewandt: Abstand zw. den entsprechenden Punkten
+         *
+         * Auf Gerade und (Orts-)Vektor angewandt: Abstand des Punktes (als Ortsvektor) zur Gerade.
+         */
         @JvmStatic
         fun dist(a: Vektor, b: Vektor): Double = (a - b).abs(true)
 
 
+        /**
+         * Berechnet den Abstand eines Punktes zu einer Strecke AB (aus geg. A und B):
+         *
+         * Falls der Fußpkt auf AB liegt, gebe dies zurück.
+         *
+         * Sonst, gebe die Entfernung zum nächsten Pkt A oder B zurück.
+         */
         @JvmStatic
-        fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {  // keine Option doSqrt, da sonst in manchen Fällen noch
+        fun clampedDist(a: Vektor, b: Vektor, p: Vektor): Double {
+            // keine Option doSqrt, da sonst in manchen Fällen noch
             // hoch 2 genommen werden müsste lul
-            /**
-             * clampedDist:
-             * Berechnet den Abstand eines Punktes zu einer Strecke AB (aus geg. A und B):
-             * Falls der Fußpkt auf AB liegt, gebe dies zurück.
-             * Sonst, gebe die Entfernung zum nächsten Pkt A oder B zurück.
-             */
 
             // herausfinden, ob Fußpkt zwischen A und B (oder nicht)
             val ABvek = b - a
@@ -76,18 +88,27 @@ open class Vektor(x: Number, y: Number) {
         }
     }
 
+    /**
+     * Ermittle Einheitsvektor des Vektors.
+     */
     fun getUnitized(): Vektor {
         if (this == NullVektor)
             throw IllegalStateException("Cannot unitize Nullvektor! (The laws of math forbid it)")
         return this / this.abs()  // Division durch Null ist nicht gut diese, darum hat ein Nullvektor keinen definierten Einheitsvektor.
     }
 
+    /**
+     * Ermittle einen hesse'schen Normalenvektor des Vektors.
+     */
     fun getUnitNormal(): Vektor {  // Ich kann nicht garantieren, dass der Vektor in die "richtige" Richtung zeigt.
         if (this == NullVektor)
             throw IllegalStateException("Cannot get unit normal of NullVektor! (The laws of maths forbid it)")
         return Vektor(y, -x).getUnitized()
     }
 
+    /**
+     * Ermittle den Winkel des Vektors (in Grad).
+     */
     fun getAngle(): Double {
         val unitized = getUnitized()
 
@@ -98,10 +119,17 @@ open class Vektor(x: Number, y: Number) {
         ) % 360
     }
 
-
+    /**
+     * Betrag des Vektors: Ermittle wahlweise seine wahre oder quadrierte Länge.
+     *
+     * Die quadrierte Länge ist halt einfacher zu berechnen, da man sich dadurch die sqrt-Funktion spart.
+     */
     fun abs(doSqrt: Boolean = true): Double {
         val unsqrted = x*x + y*y
 
+        // Aus Optimierungsgründen darf man zwischen der wahren und der quadrierten Länge des Vektors wöhlen,
+        // weil sqrt sehr langsam sein soll.
+        // Ist zudem eine sehr einfache Optimierung, also...
         return if (doSqrt) {
             sqrt(unsqrted)
         } else {
@@ -109,6 +137,9 @@ open class Vektor(x: Number, y: Number) {
         }
     }
 
+    /**
+     * Betrag des Vektors: Ermittle seine Länge.
+     */
     fun abs(): Double = abs(true)
 
     override fun hashCode(): Int = 31 * x.hashCode() + y.hashCode()
@@ -120,16 +151,19 @@ open class Vektor(x: Number, y: Number) {
     fun __eq__(other: Any?) = equals(other)
 
     /**
-     * Addiere/Subtrahiere Vektor mit Vektor -> Vektor
+     * Addiere Vektor mit Vektor.
      */
     operator fun plus(other: Vektor) = Vektor(this.x + other.x, this.y + other.y)
     fun __add__(other: Vektor) = plus(other)
 
+    /**
+     * Subtrahiere Vektor von Vektor.
+     */
     operator fun minus(other: Vektor) = Vektor(this.x - other.x, this.y - other.y)
     fun __sub__(other: Vektor) = minus(other)
 
     /**
-     * Multipliziere Vektor mit Skalar -> Vektor
+     * Multipliziere Vektor mit Skalar.
      */
     operator fun times(other: Number): Vektor {
         val otherD = other.toDouble()
@@ -137,7 +171,7 @@ open class Vektor(x: Number, y: Number) {
     }
 
     /**
-     * Multipliziere Vektor mit Vektor -> Skalarprodukt
+     * Ermittle Skalarprodukt zweier Vektoren.
      */
     operator fun times(other: Vektor): Double = (this.x * other.x) + (this.y * other.y)
     // kein timesAssign mit Vektor, da sich dann der Objekttyp ändert
@@ -147,7 +181,7 @@ open class Vektor(x: Number, y: Number) {
     fun __mul__(other: Vektor) = times(other)
 
     /**
-     * Teile Vektor durch Skalar → Vektor
+     * Teile Vektor durch Skalar.
      */
     operator fun div(scalar: Number): Vektor {
         val Dscalar = scalar.toDouble()
@@ -162,25 +196,49 @@ open class Vektor(x: Number, y: Number) {
     open fun __str__() = "Vektor(${x}, ${y})"
 
     /**
-     * Bei Verwendung von Kotlin kann man den Abstand zweier Vektoren als `v1..v2` schreiben.
+     * Implementierung von Kotlins rangeTo-Operator:
+     *
+     * Statt `Vektor.dist(v1, v2)` kann man `v1..v2` schreiben.
      */
     operator fun rangeTo(other: Vektor) = dist(this, other)
 
+    /**
+     * Wandle Vektor zu `ch.aplu.jgamegrid.Location` um.
+     */
     fun toLocation() = Location(round(x).toInt(), round(y).toInt())
+
+    /**
+     * Wandle Vektor zu `java.awt.Point` um.
+     */
     fun toPoint() = Point(round(x).toInt(), round(y).toInt())
 }
 
-
+/**
+ * Vektoren, aber veränderlich.
+ *
+ * `v1 += v2` erstellt also zB. keinen weiteren Vektor `v3` und setzt `v1` gleich den,
+ * sondern addiert `v2` direkt zum Objekt `v1`.
+ */
 class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
     override var x: Double = x.toDouble()
     override var y: Double = y.toDouble()
 
+    /**
+     * Setze Richtung des Vektors anhand einer geg. Richtung in Grad.
+     *
+     * Behält Länge des Vektors bei.
+     */
     fun setAngle(angle: Number) {
         val vekLength = abs()
         x = cos(toRadians(angle.toDouble())) * vekLength
         y = sin(toRadians(angle.toDouble())) * vekLength
     }
 
+    /**
+     * Setze Länge des Vektors auf den geg. Wert.
+     *
+     * Behält Richtung des Vektors bei.
+     */
     fun setLength(length: Number) {
         val factor = length.toDouble() / abs()
         x *= factor
@@ -188,10 +246,16 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
     }
 
     companion object {
+        /**
+         * Erstelle einen neuen MutableVektor anhand von Richtung (in Grad) und Länge, anstatt von Achsenlängen.
+         */
         @JvmStatic
         fun fromAngleAndMagnitude(angle: Number, magnitude: Number = 1) =
             MutableVektor(cos(toRadians(angle.toDouble())), sin(toRadians(angle.toDouble()))) * magnitude
 
+        /**
+         * Erstelle anhand eines (normalen) Vektors einen äquivalenten MutableVektor.
+         */
         @JvmStatic
         fun fromImmutable(ivektor: Vektor) = MutableVektor(ivektor.x, ivektor.y)
     }
@@ -239,12 +303,12 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
     override fun __str__() = "MutableVektor(${x}, ${y})"
 }
 
-
+/**
+ * 2d-Geraden in Parameterform im mathematischen Sinne.
+ *
+ * `Gerade(p, v)` entspricht `g: x = p + rv` (Vektorpfeile bitte dazudenken)
+ */
 class Gerade(val p: Vektor, val v: Vektor) {
-    /**
-     * 'ne Vektorgerade der Form p> + r * v>
-     */
-
     override fun hashCode(): Int {
         var result = p.hashCode()
         result = 31 * result + v.hashCode()
@@ -256,10 +320,18 @@ class Gerade(val p: Vektor, val v: Vektor) {
     }
     fun __eq__(other: Any?) = equals(other)
 
+    /**
+     * In der Mathematik bekommt man Funktionswerte der Funktion f mit der Schreibweise f(x).
+     *
+     * Warum sollte das beim Programmieren anders sein?
+     */
     operator fun invoke(r: Number) = p + v * (r.toDouble())
     fun __call__(r: Number) = invoke(r)
 
     companion object {
+        /**
+         * Ermittle Abstand eines Punktes zu einer Gerade.
+         */
         @JvmStatic
         fun dist(a: Gerade, b: Vektor): Double {
             val APvek = b - a.p
@@ -268,7 +340,7 @@ class Gerade(val p: Vektor, val v: Vektor) {
             return abs(scalarproduct)
         }
         // Bei der Abstandmessung zu einer Gerade brauchen wir komischerweise keine Sqrt-Option,
-        // da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können nicht an der Stelle weitere Performance rausholen.
+        // da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können an der Stelle keine weitere Performance herausholen.
     }
 
     fun __repr__() = "de.wvsberlin.vektor.Gerade[p=${p}, v=${v}]@${hashCode()}"

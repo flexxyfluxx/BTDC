@@ -41,7 +41,7 @@ object FGUIForm: TFGUIForm
     Focusable = True
     actionPerformed = 'bSelectMap_ActionPerformed'
     Opaque = True
-    Text = 'Select Map'
+    Text = 'Select de.wvsberlin.Map'
     Mnemonic = 0
     DisplayedMnemonicIndex = 0
     Selected = False
@@ -257,10 +257,10 @@ object FGUIForm: TFGUIForm
     Visible = False
     Opaque = True
     Items.Strings = (
-      'Map 1, selected'
-      'Map 2'
-      'Map 3'
-      'Map 4')
+      'de.wvsberlin.Map 1, selected'
+      'de.wvsberlin.Map 2'
+      'de.wvsberlin.Map 3'
+      'de.wvsberlin.Map 4')
     Columns = 2
     Checkboxes = False
     Title = 'Maps'

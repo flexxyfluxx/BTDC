@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import ch.aplu.jgamegrid.GameGrid;
 import java.util.HashMap;
-import java.util.Objects;
-import de.wvsberlin.Difficulty;
 
 /**
  *
@@ -29,7 +27,7 @@ public class JMainFrame extends JFrame {
     public JRadioButton jButtonGroupMapsRB0 = new JRadioButton("Raum 208");
     public JRadioButton jButtonGroupMapsRB1 = new JRadioButton("Raum 208 Legacy");
     public JRadioButton jButtonGroupMapsRB2 = new JRadioButton("Jungel");
-    public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("Map not implemented");
+    public JRadioButton jButtonGroupMapsRB3 = new JRadioButton("de.wvsberlin.Map not implemented");
   public JPanel jButtonGroupDifficulty = new JPanel();
     public ButtonGroup jButtonGroupDifficultyBG = new ButtonGroup();
     public TitledBorder jButtonGroupDifficultyTB = new TitledBorder("Difficulty");
@@ -98,7 +96,7 @@ public class JMainFrame extends JFrame {
     
     //Main Menu components
     bSelectMap.setBounds(560, 200, 80, 24);
-    bSelectMap.setText("Select Map");
+    bSelectMap.setText("Select de.wvsberlin.Map");
     bSelectMap.setMargin(new Insets(2, 2, 2, 2));
     bSelectMap.addActionListener(this::bSelectMap_ActionPerformed);
     cp.add(bSelectMap);
@@ -347,7 +345,7 @@ public class JMainFrame extends JFrame {
     mapIDs.put("Raum 208", 0);
     mapIDs.put("Raum 208 Legacy", 1);
     mapIDs.put("Jungel", 2);
-    mapIDs.put("Map not implemented", 3);
+    mapIDs.put("de.wvsberlin.Map not implemented", 3);
   } // end of public JMainFrame
 
 
@@ -356,32 +354,25 @@ public class JMainFrame extends JFrame {
   }
   
   // start methods
+
+  public void gamegrid_OnMouseClick(ActionEvent evt) {
+  }
   
   //Main Menu
-  public void bSelectMap_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bSelectMap_ActionPerformed(ActionEvent evt) {    
   } // end of bSelectMap_ActionPerformed
 
-  public void bUpgrades_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bUpgrades_ActionPerformed(ActionEvent evt) {    
   } // end of bUpgrades_ActionPerformed
 
-  public void bSettings_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bSettings_ActionPerformed(ActionEvent evt) {    
   } // end of bSettings_ActionPerformed
 
-  public void bQuitGame_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bQuitGame_ActionPerformed(ActionEvent evt) {    
   } // end of bQuitGame_ActionPerformed
   
   //Settings
-  public void bDebug_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bDebug_ActionPerformed(ActionEvent evt) {    
   } // end of bDebug_ActionPerformed
 
   //Maps Selector
@@ -416,81 +407,51 @@ public class JMainFrame extends JFrame {
   } // end of bStartGame_ActionPerformed
 
   //Multiple Screens
-  public void bBack_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bBack_ActionPerformed(ActionEvent evt) {    
   } // end of bBack_ActionPerformed
 
-  public void bConfirm_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bConfirm_ActionPerformed(ActionEvent evt) {    
   } // end of bConfirm_ActionPerformed
 
   //Quit
-  public void bAbort_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bAbort_ActionPerformed(ActionEvent evt) {    
   } // end of bAbort_ActionPerformed
   
   //Game Screen
-  public void bQuit_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bQuit_ActionPerformed(ActionEvent evt) {    
   } // end of bQuit_ActionPerformed
 
-  public void bStartRound_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bStartRound_ActionPerformed(ActionEvent evt) {    
   } // end of bStartRound_ActionPerformed
 
-  public void bAutostart_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bAutostart_ActionPerformed(ActionEvent evt) {    
   } // end of bAutostart_ActionPerformed
 
-  public void bTower1_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bTower1_ActionPerformed(ActionEvent evt) {    
   } // end of bTower1_ActionPerformed
 
-  public void bTower2_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bTower2_ActionPerformed(ActionEvent evt) {    
   } // end of bTower2_ActionPerformed
 
-  public void bTower3_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bTower3_ActionPerformed(ActionEvent evt) {    
   } // end of bTower3_ActionPerformed
 
-  public void bTower4_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bTower4_ActionPerformed(ActionEvent evt) {    
   } // end of bTower4_ActionPerformed
 
-  public void bUpgrade1_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bUpgrade1_ActionPerformed(ActionEvent evt) {    
   } // end of bUpgrade1_ActionPerformed
 
-  public void bUpgrade2_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bUpgrade2_ActionPerformed(ActionEvent evt) {    
   } // end of bUpgrade2_ActionPerformed
 
-  public void bUpgrade3_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bUpgrade3_ActionPerformed(ActionEvent evt) {    
   } // end of bUpgrade3_ActionPerformed
 
-  public void bSell_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bSell_ActionPerformed(ActionEvent evt) {    
   } // end of bSell_ActionPerformed
 
-  public void bDeselect_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bDeselect_ActionPerformed(ActionEvent evt) {    
   } // end of bSell_ActionPerformed
 
   // end methods

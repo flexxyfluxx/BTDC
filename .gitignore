@@ -12,3 +12,7 @@ python/*.class
 /java/ch
 *.~fm
 *.~ava
+jar
+jar/*
+out
+out/*
