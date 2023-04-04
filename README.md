@@ -2,7 +2,7 @@
 blons tower defense clone
 
 # How to run:
-- Download the latest JAR under the Releases tab
+- Download the latest JAR from Releases
 - Run the jar. ez.
 
 ## Alternatively, to build from source...
