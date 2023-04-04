@@ -38,8 +38,8 @@ class Projectile(
                 game = game,
                 key = key,
                 richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
-                sprite = Sprite.PROJ_SPRITE,
-                lifetime = 100,
+                sprite = Sprite.SPRITE,
+                lifetime = lifetime,
                 pierce = pierce,
                 size = 6,
                 pos = pos
@@ -71,7 +71,7 @@ class Projectile(
                 game = game,
                 key = key,
                 richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
-                sprite = Sprite.PROJ_SPRITE,
+                sprite = Sprite.SPRITE,
                 lifetime = lifetime,
                 pierce = pierce,
                 size = 6,
@@ -81,7 +81,7 @@ class Projectile(
 
     fun tick() {
         if ((lifetime <= 0) or (pierce <= 0)) {
-            despawn()
+            markForGC()
             return
         }
 
@@ -93,7 +93,7 @@ class Projectile(
             if (!isTouchingEnemy(enemy)) continue
 
             if (pierce <= 0) {
-                despawn()
+                markForGC()
                 return
             }
 
@@ -101,9 +101,18 @@ class Projectile(
         }
     }
 
+    /**
+     * Removes projectile from all the places it could be.
+     *
+     * WARNING: If removing projectile mid-tick, mark for GC instead to prevent ConcurrentModificationExceptions.
+     */
     fun despawn() {
         gameGrid?.removeActor(this)
         game.activeProjectiles.remove(key)
+    }
+
+    fun markForGC() {
+        game.projectilesToGC.add(key)
     }
 
     fun isTouchingEnemy(enemy: Enemy): Boolean =

@@ -83,6 +83,10 @@ class Enemy(
         game.activeEnemies.remove(key)
     }
 
+    fun markForGC() {
+        game.enemiesToGC.add(key)
+    }
+
     /**
      * Handles the death of enemies (not their gc! that would be Enemy.despawn)
      */
@@ -90,7 +94,7 @@ class Enemy(
         if (game.debug) println("Enemy $key died.")
 
         // gc enemy and award reward
-        despawn()
+        markForGC()
         game.updateMoney(reward)
 
         childSupplier ?: return
@@ -128,7 +132,7 @@ class Enemy(
                 game.gameOver()
             }
             game.menu.tHealth.text = game.health.toString()
-            despawn()
+            markForGC()
             return
         }
 
@@ -182,7 +186,7 @@ class Enemy(
                 dmg = 3,
                 health = 1,
                 speed = 3.0,
-                sprite = Sprite.ENEMY_SPRITE,  // TODO add real sprite
+                sprite = Sprite.SPRITE,  // TODO add real sprite
                 childSupplier = this::BLUE
         )
 
@@ -195,7 +199,7 @@ class Enemy(
                 dmg = 4,
                 health = 1,
                 speed = 5.0,
-                sprite = Sprite.ENEMY_SPRITE,  // TODO add real sprite
+                sprite = Sprite.SPRITE,  // TODO add real sprite
                 childSupplier = this::GREEN
         )
 
@@ -208,7 +212,7 @@ class Enemy(
                 dmg = 5,
                 health = 1,
                 speed = 8.0,
-                sprite = Sprite.ENEMY_SPRITE,  // TODO add real sprite
+                sprite = Sprite.SPRITE,  // TODO add real sprite
                 childSupplier = this::YELLOW
         )
     }

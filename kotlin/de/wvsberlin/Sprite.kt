@@ -40,11 +40,8 @@ abstract class Sprite {
         @JvmStatic
         val SQUARE_GREEN = GGBitmap.getImage("sprites/spriteDebug.png")!!
 
-        // different can of Sprite for enemies/projectiles because the scaling is different.
         @JvmStatic
-        val ENEMY_SPRITE = GGBitmap.getScaledImage("sprites/spritesprite.png", 0.8, 0.0)!!
-        @JvmStatic
-        val PROJ_SPRITE = GGBitmap.getScaledImage("sprites/spritesprite.png", 0.1, 0.0)!!
+        val SPRITE = GGBitmap.getScaledImage("sprites/spritesprite.png", 0.1, 0.0)!!
 
         @JvmStatic
         val UWU = GGBitmap.getScaledImage("sprites/uwu.png", 0.1, 0.0)!!

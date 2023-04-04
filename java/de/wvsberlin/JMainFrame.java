@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import ch.aplu.jgamegrid.GameGrid;
 import java.util.HashMap;
-import java.util.Objects;
-import de.wvsberlin.Difficulty;
 
 /**
  *
@@ -356,32 +354,25 @@ public class JMainFrame extends JFrame {
   }
   
   // start methods
+
+  public void gamegrid_OnMouseClick(ActionEvent evt) {
+  }
   
   //Main Menu
-  public void bSelectMap_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bSelectMap_ActionPerformed(ActionEvent evt) {    
   } // end of bSelectMap_ActionPerformed
 
-  public void bUpgrades_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bUpgrades_ActionPerformed(ActionEvent evt) {    
   } // end of bUpgrades_ActionPerformed
 
-  public void bSettings_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bSettings_ActionPerformed(ActionEvent evt) {    
   } // end of bSettings_ActionPerformed
 
-  public void bQuitGame_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bQuitGame_ActionPerformed(ActionEvent evt) {    
   } // end of bQuitGame_ActionPerformed
   
   //Settings
-  public void bDebug_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bDebug_ActionPerformed(ActionEvent evt) {    
   } // end of bDebug_ActionPerformed
 
   //Maps Selector
@@ -416,81 +407,51 @@ public class JMainFrame extends JFrame {
   } // end of bStartGame_ActionPerformed
 
   //Multiple Screens
-  public void bBack_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bBack_ActionPerformed(ActionEvent evt) {    
   } // end of bBack_ActionPerformed
 
-  public void bConfirm_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bConfirm_ActionPerformed(ActionEvent evt) {    
   } // end of bConfirm_ActionPerformed
 
   //Quit
-  public void bAbort_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bAbort_ActionPerformed(ActionEvent evt) {    
   } // end of bAbort_ActionPerformed
   
   //Game Screen
-  public void bQuit_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bQuit_ActionPerformed(ActionEvent evt) {    
   } // end of bQuit_ActionPerformed
 
-  public void bStartRound_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bStartRound_ActionPerformed(ActionEvent evt) {    
   } // end of bStartRound_ActionPerformed
 
-  public void bAutostart_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bAutostart_ActionPerformed(ActionEvent evt) {    
   } // end of bAutostart_ActionPerformed
 
-  public void bTower1_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bTower1_ActionPerformed(ActionEvent evt) {    
   } // end of bTower1_ActionPerformed
 
-  public void bTower2_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bTower2_ActionPerformed(ActionEvent evt) {    
   } // end of bTower2_ActionPerformed
 
-  public void bTower3_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bTower3_ActionPerformed(ActionEvent evt) {    
   } // end of bTower3_ActionPerformed
 
-  public void bTower4_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bTower4_ActionPerformed(ActionEvent evt) {    
   } // end of bTower4_ActionPerformed
 
-  public void bUpgrade1_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bUpgrade1_ActionPerformed(ActionEvent evt) {    
   } // end of bUpgrade1_ActionPerformed
 
-  public void bUpgrade2_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bUpgrade2_ActionPerformed(ActionEvent evt) {    
   } // end of bUpgrade2_ActionPerformed
 
-  public void bUpgrade3_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bUpgrade3_ActionPerformed(ActionEvent evt) {    
   } // end of bUpgrade3_ActionPerformed
 
-  public void bSell_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bSell_ActionPerformed(ActionEvent evt) {    
   } // end of bSell_ActionPerformed
 
-  public void bDeselect_ActionPerformed(ActionEvent evt) {
-    // TODO add your code here
-    
+  public void bDeselect_ActionPerformed(ActionEvent evt) {    
   } // end of bSell_ActionPerformed
 
   // end methods

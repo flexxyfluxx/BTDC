@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent
 import java.lang.IllegalArgumentException
 import java.lang.IndexOutOfBoundsException
 import javax.swing.ImageIcon
+import kotlin.system.exitProcess
 
 class Menu : JMainFrame() {
     var game: Game? = null
@@ -96,7 +97,10 @@ class Menu : JMainFrame() {
 
     override fun bBack_ActionPerformed(evt: ActionEvent?) = setCurrentScreen(0)
 
-    override fun bQuitGame_ActionPerformed(evt: ActionEvent?) = dispose()
+    override fun bQuitGame_ActionPerformed(evt: ActionEvent?) {
+        dispose()
+        exitProcess(0)
+    }
 
     override fun bQuit_ActionPerformed(evt: ActionEvent?) {
         gamegrid.doPause()
@@ -156,10 +160,11 @@ class Menu : JMainFrame() {
         if (game.debug) {
             for (x in 0 until 96) {
                 for (y in 0 until 54) {
-                    game.heldTower = HeldTower(5)
+                    game.heldTower = HeldTower(3)
                     game.placeHeldTower(Vektor(x * 10, y * 10))
                 }
             }
+            return
         }
 
         if ((game.money < Tower3.cost) || (game.heldTower != null)) return

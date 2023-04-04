@@ -25,10 +25,13 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
 
     val enemyKeyGen = Counter()
     val activeEnemies = HashMap<Int, Enemy>()
+    var enemiesToGC = mutableListOf<Int>()
     val projectileKeyGen = Counter()
     val activeProjectiles = HashMap<Int, Projectile>()
+    var projectilesToGC = mutableListOf<Int>()
     val towerKeyGen = Counter()
     val activeTowers = HashMap<Int, Tower>()
+    // we do not need a list of towers to GC, since this is not done while iterating through the hashmap.
 
     val tickActor = TickActor(this)
 
@@ -62,6 +65,8 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
             Tower3.cost.toString()
         }
         menu.lTower4.text = "0"
+
+        gameMap.setBgOfGrid(grid, debug)
 
         grid.setSimulationPeriod(20)
         grid.addMouseListener(this::mouseLPress, GGMouse.lPress)
@@ -158,6 +163,7 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
             0 -> Tower1(pos, key, this)
             1 -> Tower2(pos, key, this)
             2 -> Tower3(pos, key, this)
+            3 -> TowerDebug(pos, key, this)
             else -> throw IllegalArgumentException("Illegal tower ID")
         }
 
@@ -205,15 +211,45 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
     }
 
     fun selectTower(tower: Actor, mouse: GGMouse, pos: Point) {
-        selectedTower = tower as Tower
+        val towerButActually = tower as Tower
+        if (debug) println("Tower ${tower.key} selected.")
+
+        selectedTower = towerButActually
         updateCost()
     }
 
     fun mouseLPress(mouse: GGMouse): Boolean {
-        TODO()
+        val clickPos = Vektor(mouse.x, mouse.y)
+
+        if (debug) println("[INFO] Mouse left click at (${clickPos.x}, ${clickPos.y})")
+
+        if (heldTower != null) {
+            placeHeldTower(clickPos)
+            return true
+        }
+        else if (selectedTower != null) {
+            changeTowerTarget(clickPos)
+            return true
+        }
+        return false
     }
     fun mouseRPress(mouse: GGMouse): Boolean {
-        TODO()
+        selectedTower ?: return true
+        val selectedTower = selectedTower!!
+
+        val clickPos = Vektor(mouse.x, mouse.y)
+
+        if (money < (selectedTower.cost.floorDiv(2))) return true
+
+        val distToPath = getDistToPath(clickPos)
+        if (distToPath < 40) return true
+
+        selectedTower.pos = clickPos
+        selectedTower.location = clickPos.toLocation()
+        updateMoney(-(selectedTower.cost.floorDiv(2)))
+        this.selectedTower = null
+        updateCost()
+        return true
     }
 
     fun removeAllActors() {
@@ -241,7 +277,7 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         // If we've surpassed the last round, win.
         if (currentRound > rounds.lastIndex) win()
 
-        menu.tCurrentRound.text = (++currentRound).toString()
+        menu.tCurrentRound.text = (++currentRound + 1).toString()
         // man, isn't `++` just such concise incrementation syntax?
         paused = false
     }
@@ -292,7 +328,8 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
                 updateMoney(rounds[currentRound].reward)
                 // gc all active projectiles too, while we're at it. don't fancy frozen projectiles everywhere if the
                 // game is paused between rounds
-                for (projectile in activeProjectiles.values) projectile.despawn()
+                projectilesToGC.addAll(activeProjectiles.keys)
+                for (projID in projectilesToGC) activeProjectiles[projID]?.despawn()
 
                 if (!menu.bAutostart.isSelected) {
                     paused = true
@@ -305,6 +342,12 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         for (tower in activeTowers.values) tower.tick()
         for (projectile in activeProjectiles.values) projectile.tick()
         for (enemy in activeEnemies.values) enemy.tick()
+
+        // after everyone has their fun, gc things as needed
+        for (enemyID in enemiesToGC) activeEnemies[enemyID]?.despawn()
+        enemiesToGC = mutableListOf()
+        for (projID in projectilesToGC) activeProjectiles[projID]?.despawn()
+        projectilesToGC = mutableListOf()
     }
 
     /**

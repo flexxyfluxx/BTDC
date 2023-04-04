@@ -51,7 +51,7 @@ class Tower2(pos: Vektor, key: Int, game: Game) : Tower(
         attackDamageUpgradeCost = 320,
         upgrade3Cost = 200,
         upgrade3Text = "Piercing",
-        projectileSupplier = TODO(),
+        projectileSupplier = Projectile::TOWER2_PROJ,
         sprite = Sprite.EGIRL
 ) {
     override val cost = Companion.cost
@@ -84,7 +84,7 @@ class Tower3(pos: Vektor, key: Int, game: Game) : Tower(
         attackDamageUpgradeCost = 100,
         upgrade3Cost = 0,
         upgrade3Text = "No upgrade",
-        projectileSupplier = TODO(),
+        projectileSupplier = Projectile::TOWER3_PROJ,
         sprite = Sprite.PICASSO
 ) {
     override val cost: Int = Companion.cost
@@ -110,7 +110,7 @@ class TowerDebug(pos: Vektor, key: Int, game: Game) : Tower(
         attackDamageUpgradeCost = 0,
         upgrade3Cost = 0,
         upgrade3Text = "No upgrade",
-        projectileSupplier = TODO(),
+        projectileSupplier = Projectile::EXAMPLE_PROJ,
         sprite = Sprite.SQUARE_GREEN
 ) {
     override val cost: Int = Companion.cost
@@ -144,6 +144,7 @@ abstract class Tower(
     var attackSpeed: Double
     var attackDamage: Double
     var attackInterval: Int
+    var attackCooldown: Int = 0
     var attackRange: Int
     var pierce: Int
     var targetDirection: Double = 0.0
@@ -180,6 +181,12 @@ abstract class Tower(
     abstract fun upgradePath3()
 
     open fun tick() {
+        if (attackCooldown > 0) {
+            attackCooldown--
+            return
+        }
+        attack()
+        attackCooldown = attackInterval
     }
 
     open fun attack() = game.spawnProjectile(pos, targetDirection, projectileSupplier, attackRange, pierce)
