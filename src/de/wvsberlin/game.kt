@@ -382,7 +382,6 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
                     win()
                     return
                 }
-
                 // If no active enemies remain, add round reward to bank
                 // and, if autostart is on, automatically start next round.
                 updateMoney(rounds[currentRound].reward)

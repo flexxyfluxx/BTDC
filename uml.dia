@@ -1561,7 +1561,7 @@
         <dia:real val="2.1999999999999997"/>
       </dia:attribute>
       <dia:attribute name="name">
-        <dia:string>#Map#</dia:string>
+        <dia:string>#de.wvsberlin.Map#</dia:string>
       </dia:attribute>
       <dia:attribute name="stereotype">
         <dia:string>##</dia:string>

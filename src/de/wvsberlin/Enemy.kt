@@ -5,7 +5,6 @@ import ch.aplu.jgamegrid.GGBitmap
 import de.wvsberlin.vektor.MutableVektor
 import de.wvsberlin.vektor.Vektor
 import java.awt.image.BufferedImage
-import kotlin.contracts.contract
 
 typealias EnemySupplier = (game: Game, key: Int, segmentIdx: Int, segmentProgress: Double) -> Enemy
 
@@ -95,7 +94,6 @@ class Enemy(
         if (game.debug) println("Enemy $key died.")
 
         val overshoot = -health
-
         // gc enemy and award reward
         markForGC()
         game.updateMoney(reward)
