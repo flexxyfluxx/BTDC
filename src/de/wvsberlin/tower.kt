@@ -29,7 +29,8 @@ class Tower1(pos: Vektor, key: Int, game: Game) : Tower(
     }
 
     override fun upgradePath3() {
-        if (upgrade3Cost > game.money) return
+        if (upgrade3Cost > game.money)
+            return
 
         game.updateMoney(-upgrade3Cost)
         attackRange += 5
@@ -61,7 +62,8 @@ class Tower2(pos: Vektor, key: Int, game: Game) : Tower(
     }
 
     override fun upgradePath3() {
-        if (upgrade3Cost > game.money) return
+        if (upgrade3Cost > game.money)
+            return
 
         game.updateMoney(-upgrade3Cost)
         pierce++
@@ -139,7 +141,8 @@ abstract class Tower(
         var upgrade3Cost: Int,
         val upgrade3Text: String,
         val projectileSupplier: ProjectileSupplier,
-        sprite: BufferedImage
+        sprite: BufferedImage,
+        val sizeRadius: Double = 16.0
 ) : Actor(true, sprite) {
     var attackSpeed: Double
     var attackDamage: Double
@@ -153,9 +156,12 @@ abstract class Tower(
 
     init {
         this.attackSpeed = attackSpeed.toDouble()
-        if (this.attackSpeed <= 0) throw IllegalArgumentException("Attack speed must be greater than zero!")
-        if (attackRange < 0) throw IllegalArgumentException("Attack range must not be negative!")
-        if (pierce <= 0) throw IllegalArgumentException("Pierce must not be negative!")
+        if (this.attackSpeed <= 0)
+            throw IllegalArgumentException("Attack speed must be greater than zero!")
+        if (attackRange < 0)
+            throw IllegalArgumentException("Attack range must not be negative!")
+        if (pierce <= 0)
+            throw IllegalArgumentException("Pierce must not be negative!")
 
         this.attackRange = attackRange
         this.attackDamage = attackDamage.toDouble()
@@ -164,13 +170,15 @@ abstract class Tower(
     }
 
     fun upgradeAttackSpeed() {
-        if (attackSpeedUpgradeCost > game.money) return
+        if (attackSpeedUpgradeCost > game.money)
+            return
 
         game.updateMoney(-attackSpeedUpgradeCost)
     }
 
     fun upgradeAttackDamage() {
-        if (attackDamageUpgradeCost > game.money) return
+        if (attackDamageUpgradeCost > game.money)
+            return
 
         game.updateMoney(-attackDamageUpgradeCost)
         attackDamage *= attackDamageIncrement
@@ -189,7 +197,7 @@ abstract class Tower(
         attackCooldown = attackInterval
     }
 
-    open fun attack() = game.spawnProjectile(pos, targetDirection, projectileSupplier, attackRange, pierce)
+    open fun attack() = game.spawnProjectile(pos, targetDirection, projectileSupplier, attackRange, pierce, attackDamage)
 }
 
 class HeldTower(val towerID: Int) : Actor(sprites[towerID], Sprite.DENIED) {
@@ -198,6 +206,17 @@ class HeldTower(val towerID: Int) : Actor(sprites[towerID], Sprite.DENIED) {
     init {
         show(0)
     }
+
+    fun getTower(pos: Vektor, key: Int, game: Game) =
+            when (towerID) {
+                0 -> Tower1(pos, key, game)
+                1 -> Tower2(pos, key, game)
+                2 -> Tower3(pos, key, game)
+                3 -> TowerDebug(pos, key, game)
+                else -> throw IllegalStateException("This heldTower has an illegal tower ID!")
+                // throw exception here instead of during instantiation to make adding towers easier
+                // ..also, Kotlin probably won't compile otherwise
+            }
 
     companion object {
         @JvmStatic

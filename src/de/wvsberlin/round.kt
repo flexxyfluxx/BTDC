@@ -144,6 +144,36 @@ class Round(val game: Game) {
                                     .setWaitsForLastRoundToBeFullySent()
                         }
         )
+        fun ROUNDS_DEBUG(game: Game): Array<Round> = arrayOf(
+                Round(game)
+                        .addWave {
+                            Wave(game, it)
+                        }
+                ,
+                Round(game)
+                        .addWave {
+                            Wave(game, it)
+                                    .setEnemyType(Enemy::BLUE)
+                        }
+                ,
+                Round(game)
+                        .addWave {
+                            Wave(game, it)
+                                    .setEnemyType(Enemy::GREEN)
+                        }
+                ,
+                Round(game)
+                        .addWave {
+                            Wave(game, it)
+                                    .setEnemyType(Enemy::YELLOW)
+                        }
+                ,
+                Round(game)
+                        .addWave {
+                            Wave(game, it)
+                                    .setEnemyType(Enemy::PINK)
+                        }
+        )
     }
 
     /**
@@ -172,7 +202,8 @@ class Round(val game: Game) {
      * The boolean return value indicates whether the round has ended.
      */
     fun tick(): Boolean {
-        if (waves.isEmpty() && activeWaves.isEmpty()) return true
+        if (waves.isEmpty() && activeWaves.isEmpty())
+            return true
 
         if (waves.isNotEmpty()) {
             if (waves[0].startDelay <= 0) {

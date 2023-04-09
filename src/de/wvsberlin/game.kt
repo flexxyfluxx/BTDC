@@ -21,7 +21,11 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
 
     val grid: GameGrid = menu.gamegrid
 
-    val rounds = Round.ROUNDS(this)
+    val rounds = if (debug) {
+        Round.ROUNDS_DEBUG(this)
+    } else {
+        Round.ROUNDS(this)
+    }
 
     val enemyKeyGen = Counter()
     val activeEnemies = HashMap<Int, Enemy>()
@@ -83,12 +87,13 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
             direction: Double,
             projSupplier: ProjectileSupplier,
             lifetime: Int,
-            pierce: Int
+            pierce: Int,
+            damage: Number
     ): Projectile {
         if (debug) println("[INFO] Projectile spawned at (${pos.x}, ${pos.y})")
 
         val key = projectileKeyGen.next()
-        val newProjectile = projSupplier(this, key, direction, MutableVektor.fromImmutable(pos), lifetime, pierce)
+        val newProjectile = projSupplier(this, key, direction, MutableVektor.fromImmutable(pos), lifetime, pierce, damage.toDouble())
         activeProjectiles[key] = newProjectile
         grid.addActor(newProjectile, pos.toLocation())
         newProjectile.show()
@@ -108,8 +113,40 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         return newEnemy
     }
 
+    fun getNearestTower(pos: Vektor, selectedTower: Tower? = null): Tower? {
+        if (debug) println("Start finding nearest tower...")
+
+        var nearestTower: Tower? = null
+        var currentDist = 9999.0
+
+        for (tower in activeTowers.values) {
+            if ((tower === selectedTower)) continue
+
+            if (nearestTower == null) {
+                nearestTower = tower
+                currentDist = tower.pos..pos
+                if (debug) println("Initial nearest tower with dist: $")
+                continue
+            }
+
+            val nextDist = tower.pos..pos
+            if (nextDist < currentDist) {
+                if (debug) println("New nearest tower with dist: $nextDist")
+                nearestTower = tower
+                currentDist = nextDist
+            }
+        }
+        if (debug) {
+            if (nearestTower == null) {
+                println("No other tower found.")
+            } else {
+                println("Closest tower has dist $currentDist")
+            }
+        }
+        return nearestTower
+    }
+
     fun getDistToPath(pos: Vektor): Double {
-        // FIXME move to GameMap?
         if (debug) println("Start finding distance to path...")
 
         var dist: Double = 99999.0  // such a large distance cannot reasonably occur.
@@ -145,9 +182,10 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         // assert that the heldTower is, in fact, not null, after making sure it isn't
         val heldTower = heldTower!!
 
-        val dist = getDistToPath(pos)
+        val key = towerKeyGen.next()
+        val newTower = heldTower.getTower(pos, key, this)
 
-        if (dist < 40) {
+        if (getDistToPath(pos) < gameMap.pathWidth + newTower.sizeRadius) {
             // if dist to path is too small, show angry red X sprite at click pos and wait for new click
             heldTower.pos = pos
             heldTower.location = pos.toLocation()
@@ -155,17 +193,17 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
             return
         }
 
-        grid.removeActor(heldTower)
-
-        val key = towerKeyGen.next()
-
-        val newTower = when (heldTower.towerID) {
-            0 -> Tower1(pos, key, this)
-            1 -> Tower2(pos, key, this)
-            2 -> Tower3(pos, key, this)
-            3 -> TowerDebug(pos, key, this)
-            else -> throw IllegalArgumentException("Illegal tower ID")
+        val nearestTower = getNearestTower(pos)
+        if (nearestTower != null) {
+            if (nearestTower.pos..pos < nearestTower.sizeRadius + newTower.sizeRadius) {
+                heldTower.pos = pos
+                heldTower.location = pos.toLocation()
+                heldTower.show(1)
+                return
+            }
         }
+
+        grid.removeActor(heldTower)
 
         activeTowers[key] = newTower
         grid.addActor(newTower, pos.toLocation())
@@ -239,10 +277,17 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
 
         val clickPos = Vektor(mouse.x, mouse.y)
 
-        if (money < (selectedTower.cost.floorDiv(2))) return true
+        if (money < (selectedTower.cost.floorDiv(2)))
+            return true
 
-        val distToPath = getDistToPath(clickPos)
-        if (distToPath < 40) return true
+        if (getDistToPath(clickPos) < gameMap.pathWidth + selectedTower.sizeRadius)
+            return true
+
+        val nearestTower = getNearestTower(clickPos, selectedTower)
+        if (nearestTower != null)
+            if (nearestTower.pos..clickPos < nearestTower.sizeRadius + selectedTower.sizeRadius)
+                return true
+
 
         selectedTower.pos = clickPos
         selectedTower.location = clickPos.toLocation()
@@ -260,9 +305,12 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         selectedTower = null
         updateCost()
 
-        for (tower in activeTowers.values) grid.removeActor(tower)
-        for (enemy in activeEnemies.values) grid.removeActor(enemy)
-        for (projectile in activeProjectiles.values) grid.removeActor(projectile)
+        for (tower in activeTowers.values)
+            grid.removeActor(tower)
+        for (enemy in activeEnemies.values)
+            grid.removeActor(enemy)
+        for (projectile in activeProjectiles.values)
+            grid.removeActor(projectile)
 
         grid.removeActor(tickActor)
         grid.bg.clear()
@@ -315,7 +363,13 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
      * Implements per-tick game-level logic.
      */
     fun tick() {
-        if (paused) return
+        if (paused)
+            return
+
+        if (health <= 0) {
+            gameOver()
+            return
+        }
 
         // Round.tick's return value indicates whether it's been depleted. Act on that.
         if (rounds[currentRound].tick()) {
@@ -323,6 +377,11 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
             if (activeEnemies.isEmpty()) {
                 if (debug) println("[INFO] Round ended.")
 
+                if (currentRound >= rounds.lastIndex) {
+                    if (debug) println("[INFO] Game won. Ending game.")
+                    win()
+                    return
+                }
                 // If no active enemies remain, add round reward to bank
                 // and, if autostart is on, automatically start next round.
                 updateMoney(rounds[currentRound].reward)

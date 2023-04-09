@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage
 class GameMap {
     var bgImg: BufferedImage? = null  // allow null incase there just is no img
     var pathNodes = mutableListOf<Vektor>( /* this bitch empty. yeet? */ )
+    var pathWidth: Double = 24.0
 
     companion object {
         @JvmStatic
@@ -108,6 +109,16 @@ class GameMap {
     }
 
     /**
+     * Bei der Erstellung der Map zu verwenden.
+     *
+     * Setze Pfadbreite, d.h. wie weit ein Turm vom Pfad platziert sein muss.
+     */
+    fun setPathWidth(width: Number): GameMap {
+        pathWidth = width.toDouble()
+        return this
+    }
+
+    /**
      * Übertrage das Hintergrundbild der Map auf ein GameGrid und zeichne optional den Pfad der Map in rot ein.
      */
     fun setBgOfGrid(grid: GameGrid, debug: Boolean = false) {
@@ -123,7 +134,8 @@ class GameMap {
         bg.clear()
         if (bgImg != null) bg.drawImage(bgImg)
 
-        if (!debug) return
+        if (!debug)
+            return
 
         // If debug flag is set, also draw debug line where the path is.
         bg.paintColor = Color.RED

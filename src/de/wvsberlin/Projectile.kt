@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage
 import java.lang.IllegalArgumentException
 import kotlin.math.pow
 
-typealias ProjectileSupplier = (game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int) -> Projectile
+typealias ProjectileSupplier = (game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) -> Projectile
 
 class Projectile(
         val game: Game,
@@ -34,7 +34,7 @@ class Projectile(
 
     companion object {
         @JvmStatic
-        fun EXAMPLE_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int) = Projectile(
+        fun EXAMPLE_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) = Projectile(
                 game = game,
                 key = key,
                 richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
@@ -42,10 +42,11 @@ class Projectile(
                 lifetime = lifetime,
                 pierce = pierce,
                 size = 6,
-                pos = pos
+                pos = pos,
+                damage = damage
         )
         @JvmStatic
-        fun TOWER1_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int) = Projectile(
+        fun TOWER1_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) = Projectile(
                 game = game,
                 key = key,
                 richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
@@ -53,10 +54,11 @@ class Projectile(
                 lifetime = lifetime,
                 pierce = pierce,
                 size = 6,
-                pos = pos
+                pos = pos,
+                damage = damage
         )
         @JvmStatic
-        fun TOWER2_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int) = Projectile(
+        fun TOWER2_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) = Projectile(
                 game = game,
                 key = key,
                 richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
@@ -64,10 +66,11 @@ class Projectile(
                 lifetime = lifetime,
                 pierce = pierce,
                 size = 6,
-                pos = pos
+                pos = pos,
+                damage = damage
         )
         @JvmStatic
-        fun TOWER3_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int) = Projectile(
+        fun TOWER3_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) = Projectile(
                 game = game,
                 key = key,
                 richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
@@ -75,7 +78,8 @@ class Projectile(
                 lifetime = lifetime,
                 pierce = pierce,
                 size = 6,
-                pos = pos
+                pos = pos,
+                damage = damage
         )
     }
 
@@ -90,7 +94,8 @@ class Projectile(
         location = pos.toLocation()
 
         for (enemy in game.activeEnemies.values) {
-            if (!isTouchingEnemy(enemy)) continue
+            if (!isTouchingEnemy(enemy))
+                continue
 
             if (pierce <= 0) {
                 markForGC()

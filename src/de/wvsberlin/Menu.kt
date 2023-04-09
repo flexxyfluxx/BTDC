@@ -131,13 +131,15 @@ class Menu : JMainFrame() {
 
     override fun bTower1_ActionPerformed(evt: ActionEvent?) {
         game ?: return
-        if ((game!!.money < Tower1.cost) || (game!!.heldTower != null)) return
+        val game = game!!
+
+        if ((game.money < Tower1.cost) or (game.heldTower != null)) return
 
         val newHeldTower = HeldTower(0)
-        game!!.heldTower = newHeldTower
+        game.heldTower = newHeldTower
 
         gamegrid.addActor(newHeldTower, newHeldTower.pos.toLocation())
-        game!!.updateMoney(-Tower1.cost)
+        game.updateMoney(-Tower1.cost)
     }
 
     override fun bTower2_ActionPerformed(evt: ActionEvent?) {
@@ -269,5 +271,5 @@ class Menu : JMainFrame() {
         else bBack.setBounds(895, 420, 80, 24)
     }
 
-    fun toggleElementGroup(group: Array<out Component>, toggle: Boolean) = group.map { it.isVisible = toggle }
+    private fun toggleElementGroup(group: Array<out Component>, toggle: Boolean) = group.map { it.isVisible = toggle }
 }

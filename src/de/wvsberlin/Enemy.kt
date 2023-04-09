@@ -18,10 +18,10 @@ class Enemy(
         var segmentIdx: Int,
         segmentProgress: Number,
         val childSupplier: EnemySupplier? = null,
-        val childCount: Int = 0,
-        val childSpacing: Int = 0,
+        val childCount: Int = 1,
+        val childSpacing: Int = 20,
         size: Number = 16,
-        reward: Int = 1
+        val reward: Int = 1
 ) : Actor(sprite) {
     var prevNodeToNextNodeVektor: Vektor
     var currentSegmentLength: Double
@@ -32,7 +32,6 @@ class Enemy(
     var segmentProgress = segmentProgress.toDouble()
     var health = health.toDouble()
     val size = size.toDouble()
-    val reward = reward
 
     val pathNodes: MutableList<Vektor> = game.gameMap.pathNodes
 
@@ -52,23 +51,20 @@ class Enemy(
      */
     fun tick() {
         // die if appropriate.
-        if (health <= 0) die(-health)
+        if (health <= 0)
+            die()
 
         // and then just handle forward movement of the enemy on the track.
 
         segmentProgress += speed
 
-        if (segmentProgress >= currentSegmentLength) {
+        if (segmentProgress >= currentSegmentLength)
             // if we hit/pass the end of the current segment, make sure the enemy arrives in the next segment properly.
-            // FIXME move to Enemy.nextSegment maybe?
-            val overshoot = segmentProgress - currentSegmentLength
-            nextSegment(overshoot)
-            pos = MutableVektor.fromImmutable(pathNodes[segmentIdx] + currentSegmentUnitVektor * overshoot)
-            location = pos.toLocation()
-            return
-        }
+            nextSegment()
+        else
+            pos += currentSegmentRichtungsVektor
+
         // if we don't hit end of segment, just move forward normally.
-        pos += currentSegmentRichtungsVektor
         location = pos.toLocation()
     }
 
@@ -83,6 +79,10 @@ class Enemy(
         game.activeEnemies.remove(key)
     }
 
+    /**
+     * Mark the enemy for removal from the system to avoid concurrency issues when iterating over the same hashmap you
+     * want to eventually rm enemies from.
+     */
     fun markForGC() {
         game.enemiesToGC.add(key)
     }
@@ -90,35 +90,35 @@ class Enemy(
     /**
      * Handles the death of enemies (not their gc! that would be Enemy.despawn)
      */
-    fun die(overshoot: Double) {
+    fun die() {
         if (game.debug) println("Enemy $key died.")
 
+        val overshoot = -health
         // gc enemy and award reward
         markForGC()
         game.updateMoney(reward)
 
         childSupplier ?: return
         // if we do have a childSupplier (!= null), spawn a child.
-        val child = game.spawnEnemy(childSupplier, segmentIdx, segmentProgress)
-        if (overshoot < child.health) {
-            // if the leftover damage is not sufficient to kill child, damage it instead.
+        for (c in 0 until childCount) {
+            // spawn children as needed, staggered toward the back of the track
+            val child = game.spawnEnemy(childSupplier, segmentIdx, segmentProgress - childSpacing * c)
+
             child.health -= overshoot
-            return
+            if (child.health <= 0) {
+                // if the child would die from the leftover dmg, act like it.
+                child.die()
+            }
         }
-        // if leftovers kill child, kill child with leftover leftovers as leftovers (idk man i'm tired)
-        // this is beautiful becuase recursion or sth. fuckiing fight me
-        child.die(overshoot - child.health)
-        // idk how to handle an enemy supposedly spawning multiple children on death yet...
-        // that is a Future Me Problem(tm), I think...
     }
 
     /**
      * Handles correct transitioning of enemy to next segment on map.
      */
-    fun nextSegment(overshoot: Double) {
-        // we take a param "overshoot" to make sure the segmentProgress is consistently equivalent to the enemy's
-        // current "real" position.
+    fun nextSegment() {
         // basically, overshoot is just how far the enemy has already travelled on the next segment.. that is literally all.
+        val overshoot = segmentProgress - currentSegmentLength
+
         segmentIdx++
 
         if (segmentIdx > pathNodes.lastIndex - 1) {
@@ -126,11 +126,6 @@ class Enemy(
             // (not that surpassing should be possible, but it might save me a headache later lol)
             // deal the enemy's damage and gc the enemy (it no longer exists)
             game.health -= dmg
-            if (game.health <= 0) {
-                // make sure the game actually ends and we lose if hp <= 0
-                game.health = 0
-                game.gameOver()
-            }
             game.menu.tHealth.text = game.health.toString()
             markForGC()
             return
@@ -141,6 +136,8 @@ class Enemy(
         currentSegmentUnitVektor = prevNodeToNextNodeVektor.getUnitized()
         currentSegmentRichtungsVektor = currentSegmentUnitVektor * speed
         segmentProgress = overshoot
+
+        pos = MutableVektor.fromImmutable(pathNodes[segmentIdx] + currentSegmentUnitVektor * overshoot)
     }
 
     /**
