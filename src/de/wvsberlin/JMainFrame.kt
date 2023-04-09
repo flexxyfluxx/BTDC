@@ -239,12 +239,24 @@ open class JMainFrame : JFrame() {
         jGridPanel.setBounds(40, 120, 960, 540)
         jGridPanel.isVisible = false
         cp.add(jGridPanel)
-        gamegrid.setNbHorzCells(960)
-        gamegrid.setNbVertCells(540)
+
+        // due to jgamegrid being retarded, we will now do a lot of stuff manually that could be done with a single
+        // method call, IF THAT METHOD WASN'T FUCKING PRIVATE.
+        // Also, I suspect that there is an issue in disposing the gamegrid's gPanel that causes a severe memleak.
+        // By setting shit manually, we only dispose and reassign it once.
+        gamegrid.nbHorzCells = 960
+        gamegrid.nbVertCells = 540
+
+        // the reason we do this as a regular method call is because the only way for us to make sure that the grid's
+        // gPanel is correct, because FOR SOME FUCKING REASON, EVERYTHJING IS PRIVATE.
+        // I hate the way Java does things sometimes.
         gamegrid.setCellSize(1)
-        gamegrid.setBgColor(Color.BLACK)
+
+        gamegrid.bgColor = Color.BLACK
+
         gamegrid.setBounds(40, 120, 960, 540)
         jGridPanel.add(gamegrid)
+
         bQuit.setBounds(1170, 10, 80, 24)
         bQuit.text = "Quit"
         bQuit.margin = Insets(2, 2, 2, 2)
