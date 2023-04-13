@@ -110,7 +110,11 @@ open class Vektor(x: Number, y: Number) {
      * Ermittle den Winkel des Vektors (in Grad).
      */
     fun getAngle(): Double {
-        val unitized = getUnitized()
+        val unitized: Vektor
+        if (abs() != 1.0)
+            unitized = getUnitized()
+        else
+            unitized = this
 
         return (360 +
             if (unitized.x < 0) {

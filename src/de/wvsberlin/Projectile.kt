@@ -85,7 +85,7 @@ class Projectile(
 
     fun tick() {
         if ((lifetime <= 0) or (pierce <= 0)) {
-            markForGC()
+            despawn()
             return
         }
 
@@ -98,7 +98,7 @@ class Projectile(
                 continue
 
             if (pierce <= 0) {
-                markForGC()
+                despawn()
                 return
             }
 
@@ -108,17 +108,8 @@ class Projectile(
 
     /**
      * Removes projectile from all the places it could be.
-     *
-     * WARNING: If removing projectile mid-tick, mark for GC instead to prevent ConcurrentModificationExceptions.
      */
-    fun despawn() {
-        gameGrid?.removeActor(this)
-        game.activeProjectiles.remove(key)
-    }
-
-    fun markForGC() {
-        game.projectilesToGC.add(key)
-    }
+    fun despawn() = game.grid.removeActor(game.activeProjectiles.remove(key))  // glorious oneliner
 
     fun isTouchingEnemy(enemy: Enemy): Boolean =
             (Vektor.dist(pos, enemy.pos, false) < (size + enemy.size).pow(2)) and (enemy !in enemiesHit)

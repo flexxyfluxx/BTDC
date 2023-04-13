@@ -7,7 +7,6 @@ import ch.aplu.jgamegrid.Location
 import de.wvsberlin.vektor.MutableVektor
 import de.wvsberlin.vektor.Vektor
 import java.awt.Point
-import java.lang.IllegalArgumentException
 
 class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
     var health: Int
@@ -29,10 +28,8 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
 
     val enemyKeyGen = Counter()
     val activeEnemies = HashMap<Int, Enemy>()
-    var enemiesToGC = mutableListOf<Int>()
     val projectileKeyGen = Counter()
     val activeProjectiles = HashMap<Int, Projectile>()
-    var projectilesToGC = mutableListOf<Int>()
     val towerKeyGen = Counter()
     val activeTowers = HashMap<Int, Tower>()
     // we do not need a list of towers to GC, since this is not done while iterating through the hashmap.
@@ -63,11 +60,7 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
 
         menu.lTower1.text = Tower1.cost.toString()
         menu.lTower2.text = Tower2.cost.toString()
-        menu.lTower3.text = if (debug) {
-            TowerDebug.cost.toString()
-        } else {
-            Tower3.cost.toString()
-        }
+        menu.lTower3.text = Tower3.cost.toString()
         menu.lTower4.text = "0"
 
         gameMap.setBgOfGrid(grid, debug)
@@ -77,6 +70,51 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         grid.addMouseListener(this::mouseRPress, GGMouse.rPress)
 
         grid.addActor(tickActor, Location())
+    }
+
+    /**
+     * Runs every game tick.
+     *
+     * Implements per-tick game-level logic.
+     */
+    fun tick() {
+        if (paused)
+            return
+
+        if (health <= 0) {
+            gameOver()
+            return
+        }
+
+        // Round.tick's return value indicates whether it's been depleted. Act on that.
+        if (rounds[currentRound].tick()) {
+            if (debug) println("[INFO] Round exhausted.")
+            if (activeEnemies.isEmpty()) {
+                if (debug) println("[INFO] Round ended.")
+
+                if (currentRound >= rounds.lastIndex) {
+                    if (debug) println("[INFO] Game won. Ending game.")
+                    win()
+                    return
+                }
+                // If no active enemies remain, add round reward to bank
+                // and, if autostart is on, automatically start next round.
+                updateMoney(rounds[currentRound].reward)
+                // gc all active projectiles too, while we're at it. don't fancy frozen projectiles everywhere if the
+                // game is paused between rounds
+                for (projectile in activeProjectiles.values.toTypedArray()) projectile.despawn()
+
+                if (!menu.bAutostart.isSelected) {
+                    paused = true
+                    return
+                }
+                startNextRound()
+            }
+        }
+
+        for (enemy in activeEnemies.values.toTypedArray()) enemy.tick()
+        for (projectile in activeProjectiles.values.toTypedArray()) projectile.tick()
+        for (tower in activeTowers.values.toTypedArray()) tower.tick()
     }
 
     /**
@@ -103,11 +141,11 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
     /**
      * Spawn yourself a brand new enemy at a specified location on the track.
      */
-    fun spawnEnemy(enemySupplier: EnemySupplier, segmentIdx: Int = 0, segmentProgress: Double = 0.0): Enemy {
+    fun spawnEnemy(enemyType: DynamicEnemy, segmentIdx: Int = 0, segmentProgress: Double = 0.0): Enemy {
         if (debug) println("[INFO] Enemy spawned at segment $segmentIdx with progress $segmentProgress")
 
         val key = enemyKeyGen.next()
-        val newEnemy = enemySupplier(this, key, segmentIdx, segmentProgress)
+        val newEnemy = enemyType.new(this, key, segmentIdx, segmentProgress)
         activeEnemies[key] = newEnemy
         grid.addActor(newEnemy, (gameMap.pathNodes[segmentIdx] + newEnemy.currentSegmentUnitVektor * segmentProgress).toLocation())
         return newEnemy
@@ -125,7 +163,7 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
             if (nearestTower == null) {
                 nearestTower = tower
                 currentDist = tower.pos..pos
-                if (debug) println("Initial nearest tower with dist: $")
+                if (debug) println("Initial nearest tower with dist: id ${nearestTower.key}")
                 continue
             }
 
@@ -149,7 +187,7 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
     fun getDistToPath(pos: Vektor): Double {
         if (debug) println("Start finding distance to path...")
 
-        var dist: Double = 99999.0  // such a large distance cannot reasonably occur.
+        var dist = 99999.0  // such a large distance cannot reasonably occur.
 
         var node1: Vektor
         var node2: Vektor
@@ -249,10 +287,11 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
     }
 
     fun selectTower(tower: Actor, mouse: GGMouse, pos: Point) {
-        val towerButActually = tower as Tower
+        if (tower !is Tower) return
+
         if (debug) println("Tower ${tower.key} selected.")
 
-        selectedTower = towerButActually
+        selectedTower = tower
         updateCost()
     }
 
@@ -305,14 +344,7 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         selectedTower = null
         updateCost()
 
-        for (tower in activeTowers.values)
-            grid.removeActor(tower)
-        for (enemy in activeEnemies.values)
-            grid.removeActor(enemy)
-        for (projectile in activeProjectiles.values)
-            grid.removeActor(projectile)
-
-        grid.removeActor(tickActor)
+        grid.removeAllActors()
         grid.bg.clear()
     }
 
@@ -338,6 +370,11 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         menu.tMoney.text = money.toString()
     }
 
+    fun updateHealth(difference: Int) {
+        health += difference
+        menu.tHealth.text = health.toString()
+    }
+
     /**
      * Update the upgrade cost display according to the currently selected tower (or lack thereof).
      */
@@ -355,58 +392,6 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
         menu.tUpgrade2.text = selectedTower.attackDamageUpgradeCost.toString()
         menu.tUpgrade3.text = selectedTower.upgrade3Cost.toString()
         menu.lUpgrade3.text = selectedTower.upgrade3Text
-    }
-
-    /**
-     * Runs every game tick.
-     *
-     * Implements per-tick game-level logic.
-     */
-    fun tick() {
-        if (paused)
-            return
-
-        if (health <= 0) {
-            gameOver()
-            return
-        }
-
-        // Round.tick's return value indicates whether it's been depleted. Act on that.
-        if (rounds[currentRound].tick()) {
-            if (debug) println("[INFO] Round exhausted.")
-            if (activeEnemies.isEmpty()) {
-                if (debug) println("[INFO] Round ended.")
-
-                if (currentRound >= rounds.lastIndex) {
-                    if (debug) println("[INFO] Game won. Ending game.")
-                    win()
-                    return
-                }
-                // If no active enemies remain, add round reward to bank
-                // and, if autostart is on, automatically start next round.
-                updateMoney(rounds[currentRound].reward)
-                // gc all active projectiles too, while we're at it. don't fancy frozen projectiles everywhere if the
-                // game is paused between rounds
-                projectilesToGC.addAll(activeProjectiles.keys)
-                for (projID in projectilesToGC) activeProjectiles[projID]?.despawn()
-
-                if (!menu.bAutostart.isSelected) {
-                    paused = true
-                    return
-                }
-                startNextRound()
-            }
-        }
-
-        for (tower in activeTowers.values) tower.tick()
-        for (projectile in activeProjectiles.values) projectile.tick()
-        for (enemy in activeEnemies.values) enemy.tick()
-
-        // after everyone has their fun, gc things as needed
-        for (enemyID in enemiesToGC) activeEnemies[enemyID]?.despawn()
-        enemiesToGC = mutableListOf()
-        for (projID in projectilesToGC) activeProjectiles[projID]?.despawn()
-        projectilesToGC = mutableListOf()
     }
 
     /**
