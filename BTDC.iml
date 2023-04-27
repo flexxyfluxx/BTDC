@@ -22,16 +22,17 @@
       <sourceFolder url="file://$MODULE_DIR$/assets" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/python" />
-      <excludeFolder url="file://$MODULE_DIR$/.idea/artifacts" />
-      <excludeFolder url="file://$MODULE_DIR$/.idea/codeStyles" />
-      <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
-      <excludeFolder url="file://$MODULE_DIR$/.jython_cache/packages" />
       <excludeFolder url="file://$MODULE_DIR$/jar" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/codeStyles" />
+      <excludeFolder url="file://$MODULE_DIR$/.jython_cache/packages" />
       <excludeFolder url="file://$MODULE_DIR$/java" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/artifacts" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" exported="" name="jgamegrid" level="project" />
+    <orderEntry type="library" exported="" name="jetbrains.kotlin.reflect" level="project" />
   </component>
 </module>

@@ -40,7 +40,7 @@ class Round(val game: Game) {
                         }
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::BLUE)
+                                    .setEnemyType(Enemy.BLUE)
                                     .setCount(5)
                                     .setSpacing(80)
                                     .setWaitsForLastRoundToBeFullySent()
@@ -61,7 +61,7 @@ class Round(val game: Game) {
                         }
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::BLUE)
+                                    .setEnemyType(Enemy.BLUE)
                                     .setCount(18)
                                     .setSpacing(15)
                                     .setWaitsForLastRoundToBeFullySent()
@@ -77,7 +77,7 @@ class Round(val game: Game) {
                 Round(game)  // 5
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::BLUE)
+                                    .setEnemyType(Enemy.BLUE)
                                     .setCount(27)
                                     .setSpacing(50)
                         }
@@ -92,7 +92,7 @@ class Round(val game: Game) {
                 Round(game)  // 6
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::GREEN)
+                                    .setEnemyType(Enemy.GREEN)
                                     .setCount(4)
                                     .setSpacing(50)
                         }
@@ -105,7 +105,7 @@ class Round(val game: Game) {
                         }
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::BLUE)
+                                    .setEnemyType(Enemy.BLUE)
                                     .setCount(15)
                                     .setSpacing(30)
                                     .setStartDelay(100)
@@ -116,7 +116,7 @@ class Round(val game: Game) {
                 Round(game)  // 7
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::BLUE)
+                                    .setEnemyType(Enemy.BLUE)
                                     .setCount(10)
                                     .setSpacing(30)
                         }
@@ -129,7 +129,7 @@ class Round(val game: Game) {
                         }
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::GREEN)
+                                    .setEnemyType(Enemy.GREEN)
                                     .setCount(5)
                                     .setSpacing(50)
                                     .setStartDelay(150)
@@ -137,7 +137,7 @@ class Round(val game: Game) {
                         }
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::BLUE)
+                                    .setEnemyType(Enemy.BLUE)
                                     .setCount(10)
                                     .setSpacing(30)
                                     .setStartDelay(150)
@@ -153,25 +153,25 @@ class Round(val game: Game) {
                 Round(game)
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::BLUE)
+                                    .setEnemyType(Enemy.BLUE)
                         }
                 ,
                 Round(game)
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::GREEN)
+                                    .setEnemyType(Enemy.GREEN)
                         }
                 ,
                 Round(game)
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::YELLOW)
+                                    .setEnemyType(Enemy.YELLOW)
                         }
                 ,
                 Round(game)
                         .addWave {
                             Wave(game, it)
-                                    .setEnemyType(Enemy::PINK)
+                                    .setEnemyType(Enemy.PINK)
                         }
         )
     }
@@ -216,7 +216,7 @@ class Round(val game: Game) {
             }
         }
 
-        for (wave in activeWaves.values) {
+        for (wave in activeWaves.values.toTypedArray()) {
             if (wave.count <= 0) {
                 activeWaves.remove(wave.key)
                 continue
@@ -236,7 +236,7 @@ class Wave(val game: Game, val key: Int) {
     var spacing: Int = 0
     var sendCooldown: Int = 0
     var count: Int = 1
-    var enemySupplier: EnemySupplier = (Enemy)::WEAKEST
+    var enemy: DynamicEnemy = Enemy.WEAKEST
     var waitsForRoundToBeFullySent: Boolean = false
 
     /**
@@ -251,15 +251,15 @@ class Wave(val game: Game, val key: Int) {
         }
 
         count--
-        game.spawnEnemy(enemySupplier)
+        game.spawnEnemy(enemy)
         sendCooldown = spacing
     }
 
     /**
      * Set the enemy type by providing an appropriate supplier.
      */
-    fun setEnemyType(enemySupplier: EnemySupplier): Wave {
-        this.enemySupplier = enemySupplier
+    fun setEnemyType(enemy: DynamicEnemy): Wave {
+        this.enemy = enemy
         return this
     }
 
