@@ -174,6 +174,8 @@ abstract class Tower(
             return
 
         game.updateMoney(-attackSpeedUpgradeCost)
+        attackSpeed *= attackSpeedIncrement
+        attackSpeedUpgradeCost = (attackSpeedUpgradeCost * 1.1).toInt()
     }
 
     fun upgradeAttackDamage() {

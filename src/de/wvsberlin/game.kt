@@ -154,32 +154,17 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
     fun getNearestTower(pos: Vektor, selectedTower: Tower? = null): Tower? {
         if (debug) println("Start finding nearest tower...")
 
-        var nearestTower: Tower? = null
-        var currentDist = 9999.0
+        val validTowers = activeTowers.values.filter { it != selectedTower }
 
-        for (tower in activeTowers.values) {
-            if ((tower === selectedTower)) continue
-
-            if (nearestTower == null) {
-                nearestTower = tower
-                currentDist = tower.pos..pos
-                if (debug) println("Initial nearest tower with dist: id ${nearestTower.key}")
-                continue
-            }
-
-            val nextDist = tower.pos..pos
-            if (nextDist < currentDist) {
-                if (debug) println("New nearest tower with dist: $nextDist")
-                nearestTower = tower
-                currentDist = nextDist
-            }
+        if (validTowers.isEmpty()) {
+            if (debug) println("No valid towers exist. Returning null.")
+            return null
         }
+
+        val nearestTower = validTowers.minBy { it.pos..pos }
+
         if (debug) {
-            if (nearestTower == null) {
-                println("No other tower found.")
-            } else {
-                println("Closest tower has dist $currentDist")
-            }
+            println("Closest tower (key: ${nearestTower.key}) has dist ${nearestTower.pos..pos}")
         }
         return nearestTower
     }
@@ -187,27 +172,17 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
     fun getDistToPath(pos: Vektor): Double {
         if (debug) println("Start finding distance to path...")
 
-        var dist = 99999.0  // such a large distance cannot reasonably occur.
-
-        var node1: Vektor
-        var node2: Vektor
-        var clampedDist: Double
-
-        for (c in 0 until gameMap.pathNodes.lastIndex) {
-            // iterate through all the pairs of connected nodes; these are the segments.
-            // find the smallest dist to any one of the segments.
-            node1 = gameMap.pathNodes[c]
-            node2 = gameMap.pathNodes[c+1]
-            clampedDist = Vektor.clampedDist(node1, node2, pos)
-            if (debug) println("clampedDist = $clampedDist")
-
-            if (clampedDist < dist)
-                dist = clampedDist
+        val segments = Array(gameMap.pathNodes.lastIndex) {
+            Pair(gameMap.pathNodes[it], gameMap.pathNodes[it + 1])
         }
 
-        if (debug) println("final dist to path: $dist")
+        val smallestDist = segments.minOf { Vektor.clampedDist(it.first, it.second, pos) }
+        // This can never be null, because the map needs at least one segment to be instantiated.
+        // so don't worry about NullPointerExceptions. They don't happen.
 
-        return dist
+        if (debug) println("final dist to path: $smallestDist")
+
+        return smallestDist
     }
 
     fun placeHeldTower(pos: Vektor) {
@@ -233,7 +208,7 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
 
         val nearestTower = getNearestTower(pos)
         if (nearestTower != null) {
-            if (nearestTower.pos..pos < nearestTower.sizeRadius + newTower.sizeRadius) {
+            if (nearestTower.pos..pos < (nearestTower.sizeRadius + newTower.sizeRadius)) {
                 heldTower.pos = pos
                 heldTower.location = pos.toLocation()
                 heldTower.show(1)

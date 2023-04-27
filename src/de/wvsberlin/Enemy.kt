@@ -17,13 +17,11 @@ interface DynamicEnemy {
         get() = 50.0
 }
 
-class EnemyChildEntry(vararg val children: DynamicEnemy, val spacing: Double = 50.0)
-
-fun spawnChildren(enemy: DynamicEnemy, overkill: Double, game: Game, segmentIdx: Int, segmentProgress: Double, debug: Boolean) {
-    for (childElem in enemy.children.withIndex()) {
+private fun spawnChildren(enemyType: DynamicEnemy, overkill: Double, game: Game, segmentIdx: Int, segmentProgress: Double, debug: Boolean) {
+    for (childElem in enemyType.children.withIndex()) {
         val childType = childElem.value
         val c = childElem.index
-        val appropriatedSegmentProgress = segmentProgress - enemy.childSpacing * c
+        val appropriatedSegmentProgress = segmentProgress - enemyType.childSpacing * c
 
         if (overkill < childType.initialHealth) {
             val newchild = game.spawnEnemy(childType, segmentIdx, appropriatedSegmentProgress)
@@ -36,29 +34,25 @@ fun spawnChildren(enemy: DynamicEnemy, overkill: Double, game: Game, segmentIdx:
     }
 }
 
-abstract class Enemy(
+class Enemy private constructor(
         val game: Game,
         val key: Int,
+        var segmentIdx: Int,
+        var segmentProgress: Double,
+        val typeInstance: DynamicEnemy,
         val dmg: Int,
-        health: Number,
+        var health: Double = 1.0,
         val speed: Double,
         sprite: BufferedImage,
-        var segmentIdx: Int,
-        segmentProgress: Number,
-        size: Number = 16,
+        var size: Double = 16.0,
         val rotates: Boolean = false,
         val reward: Int = 1
 ) : Actor(rotates, sprite) {
-    abstract val enemyCompanion: DynamicEnemy
     var prevNodeToNextNodeVektor: Vektor
     var currentSegmentLength: Double
     var currentSegmentUnitVektor: Vektor
     var currentSegmentRichtungsVektor: Vektor
     var pos: MutableVektor
-
-    var segmentProgress = segmentProgress.toDouble()
-    var health = health.toDouble()
-    val size = size.toDouble()
 
     val pathNodes: MutableList<Vektor> = game.gameMap.pathNodes
 
@@ -89,10 +83,9 @@ abstract class Enemy(
         segmentProgress += speed
 
         if (segmentProgress >= currentSegmentLength)
-            // if we hit/pass the end of the current segment, make sure the enemy arrives in the next segment properly.
+        // if we hit/pass the end of the current segment, make sure the enemy arrives in the next segment properly.
             nextSegment()
-        else
-            pos += currentSegmentRichtungsVektor
+        else pos += currentSegmentRichtungsVektor
 
         // if we don't hit end of segment, just move forward normally.
         location = pos.toLocation()
@@ -114,7 +107,7 @@ abstract class Enemy(
 
         game.updateMoney(reward)
 
-        spawnChildren(enemyCompanion, -health, game, segmentIdx, segmentProgress, game.debug)
+        spawnChildren(typeInstance, -health, game, segmentIdx, segmentProgress, game.debug)
         despawn()
     }
 
@@ -143,8 +136,7 @@ abstract class Enemy(
         segmentProgress = overshoot
 
         pos = MutableVektor.fromImmutable(pathNodes[segmentIdx] + currentSegmentUnitVektor * overshoot)
-        if (rotates)
-            direction = currentSegmentUnitVektor.getAngle()
+        if (rotates) direction = currentSegmentUnitVektor.getAngle()
     }
 
     ////////////////////////////////////////////////////////////////
@@ -152,76 +144,75 @@ abstract class Enemy(
     ////////////////////////////////////////////////////////////////
 
     object WEAKEST : DynamicEnemy {
-        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Weakest =
-                Weakest(game, key, segmentIdx, segmentProgress)
+        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Enemy = Enemy(
+                game = game,
+                key = key,
+                segmentIdx = segmentIdx,
+                segmentProgress = segmentProgress,
+                typeInstance = this,
+                dmg = 1,
+                speed = 1.5,
+                sprite = Sprite.BALLOON_WEAKEST
+        )
     }
 
     object BLUE : DynamicEnemy {
-        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Blue =
-                Blue(game, key, segmentIdx, segmentProgress)
+        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Enemy = Enemy(
+                game = game,
+                key = key,
+                segmentIdx = segmentIdx,
+                segmentProgress = segmentProgress,
+                typeInstance = this,
+                dmg = 2,
+                speed = 2.0,
+                sprite = Sprite.BALLOON_BLUE
+        )
 
         override val children = arrayOf<DynamicEnemy>(WEAKEST)
     }
 
     object GREEN : DynamicEnemy {
-        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Green =
-                Green(game, key, segmentIdx, segmentProgress)
+        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Enemy = Enemy(
+                game = game,
+                key = key,
+                segmentIdx = segmentIdx,
+                segmentProgress = segmentProgress,
+                typeInstance = this,
+                dmg = 3,
+                speed = 3.0,
+                sprite = Sprite.BALLOON_GREEN
+        )
 
         override val children = arrayOf<DynamicEnemy>(BLUE)
     }
 
     object YELLOW : DynamicEnemy {
-        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Yellow =
-                Yellow(game, key, segmentIdx, segmentProgress)
+        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Enemy = Enemy(
+                game = game,
+                key = key,
+                segmentIdx = segmentIdx,
+                segmentProgress = segmentProgress,
+                typeInstance = this,
+                dmg = 4,
+                speed = 5.0,
+                sprite = Sprite.BALLOON_YELLOW
+        )
 
         override val children = arrayOf<DynamicEnemy>(GREEN)
     }
 
     object PINK : DynamicEnemy {
-        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Pink =
-                Pink(game, key, segmentIdx, segmentProgress)
+        override fun new(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double): Enemy = Enemy(
+                game = game,
+                key = key,
+                segmentIdx = segmentIdx,
+                segmentProgress = segmentProgress,
+                typeInstance = this,
+                dmg = 5,
+                speed = 8.0,
+                sprite = Sprite.BALLOON_PINK
+        )
 
         override val children = arrayOf<DynamicEnemy>(YELLOW)
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // Now, the Enemy classes.
-    // These used to just be suppliers that returned base Enemies
-    // with certain params, but that is probably suboptimal.
-    ////////////////////////////////////////////////////////////////
-
-    class Weakest(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double) : Enemy(
-            game = game, key = key, segmentIdx = segmentIdx, segmentProgress = segmentProgress,
-            dmg = 1, health = 1, speed = 1.5, sprite = Sprite.BALLOON_WEAKEST
-    ) {
-        override val enemyCompanion = WEAKEST
-    }
-
-    class Blue(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double) : Enemy(
-            game = game, key = key, segmentIdx = segmentIdx, segmentProgress = segmentProgress,
-            dmg = 2, health = 1, speed = 2.0, sprite = Sprite.BALLOON_BLUE
-    ) {
-        override val enemyCompanion = BLUE
-    }
-
-    class Green(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double) : Enemy(
-            game = game, key = key, segmentIdx = segmentIdx, segmentProgress = segmentProgress,
-            dmg = 3, health = 1, speed = 3.0, sprite = Sprite.SPRITE
-    ) {
-        override val enemyCompanion = GREEN
-    }
-
-    class Yellow(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double) : Enemy(
-            game = game, key = key, segmentIdx = segmentIdx, segmentProgress = segmentProgress,
-            dmg = 4, health = 1, speed = 5.0, sprite = Sprite.SPRITE
-    ) {
-        override val enemyCompanion = YELLOW
-    }
-
-    class Pink(game: Game, key: Int, segmentIdx: Int, segmentProgress: Double) : Enemy(
-            game = game, key = key, segmentIdx = segmentIdx, segmentProgress = segmentProgress,
-            dmg = 5, health = 1, speed = 8.0, sprite = Sprite.SPRITE
-    ) {
-        override val enemyCompanion = PINK
     }
 }

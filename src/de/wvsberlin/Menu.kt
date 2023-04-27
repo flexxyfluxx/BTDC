@@ -1,7 +1,6 @@
 package de.wvsberlin
 
 import ch.aplu.jgamegrid.GameGrid
-import de.wvsberlin.vektor.Vektor
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.lang.IllegalArgumentException
@@ -135,7 +134,7 @@ class Menu : JFrame() {
         /*
         jframe components incoming
          */
-        defaultCloseOperation = DISPOSE_ON_CLOSE
+        defaultCloseOperation = EXIT_ON_CLOSE
         val frameWidth = 1280
         val frameHeight = 720
         super.setSize(frameWidth, frameHeight)
@@ -158,7 +157,6 @@ class Menu : JFrame() {
         bUpgrades.setBounds(560, 260, 80, 24)
         bUpgrades.text = "Upgrades"
         bUpgrades.margin = Insets(2, 2, 2, 2)
-        bUpgrades.addActionListener(this::bUpgrades_ActionPerformed)
         cp.add(bUpgrades)
         bSettings.setBounds(560, 460, 80, 24)
         bSettings.text = "Settings"
@@ -175,7 +173,6 @@ class Menu : JFrame() {
         bDebug.setBounds(560, 258, 80, 24)
         bDebug.margin = Insets(2, 2, 2, 2)
         bDebug.isVisible = false
-        bDebug.addActionListener(this::bDebug_ActionPerformed)
         cp.add(bDebug)
 
         //Maps Selector Components
@@ -506,8 +503,10 @@ class Menu : JFrame() {
 
     fun bStartRound_ActionPerformed(evt: ActionEvent?) {
         game ?: return
-        if (!game!!.roundActive)
-            game!!.startNextRound()
+        val game = game!!
+
+        if (!game.roundActive)
+            game.startNextRound()
     }
 
     fun bTower1_ActionPerformed(evt: ActionEvent?) {
@@ -644,9 +643,7 @@ class Menu : JFrame() {
         else bBack.setBounds(895, 420, 80, 24)
     }
 
-    private fun toggleElementGroup(group: Array<Component>, toggle: Boolean) = group.map { it.isVisible = toggle }
-
-    fun bUpgrades_ActionPerformed(evt: ActionEvent?) {} // end of bUpgrades_ActionPerformed
+    private fun toggleElementGroup(group: Array<out Component>, toggle: Boolean) = group.map { it.isVisible = toggle }
 
     //Settings
     fun bDebug_ActionPerformed(evt: ActionEvent?) {} // end of bDebug_ActionPerformed
