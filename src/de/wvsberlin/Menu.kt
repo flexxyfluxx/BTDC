@@ -1,28 +1,86 @@
 package de.wvsberlin
 
-import de.wvsberlin.vektor.Vektor
-import java.awt.Component
+import ch.aplu.jgamegrid.GameGrid
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.lang.IllegalArgumentException
 import java.lang.IndexOutOfBoundsException
-import javax.swing.ImageIcon
+import javax.swing.*
+import javax.swing.border.TitledBorder
 import kotlin.system.exitProcess
 
-class Menu : JMainFrame() {
+class Menu : JFrame() {
+    var bSelectMap = JButton()
+    var bUpgrades = JButton()
+    var bSettings = JButton()
+    var bQuitGame = JButton()
+    var jButtonGroupMaps = JPanel()
+    var jButtonGroupMapsBG = ButtonGroup()
+    var jButtonGroupMapsTB = TitledBorder("Maps")
+    var jButtonGroupMapsRB0 = JRadioButton("Raum 208")
+    var jButtonGroupMapsRB1 = JRadioButton("Raum 208 Legacy")
+    var jButtonGroupMapsRB2 = JRadioButton("Jungel")
+    var jButtonGroupMapsRB3 = JRadioButton("Map not implemented")
+    var jButtonGroupDifficulty = JPanel()
+    var jButtonGroupDifficultyBG = ButtonGroup()
+    var jButtonGroupDifficultyTB = TitledBorder("Difficulty")
+    var jButtonGroupDifficultyRB0 = JRadioButton("Easy")
+    var jButtonGroupDifficultyRB1 = JRadioButton("Normal")
+    var jButtonGroupDifficultyRB2 = JRadioButton("Hard")
+    var bStartGame = JButton()
+    var bBack = JButton()
+    var gamegrid = GameGrid()
+    var jGridPanel = JPanel()
+    var bQuit = JButton()
+    var bConfirm = JButton()
+    var bAbort = JButton()
+    var bStartRound = JButton()
+    var jSeparator1 = JSeparator()
+    var bAutostart = JToggleButton()
+    var bTower1 = JButton()
+    var bTower2 = JButton()
+    var bTower3 = JButton()
+    var bTower4 = JButton()
+    var lTower1 = JLabel()
+    var lTower2 = JLabel()
+    var lTower3 = JLabel()
+    var lTower4 = JLabel()
+    var bUpgrade1 = JButton()
+    var bUpgrade2 = JButton()
+    var bUpgrade3 = JButton()
+    var bSell = JButton()
+    var bDeselect = JButton()
+    var tUpgrade1 = JTextField()
+    var tUpgrade2 = JTextField()
+    var tUpgrade3 = JTextField()
+    var lUpgrade1 = JLabel("Attackspeed:")
+    var lUpgrade2 = JLabel("Attackdamage:")
+    var lUpgrade3 = JLabel("Towerspecific:")
+    var lCurrentRound = JLabel("Round:")
+    var lMoney = JLabel("Money:")
+    var lHealth = JLabel("Health:")
+    var tCurrentRound = JTextField()
+    var tMoney = JTextField()
+    var tHealth = JTextField()
+    var lGooseCondition = JLabel()
+    var lgameOver = JLabel("You Goose!")
+    var lWon = JLabel("You Won!")
+    var bDebug = JToggleButton("Debug")
+
     var game: Game? = null
-    val mainMenu: Array<out Component> = arrayOf(
+    val mainMenu = arrayOf<Component>(
             bSelectMap,
             bUpgrades,
             bSettings,
             bQuitGame
     )
-    val mapSelector: Array<out Component> = arrayOf(
+    val mapSelector = arrayOf<Component>(
             jButtonGroupMaps,
             jButtonGroupDifficulty,
             bStartGame,
             bBack
     )
-    val gameScreen: Array<out Component> = arrayOf(
+    val gameScreen = arrayOf<Component>(
             jGridPanel,
             bQuit,
             bTower1,
@@ -54,20 +112,20 @@ class Menu : JMainFrame() {
             lMoney,
             lHealth
     )
-    val confirmScreen: Array<out Component> = arrayOf(
+    val confirmScreen = arrayOf<Component>(
             bConfirm,
             bAbort
     )
-    val gameOverScreen: Array<out Component> = arrayOf(
-            lgooseCondition,
+    val gameOverScreen = arrayOf<Component>(
+            lGooseCondition,
             bConfirm,
             lgameOver
     )
-    val winScreen: Array<out Component> = arrayOf(
+    val winScreen = arrayOf<Component>(
             bConfirm,
-            lwon
+            lWon
     )
-    val settingsScreen: Array<out Component> = arrayOf(
+    val settingsScreen = arrayOf<Component>(
             bDebug,
             bBack
     )
@@ -99,7 +157,6 @@ class Menu : JMainFrame() {
         bUpgrades.setBounds(560, 260, 80, 24)
         bUpgrades.text = "Upgrades"
         bUpgrades.margin = Insets(2, 2, 2, 2)
-        bUpgrades.addActionListener(this::bUpgrades_ActionPerformed)
         cp.add(bUpgrades)
         bSettings.setBounds(560, 460, 80, 24)
         bSettings.text = "Settings"
@@ -116,7 +173,6 @@ class Menu : JMainFrame() {
         bDebug.setBounds(560, 258, 80, 24)
         bDebug.margin = Insets(2, 2, 2, 2)
         bDebug.isVisible = false
-        bDebug.addActionListener(this::bDebug_ActionPerformed)
         cp.add(bDebug)
 
         //Maps Selector Components
@@ -404,7 +460,7 @@ class Menu : JMainFrame() {
         }
 
         try {
-            game = Game(this, selectedDifficulty, GameMap.theMaps[selectedMap])
+            game = Game(this, selectedDifficulty, selectedMap)
         } catch (err: IndexOutOfBoundsException) {
             setCurrentScreen(1)
             if (bDebug.isSelected) println("Illegal map ID; returning to map select.")
@@ -413,32 +469,32 @@ class Menu : JMainFrame() {
         gamegrid.doRun()
     }
 
-    override fun bSelectMap_ActionPerformed(evt: ActionEvent?) = setCurrentScreen(1)
+    fun bSelectMap_ActionPerformed(evt: ActionEvent?) = setCurrentScreen(1)
 
-    override fun bBack_ActionPerformed(evt: ActionEvent?) = setCurrentScreen(0)
+    fun bBack_ActionPerformed(evt: ActionEvent?) = setCurrentScreen(0)
 
-    override fun bQuitGame_ActionPerformed(evt: ActionEvent?) {
+    fun bQuitGame_ActionPerformed(evt: ActionEvent?) {
         dispose()
         exitProcess(0)
     }
 
-    override fun bQuit_ActionPerformed(evt: ActionEvent?) {
+    fun bQuit_ActionPerformed(evt: ActionEvent?) {
         gamegrid.doPause()
         setCurrentScreen(3)
     }
 
-    override fun bAbort_ActionPerformed(evt: ActionEvent?) {
+    fun bAbort_ActionPerformed(evt: ActionEvent?) {
         gamegrid.doRun()
         setCurrentScreen(2)
     }
 
-    override fun bConfirm_ActionPerformed(evt: ActionEvent?) {
+    fun bConfirm_ActionPerformed(evt: ActionEvent?) {
         game?.removeAllActors()
         game = null
         setCurrentScreen(0)
     }
 
-    override fun bStartGame_ActionPerformed(evt: ActionEvent?) {
+    fun bStartGame_ActionPerformed(evt: ActionEvent?) {
         if (bDebug.isSelected) println("Menu.bStartGame_ActionPerformed")
 
         setCurrentScreen(2)
@@ -453,7 +509,7 @@ class Menu : JMainFrame() {
             game.startNextRound()
     }
 
-    override fun bTower1_ActionPerformed(evt: ActionEvent?) {
+    fun bTower1_ActionPerformed(evt: ActionEvent?) {
         game ?: return
         val game = game!!
 
@@ -466,7 +522,7 @@ class Menu : JMainFrame() {
         game.updateMoney(-Tower1.cost)
     }
 
-    override fun bTower2_ActionPerformed(evt: ActionEvent?) {
+    fun bTower2_ActionPerformed(evt: ActionEvent?) {
         game ?: return
         val game = game!!
 
@@ -479,21 +535,11 @@ class Menu : JMainFrame() {
         game.updateMoney(-Tower2.cost)
     }
 
-    override fun bTower3_ActionPerformed(evt: ActionEvent?) {
+    fun bTower3_ActionPerformed(evt: ActionEvent?) {
         game ?: return
         val game = game!!
 
-        if (game.debug) {
-            for (x in 0 until 96) {
-                for (y in 0 until 54) {
-                    game.heldTower = HeldTower(3)
-                    game.placeHeldTower(Vektor(x * 10, y * 10))
-                }
-            }
-            return
-        }
-
-        if ((game.money < Tower3.cost) || (game.heldTower != null)) return
+        if ((game.money < Tower3.cost) or (game.heldTower != null)) return
 
         val newHeldTower = HeldTower(2)
         game.heldTower = newHeldTower
@@ -502,7 +548,7 @@ class Menu : JMainFrame() {
         game.updateMoney(-Tower3.cost)
     }
 
-    override fun bTower4_ActionPerformed(evt: ActionEvent?) {
+    fun bTower4_ActionPerformed(evt: ActionEvent?) {
         game ?: return
         val game = game!!
 
@@ -512,41 +558,43 @@ class Menu : JMainFrame() {
         } else throw NotImplementedError("This tower has not been implemented!")
     }
 
-    override fun bUpgrade1_ActionPerformed(evt: ActionEvent?) {
+    fun bUpgrade1_ActionPerformed(evt: ActionEvent?) {
         game?.selectedTower?.upgradeAttackSpeed()
     }
 
-    override fun bUpgrade2_ActionPerformed(evt: ActionEvent?) {
+    fun bUpgrade2_ActionPerformed(evt: ActionEvent?) {
         game?.selectedTower?.upgradeAttackDamage()
     }
 
-    override fun bUpgrade3_ActionPerformed(evt: ActionEvent?) {
+    fun bUpgrade3_ActionPerformed(evt: ActionEvent?) {
         game?.selectedTower?.upgradePath3()
     }
 
-    override fun bSell_ActionPerformed(evt: ActionEvent?) {
+    fun bSell_ActionPerformed(evt: ActionEvent?) {
         game?.sellSelectedTower()
     }
 
-    override fun bDeselect_ActionPerformed(evt: ActionEvent?) {
+    fun bDeselect_ActionPerformed(evt: ActionEvent?) {
         game ?: return
         val game = game!!
 
         game.selectedTower = null
         game.updateCost()
 
-        if (game.heldTower != null) {
-            when (game.heldTower!!.towerID) {
-                0 -> game.updateMoney(Tower1.cost)
-                1 -> game.updateMoney(Tower2.cost)
-                2 -> game.updateMoney(Tower3.cost)
-                else -> throw IllegalArgumentException("Illegal tower ID")
-            }
-            game.grid.removeActor(game.heldTower)
+        if (game.heldTower == null)
+            return
+
+        when (game.heldTower!!.towerID) {
+            0 -> game.updateMoney(Tower1.cost)
+            1 -> game.updateMoney(Tower2.cost)
+            2 -> game.updateMoney(Tower3.cost)
+            else -> throw IllegalArgumentException("Illegal tower ID")
         }
+        game.grid.removeActor(game.heldTower)
+        game.heldTower = null
     }
 
-    override fun bSettings_ActionPerformed(evt: ActionEvent?) = setCurrentScreen(6)
+    fun bSettings_ActionPerformed(evt: ActionEvent?) = setCurrentScreen(6)
 
     fun setCurrentScreen(screenID: Int) {
         toggleMainMenu(false)
@@ -596,4 +644,45 @@ class Menu : JMainFrame() {
     }
 
     private fun toggleElementGroup(group: Array<out Component>, toggle: Boolean) = group.map { it.isVisible = toggle }
+
+    //Settings
+    fun bDebug_ActionPerformed(evt: ActionEvent?) {} // end of bDebug_ActionPerformed
+    val selectedMap: GameMap
+        //Maps Selector
+        get() {
+            val e = jButtonGroupMapsBG.elements
+            var b: AbstractButton
+            while (e.hasMoreElements()) {  // why is this like this
+                b = e.nextElement()
+                if (!b.isSelected)
+                    continue
+
+                return when(b.text) {
+                    "Raum 208" -> GameMap.RAUM208_V2
+                    "Raum 208 Legacy" -> GameMap.RAUM208_LEGACY
+                    "Jungel" -> GameMap.JUNGLE
+                    else -> throw IllegalStateException("Illegal map selected.")
+                }
+            }
+            throw IllegalStateException("Somehow, no map is selected. That should not be the case.")
+        }
+
+    val selectedDifficulty: Difficulty
+        get() {
+            val e = jButtonGroupDifficultyBG.elements
+            var b: AbstractButton
+            while (e.hasMoreElements()) {
+                b = e.nextElement()
+                if (!b.isSelected)
+                    continue
+
+                return when (b.text) {
+                    "Easy" -> Difficulty.EASY
+                    "Normal" -> Difficulty.NORMAL
+                    "Hard" -> Difficulty.HARD
+                    else -> throw IllegalStateException("Illegal difficulty selected.")
+                }
+            }
+            throw IllegalStateException("No difficulty selected.")
+        }
 }
