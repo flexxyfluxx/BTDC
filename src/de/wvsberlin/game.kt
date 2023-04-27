@@ -156,8 +156,8 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
 
         val validTowers = activeTowers.values.filter { it != selectedTower }
 
-        if (validTowers.isEmpty() and debug) {
-            println("No valid towers exist. Returning null.")
+        if (validTowers.isEmpty()) {
+            if (debug) println("No valid towers exist. Returning null.")
             return null
         }
 
@@ -208,7 +208,7 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
 
         val nearestTower = getNearestTower(pos)
         if (nearestTower != null) {
-            if (nearestTower.pos..pos < nearestTower.sizeRadius + newTower.sizeRadius) {
+            if (nearestTower.pos..pos < (nearestTower.sizeRadius + newTower.sizeRadius)) {
                 heldTower.pos = pos
                 heldTower.location = pos.toLocation()
                 heldTower.show(1)
