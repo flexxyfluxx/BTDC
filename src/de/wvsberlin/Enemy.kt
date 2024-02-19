@@ -15,6 +15,8 @@ interface DynamicEnemy {
         get() = emptyArray()
     val childSpacing: Double
         get() = 50.0
+
+    val strength: Int
 }
 
 private fun spawnChildren(enemyType: DynamicEnemy, overkill: Double, game: Game, segmentIdx: Int, segmentProgress: Double, debug: Boolean) {
@@ -54,6 +56,8 @@ class Enemy private constructor(
     var currentSegmentRichtungsVektor: Vektor
     var pos: MutableVektor
 
+    private var completedSegmentLengthSum = 0.0
+
     val pathNodes: MutableList<Vektor> = game.gameMap.pathNodes
 
     init {
@@ -65,6 +69,9 @@ class Enemy private constructor(
         pos = MutableVektor.fromImmutable(pathNodes[segmentIdx] + currentSegmentUnitVektor * segmentProgress)
         direction = currentSegmentUnitVektor.getAngle()
     }
+
+    val totalTrackProgress: Double
+        get() = completedSegmentLengthSum + segmentProgress
 
     /**
      * Runs every tick.
@@ -114,7 +121,7 @@ class Enemy private constructor(
     /**
      * Handles correct transitioning of enemy to next segment on map.
      */
-    fun nextSegment() {
+    private fun nextSegment() {
         // basically, overshoot is just how far the enemy has already travelled on the next segment.. that is literally all.
         val overshoot = segmentProgress - currentSegmentLength
 
@@ -129,6 +136,8 @@ class Enemy private constructor(
             return
         }
 
+        completedSegmentLengthSum += currentSegmentLength
+
         prevNodeToNextNodeVektor = pathNodes[segmentIdx + 1] - pathNodes[segmentIdx]
         currentSegmentLength = prevNodeToNextNodeVektor.abs()
         currentSegmentUnitVektor = prevNodeToNextNodeVektor.getUnitized()
@@ -140,7 +149,7 @@ class Enemy private constructor(
     }
 
     ////////////////////////////////////////////////////////////////
-    // Please don't ask me to explain this.
+    // Please don't ask me to explain this. I think it's optimal..?
     ////////////////////////////////////////////////////////////////
 
     object WEAKEST : DynamicEnemy {
@@ -154,6 +163,8 @@ class Enemy private constructor(
                 speed = 1.5,
                 sprite = Sprite.BALLOON_WEAKEST
         )
+
+        override val strength: Int = 1
     }
 
     object BLUE : DynamicEnemy {
@@ -169,6 +180,8 @@ class Enemy private constructor(
         )
 
         override val children = arrayOf<DynamicEnemy>(WEAKEST)
+
+        override val strength: Int = 2
     }
 
     object GREEN : DynamicEnemy {
@@ -184,6 +197,8 @@ class Enemy private constructor(
         )
 
         override val children = arrayOf<DynamicEnemy>(BLUE)
+
+        override val strength: Int = 3
     }
 
     object YELLOW : DynamicEnemy {
@@ -199,6 +214,8 @@ class Enemy private constructor(
         )
 
         override val children = arrayOf<DynamicEnemy>(GREEN)
+
+        override val strength: Int = 4
     }
 
     object PINK : DynamicEnemy {
@@ -214,5 +231,7 @@ class Enemy private constructor(
         )
 
         override val children = arrayOf<DynamicEnemy>(YELLOW)
+
+        override val strength: Int = 5
     }
 }

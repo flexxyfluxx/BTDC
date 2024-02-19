@@ -10,6 +10,19 @@ import kotlin.math.pow
 
 typealias ProjectileSupplier = (game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) -> Projectile
 
+interface DynamicProjectile {
+    fun new(game: Game, key: Int, direction: Double, pos: MutableVektor, pierce: Int, damage: Double): Projectile =
+            Projectile(game, key, Vektor.fromAngleAndMagnitude(direction, speed), sprite, lifetime, pos, pierce, size, damage)
+    val size: Double
+        get() = 6.0
+    val sprite: BufferedImage
+        get() = Sprite.SPRITE
+    val speed: Double
+        get() = 10.0
+    val lifetime: Int
+        get() = 100
+}
+
 class Projectile(
         val game: Game,
         val key: Int,
@@ -20,67 +33,22 @@ class Projectile(
         var pierce: Int = 1,
         size: Number = 16,
         val damage: Double = 1.0
-) : Actor(false, sprite) {
+) : Actor(true, sprite) {
     var enemiesHit: List<Enemy> = emptyList()
     val size: Double
 
     init {
-        this.size = size.toDouble()
-        if (lifetime < 0) throw IllegalArgumentException("Lifetime must not be below zero!")
-        if (pierce < 0) throw IllegalArgumentException("Pierce must not be below zero!")
-        if (this.size < 0) throw IllegalArgumentException("Size must not be below zero!")
-        direction = richtungsvektor.getAngle()
-    }
+        val sizeDouble = size.toDouble()
+        if (lifetime < 0) this.lifetime = 0
+        if (pierce < 0) this.pierce = 0
 
-    companion object {
-        @JvmStatic
-        fun EXAMPLE_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) = Projectile(
-                game = game,
-                key = key,
-                richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
-                sprite = Sprite.SPRITE,
-                lifetime = lifetime,
-                pierce = pierce,
-                size = 6,
-                pos = pos,
-                damage = damage
-        )
-        @JvmStatic
-        fun TOWER1_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) = Projectile(
-                game = game,
-                key = key,
-                richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
-                sprite = GGBitmap.getScaledImage(Sprite.ARROW, 1.0, direction - 90),
-                lifetime = lifetime,
-                pierce = pierce,
-                size = 6,
-                pos = pos,
-                damage = damage
-        )
-        @JvmStatic
-        fun TOWER2_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) = Projectile(
-                game = game,
-                key = key,
-                richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
-                sprite = Sprite.UWU,
-                lifetime = lifetime,
-                pierce = pierce,
-                size = 6,
-                pos = pos,
-                damage = damage
-        )
-        @JvmStatic
-        fun TOWER3_PROJ(game: Game, key: Int, direction: Double, pos: MutableVektor, lifetime: Int, pierce: Int, damage: Double) = Projectile(
-                game = game,
-                key = key,
-                richtungsvektor = Vektor.fromAngleAndMagnitude(direction, 5),
-                sprite = Sprite.SPRITE,
-                lifetime = lifetime,
-                pierce = pierce,
-                size = 6,
-                pos = pos,
-                damage = damage
-        )
+        this.size = if (sizeDouble < 0) {
+            0.0
+        } else {
+            sizeDouble
+        }
+        direction = richtungsvektor.getAngle()
+        super.setDirection(direction)
     }
 
     fun tick() {
@@ -120,4 +88,21 @@ class Projectile(
     }
 
     override fun getDirection(): Double = richtungsvektor.getAngle()
+
+    object EXAMPLE_PROJ : DynamicProjectile
+
+    object TOWER1_PROJ : DynamicProjectile {
+        fun new(game: Game, key: Int, direction: Double, pos: MutableVektor, pierce: Int, damage: Double, lifetime: Int): Projectile =
+                Projectile(game, key, Vektor.fromAngleAndMagnitude(direction, speed),
+                        sprite = GGBitmap.getScaledImage(sprite, 1.0, 90 - direction),
+                        lifetime = lifetime, pos = pos, pierce = pierce, damage = damage, size = size)
+
+        override val sprite = Sprite.ARROW
+    }
+
+    object TOWER2_PROJ : DynamicProjectile {
+        override val sprite = Sprite.UWU
+    }
+
+    object TOWER3_PROJ : DynamicProjectile
 }
