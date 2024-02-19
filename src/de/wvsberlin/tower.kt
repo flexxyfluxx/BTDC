@@ -4,13 +4,14 @@ import ch.aplu.jgamegrid.Actor
 import de.wvsberlin.vektor.Vektor
 import java.awt.image.BufferedImage
 import java.lang.IllegalArgumentException
+import kotlin.math.pow
 
 class Tower1(pos: Vektor, key: Int, game: Game) : Tower(
         game = game,
         key = key,
         attackSpeed = 5,
         attackDamage = 2,
-        attackRange = 40,
+        attackRange = 400.0,
         pierce = 1,
         pos = pos,
         attackSpeedIncrement = 1.05,
@@ -19,7 +20,7 @@ class Tower1(pos: Vektor, key: Int, game: Game) : Tower(
         attackDamageUpgradeCost = 75,
         upgrade3Cost = 220,
         upgrade3Text = "Attack range",
-        projectileSupplier = Projectile::TOWER1_PROJ,
+        projectileType = Projectile.TOWER1_PROJ,
         sprite = Sprite.CR_TOWER
 ) {
     override val cost: Int = Companion.cost
@@ -43,7 +44,7 @@ class Tower2(pos: Vektor, key: Int, game: Game) : Tower(
         key = key,
         attackSpeed = 10,
         attackDamage = 1,
-        attackRange = 20,
+        attackRange = 20.0,
         pierce = 1,
         pos = pos,
         attackSpeedIncrement = 1.01,
@@ -52,7 +53,7 @@ class Tower2(pos: Vektor, key: Int, game: Game) : Tower(
         attackDamageUpgradeCost = 320,
         upgrade3Cost = 200,
         upgrade3Text = "Piercing",
-        projectileSupplier = Projectile::TOWER2_PROJ,
+        projectileType = Projectile.TOWER2_PROJ,
         sprite = Sprite.EGIRL
 ) {
     override val cost = Companion.cost
@@ -77,7 +78,7 @@ class Tower3(pos: Vektor, key: Int, game: Game) : Tower(
         key = key,
         attackSpeed = 7,
         attackDamage = 3,
-        attackRange = 25,
+        attackRange = 25.0,
         pierce = 1,
         pos = pos,
         attackSpeedIncrement = 1.02,
@@ -86,7 +87,7 @@ class Tower3(pos: Vektor, key: Int, game: Game) : Tower(
         attackDamageUpgradeCost = 100,
         upgrade3Cost = 0,
         upgrade3Text = "No upgrade",
-        projectileSupplier = Projectile::TOWER3_PROJ,
+        projectileType = Projectile.TOWER3_PROJ,
         sprite = Sprite.PICASSO
 ) {
     override val cost: Int = Companion.cost
@@ -103,7 +104,7 @@ class TowerDebug(pos: Vektor, key: Int, game: Game) : Tower(
         key = key,
         attackSpeed = 1,
         attackDamage = 1,
-        attackRange = 1,
+        attackRange = 1.0,
         pierce = 1,
         pos = pos,
         attackSpeedIncrement = 1.0,
@@ -112,7 +113,7 @@ class TowerDebug(pos: Vektor, key: Int, game: Game) : Tower(
         attackDamageUpgradeCost = 0,
         upgrade3Cost = 0,
         upgrade3Text = "No upgrade",
-        projectileSupplier = Projectile::EXAMPLE_PROJ,
+        projectileType = Projectile.EXAMPLE_PROJ,
         sprite = Sprite.SQUARE_GREEN
 ) {
     override val cost: Int = Companion.cost
@@ -123,6 +124,8 @@ class TowerDebug(pos: Vektor, key: Int, game: Game) : Tower(
 
     override fun tick() {}
 
+    override fun attack() = false
+
     override fun upgradePath3() {}
 }
 
@@ -131,7 +134,7 @@ abstract class Tower(
         val key: Int,
         attackSpeed: Number,
         attackDamage: Number,
-        attackRange: Int,
+        attackRange: Double,
         pierce: Int,
         var pos: Vektor,
         val attackSpeedIncrement: Double,
@@ -140,7 +143,7 @@ abstract class Tower(
         var attackDamageUpgradeCost: Int,
         var upgrade3Cost: Int,
         val upgrade3Text: String,
-        val projectileSupplier: ProjectileSupplier,
+        val projectileType: DynamicProjectile,
         sprite: BufferedImage,
         val sizeRadius: Double = 16.0
 ) : Actor(true, sprite) {
@@ -148,9 +151,10 @@ abstract class Tower(
     var attackDamage: Double
     var attackInterval: Int
     var attackCooldown: Int = 0
-    var attackRange: Int
+    var attackRange: Double
     var pierce: Int
     var targetDirection: Double = 0.0
+    var targetMode = TargetMode.FIRST
 
     abstract val cost: Int
 
@@ -195,11 +199,44 @@ abstract class Tower(
             attackCooldown--
             return
         }
-        attack()
-        attackCooldown = attackInterval
+
+        if (attack()) attackCooldown = attackInterval
     }
 
-    open fun attack() = game.spawnProjectile(pos, targetDirection, projectileSupplier, attackRange, pierce, attackDamage)
+    open fun attack(): Boolean {
+        val projHeading: Double
+        val targetEnemy = getEnemyByTargetMode(targetMode)
+        if (game.debug) {
+            targetEnemy ?: println("no enemy found")
+        }
+        targetEnemy ?: return false
+        projHeading = (targetEnemy.pos - pos).getAngle()
+        game.spawnProjectile(pos, projHeading, projectileType, pierce, attackDamage)
+        return true
+    }
+
+    fun getEnemiesInRange(): List<Enemy> {
+        return game.activeEnemies.values.filter { Vektor.dist(pos, it.pos, false) <= attackRange.pow(2) }
+    }
+
+    fun getEnemiesInRangeSortedByTrackProgress(): List<Enemy> {
+        val enemiesInRange = getEnemiesInRange()
+        return enemiesInRange.sortedBy { it.totalTrackProgress }
+    }
+
+    fun getEnemyByTargetMode(targetMode: TargetMode) = when (targetMode) {
+        TargetMode.FIRST  -> getEnemiesInRangeSortedByTrackProgress().firstOrNull()
+        TargetMode.LAST   -> getEnemiesInRangeSortedByTrackProgress().lastOrNull()
+        TargetMode.CLOSE  -> getEnemiesInRange().minByOrNull { Vektor.dist(pos, it.pos, false) }
+        TargetMode.STRONG -> getEnemiesInRange().maxByOrNull { it.typeInstance.strength }
+    }
+
+    enum class TargetMode {
+        FIRST,
+        LAST,
+        CLOSE,
+        STRONG
+    }
 }
 
 class HeldTower(val towerID: Int) : Actor(sprites[towerID], Sprite.DENIED) {
@@ -221,7 +258,6 @@ class HeldTower(val towerID: Int) : Actor(sprites[towerID], Sprite.DENIED) {
             }
 
     companion object {
-        @JvmStatic
         // we should move away from towerIDs to figure out which sprite should be shown..
         val sprites: Array<BufferedImage> = arrayOf(
                 Sprite.CR_TOWER, Sprite.EGIRL, Sprite.PICASSO, Sprite.SQUARE_GREEN

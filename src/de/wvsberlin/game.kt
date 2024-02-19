@@ -123,15 +123,14 @@ class Game(val menu: Menu, difficulty: Difficulty, val gameMap: GameMap) {
     fun spawnProjectile(
             pos: Vektor,
             direction: Double,
-            projSupplier: ProjectileSupplier,
-            lifetime: Int,
+            proj: DynamicProjectile,
             pierce: Int,
             damage: Number
     ): Projectile {
         if (debug) println("[INFO] Projectile spawned at (${pos.x}, ${pos.y})")
 
         val key = projectileKeyGen.next()
-        val newProjectile = projSupplier(this, key, direction, MutableVektor.fromImmutable(pos), lifetime, pierce, damage.toDouble())
+        val newProjectile = proj.new(this, key, direction, MutableVektor.fromImmutable(pos), pierce, damage.toDouble())
         activeProjectiles[key] = newProjectile
         grid.addActor(newProjectile, pos.toLocation())
         newProjectile.show()

@@ -152,22 +152,19 @@ open class Vektor(x: Number, y: Number) {
         if (other !is Vektor) return false
         return hashCode() == other.hashCode()
     }
-    fun __eq__(other: Any?) = equals(other)
 
     /**
      * Addiere Vektor mit Vektor.
      */
     operator fun plus(other: Vektor) = Vektor(this.x + other.x, this.y + other.y)
-    fun __add__(other: Vektor) = plus(other)
 
     /**
      * Subtrahiere Vektor von Vektor.
      */
     operator fun minus(other: Vektor) = Vektor(this.x - other.x, this.y - other.y)
-    fun __sub__(other: Vektor) = minus(other)
 
     /**
-     * Multipliziere Vektor mit Skalar.
+     * tipliziere Vektor mit Skalar.
      */
     operator fun times(other: Number): Vektor {
         val otherD = other.toDouble()
@@ -180,10 +177,6 @@ open class Vektor(x: Number, y: Number) {
     operator fun times(other: Vektor): Double = (this.x * other.x) + (this.y * other.y)
     // kein timesAssign mit Vektor, da sich dann der Objekttyp ändert
 
-    fun __mul__(other: Number) = times(other)
-    fun __rmul__(other: Number) = times(other)
-    fun __mul__(other: Vektor) = times(other)
-
     /**
      * Teile Vektor durch Skalar.
      */
@@ -191,9 +184,6 @@ open class Vektor(x: Number, y: Number) {
         val Dscalar = scalar.toDouble()
         return Vektor(x / Dscalar, y / Dscalar)
     }
-    fun __div__(other: Number) = div(other)
-
-    fun __abs__() = abs()
 
     open fun __repr__() = "de.wvsberlin.vektor.Vektor[${x}, ${y}]@${hashCode()}"
 
@@ -268,18 +258,10 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
         this.x += other.x
         this.y += other.y
     }
-    fun __iadd__(other: Vektor): MutableVektor {
-        plusAssign(other)
-        return this
-    }
 
     operator fun minusAssign(other: Vektor) {
         this.x -= other.x
         this.y -= other.y
-    }
-    fun __isub__(other: Vektor): MutableVektor {
-        minusAssign(other)
-        return this
     }
 
     operator fun timesAssign(other: Number) {
@@ -287,19 +269,11 @@ class MutableVektor(x: Number, y: Number) : Vektor(x, y) {
         this.x *= otherD
         this.y *= otherD
     }
-    fun __imul__(other: Number): MutableVektor {
-        times(other)
-        return this
-    }
 
     operator fun divAssign(scalar: Number) {
         val Dscalar = scalar.toDouble()
         this.x /= Dscalar
         this.y /= Dscalar
-    }
-    fun __idiv__(other: Number): MutableVektor{
-        divAssign(other)
-        return this
     }
 
     override fun __repr__() = "de.wvsberlin.vektor.MutableVektor[${x}, ${y}]@${hashCode()}"
@@ -322,7 +296,6 @@ class Gerade(val p: Vektor, val v: Vektor) {
         if (other !is Gerade) return false
         return hashCode() == other.hashCode()
     }
-    fun __eq__(other: Any?) = equals(other)
 
     /**
      * In der Mathematik bekommt man Funktionswerte der Funktion f mit der Schreibweise f(x).
@@ -330,7 +303,6 @@ class Gerade(val p: Vektor, val v: Vektor) {
      * Warum sollte das beim Programmieren anders sein?
      */
     operator fun invoke(r: Number) = p + v * (r.toDouble())
-    fun __call__(r: Number) = invoke(r)
 
     companion object {
         /**
@@ -346,7 +318,4 @@ class Gerade(val p: Vektor, val v: Vektor) {
         // Bei der Abstandmessung zu einer Gerade brauchen wir komischerweise keine Sqrt-Option,
         // da wir nicht überhaupt Sqrt rechnen müssen, d.h. wir können an der Stelle keine weitere Performance herausholen.
     }
-
-    fun __repr__() = "de.wvsberlin.vektor.Gerade[p=${p}, v=${v}]@${hashCode()}"
-    fun __str__() = "Gerade(p=(${p.x}, ${p.y}), v=(${v.x}, ${v.y}))"
 }
